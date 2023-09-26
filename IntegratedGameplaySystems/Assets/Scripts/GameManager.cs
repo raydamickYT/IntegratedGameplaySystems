@@ -36,7 +36,10 @@ public class GameManager : MonoBehaviour
         var playerMovement = new PlayerMovement(fsm);
         var fireGun = new FireGunCommand(fsm);
         inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
-        inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.up });
+        inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.forward });
+        inputHandler.BindInputToCommand(KeyCode.A, playerMovement, new MovementContext { Direction = Vector3.left });
+        inputHandler.BindInputToCommand(KeyCode.S, playerMovement, new MovementContext { Direction = Vector3.back });
+        inputHandler.BindInputToCommand(KeyCode.D, playerMovement, new MovementContext { Direction = Vector3.right });
 
 
         fsm.AddState(new InstantiateGameObjects(fsm));
@@ -44,11 +47,12 @@ public class GameManager : MonoBehaviour
         fsm.AddState(new IdleState(fsm));
         fsm.AddState(playerMovement);
 
-        //fsm.SwitchState(typeof(InstantiateGameObjects));
+        fsm.SwitchState(typeof(InstantiateGameObjects));
     }
 
     private void Update()
     {
         inputHandler.HandleInput();
+        fsm.Update();
     }
 }

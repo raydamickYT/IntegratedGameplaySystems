@@ -23,12 +23,11 @@ public class InstantiateGameObjects : State<GameManager>
     {
         //voeg gameobjecten toe aan je dictionary
         owner.pOwner.PrefabLibrary.Add("player", owner.pOwner.Prefab);
-        //manager.PrefabLibrary.Add("Bullet", manager.PreFab);
 
         //voeg bullets toe aan de dictionary
         for (int i = 0; i < owner.pOwner.AmountToPool; i++)
         {
-            //owner.pOwner.PrefabLibrary.Add("Bullet" + i.ToString(), owner.pOwner.bullets.BulletObject);
+            owner.pOwner.PrefabLibrary.Add("Bullet" + i.ToString(), owner.pOwner.Prefab);
         }
         //manager.PrefabLibrary.Add("enemy", manager.PreFab);
 
