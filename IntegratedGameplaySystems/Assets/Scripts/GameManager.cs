@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     #region Dictionaries and Lists
     public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> InstantiatedObjects = new Dictionary<string, GameObject>();
+
+    public FSM<GameManager> fsm { get; private set; }
     #endregion
 
     private void Start()
