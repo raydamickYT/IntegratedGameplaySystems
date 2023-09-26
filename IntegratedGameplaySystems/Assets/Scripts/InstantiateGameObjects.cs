@@ -9,6 +9,7 @@ using UnityEngine;
 //scirpt voor het maken van de game objecten
 public class InstantiateGameObjects : State<GameManager>
 {
+    ObjectPool objectPool = new ObjectPool();
     protected FSM<GameManager> owner;
     //dependency injection (dit geval met de gamemanager monobehaviour)
     public InstantiateGameObjects(FSM<GameManager> _owner)

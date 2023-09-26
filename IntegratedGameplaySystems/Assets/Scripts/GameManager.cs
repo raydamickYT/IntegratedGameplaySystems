@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    FSM<GameManager> fsm;
+
     #region Adjustable Variables
     public int AmountToPool = 30;
     #endregion
@@ -31,8 +33,8 @@ public class GameManager : MonoBehaviour
         //ZORG DAT DIT BOVENAAN STAAT ANDERS KRIJG JE EEN NULLREFERENCE
         fsm = new FSM<GameManager>();
         fsm.Initialize(this);
-        inputHandler = new InputHandler();
 
+        inputHandler = new InputHandler();
         var playerMovement = new PlayerMovement(fsm);
         var fireGun = new FireGunCommand(fsm);
         inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
