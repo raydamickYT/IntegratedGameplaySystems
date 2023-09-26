@@ -23,17 +23,15 @@ public class InstantiateGameObjects : State<GameManager>
     {
         //voeg gameobjecten toe aan je dictionary
         owner.pOwner.PrefabLibrary.Add("player", owner.pOwner.Prefab);
-        //manager.PrefabLibrary.Add("Bullet", manager.PreFab);
 
         //voeg bullets toe aan de dictionary
         for (int i = 0; i < owner.pOwner.AmountToPool; i++)
         {
-            //owner.pOwner.PrefabLibrary.Add("Bullet" + i.ToString(), owner.pOwner.bullets.BulletObject);
+            owner.pOwner.PrefabLibrary.Add("Bullet" + i.ToString(), owner.pOwner.Prefab);
         }
-        //manager.PrefabLibrary.Add("enemy", manager.PreFab);
 
         //instantiaten van alle objecten in de dictionary
-        //kvp staat voor keyvaluepair you stoopid
+        //kvp staat voor keyvaluepair 
         foreach (var kvp in owner.pOwner.PrefabLibrary)
         {
             Vector3 startPos = new Vector3(0, 0, 0);

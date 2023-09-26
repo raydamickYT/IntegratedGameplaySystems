@@ -35,7 +35,6 @@ public class FSM<T>
     {
         currentState?.OnExit();
         currentState = allStates[_type];
-        //Debug.Log(_type);
         currentState?.OnEnter();
     }
     
