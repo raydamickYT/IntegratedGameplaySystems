@@ -1,29 +1,30 @@
-using System.Buffers;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 public class ObjectPool
 {
-    private GameManager manager;
+    public List<GameObject> InactivePooledObjects = new();
+    public List<GameObject> ActivePooledObjects = new();
 
-    public ObjectPool(GameManager manager)
+    public void AddObjectToPool(GameObject item)
     {
-        this.manager = manager;
+        if (!InactivePooledObjects.Contains(item) && !ActivePooledObjects.Contains(item))
+        {
+            InactivePooledObjects.Add(item);
+        }
     }
 
-
-//verplaatst objecten van de inactive pool naar de active pool
+    //verplaatst objecten van de inactive pool naar de active pool
     public GameObject GetPooledObjects()
     {
-        if (manager.InactivePooledObjects.Count > 0)
+        if (InactivePooledObjects.Count > 0)
         {
-            if (!manager.InactivePooledObjects[0].activeInHierarchy && FireGunCommand._canFire)
+            if (!InactivePooledObjects[0].activeInHierarchy && FireGunCommand._canFire)
             {
-                GameObject _object = manager.InactivePooledObjects[0];
-                manager.ActivePooledObjects.Add(_object);
-                manager.InactivePooledObjects.Remove(_object);
+                GameObject _object = InactivePooledObjects[0];
+                ActivePooledObjects.Add(_object);
+                InactivePooledObjects.Remove(_object);
+                _object.SetActive(true);
                 return _object;
             }
         }
@@ -37,13 +38,11 @@ public class ObjectPool
     //de functie die alle bullets van de active pool naar de inactive pool verplaatst.
     public void DeActivate(GameObject bullet)
     {
-        if (manager.ActivePooledObjects.Contains(bullet))
+        if (ActivePooledObjects.Contains(bullet))
         {
-            manager.ActivePooledObjects.Remove(bullet);
-            manager.InactivePooledObjects.Add(bullet);
+            ActivePooledObjects.Remove(bullet);
+            InactivePooledObjects.Add(bullet);
             bullet.SetActive(false);
         }
     }
-
-
 }
