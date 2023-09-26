@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443a695596c10c34bace45ed8284da99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AmountToPool: 30
+  Prefab: {fileID: 830673832135509097, guid: 31e7b52c8ccc3fb4e8c692579cbd9d08, type: 3}
 --- !u!4 &286848344
 Transform:
   m_ObjectHideFlags: 0
