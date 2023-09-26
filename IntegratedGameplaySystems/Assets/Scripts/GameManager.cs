@@ -26,22 +26,27 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        ObjectPool = new ObjectPool();
+        //ZORG DAT DIT BOVENAAN STAAT ANDERS KRIJG JE EEN NULLREFERENCE
+        fsm = new FSM<GameManager>();
+        fsm.Initialize(this);
+        inputHandler = new InputHandler();
 
-        for (int i = 0; i < AmountToPool; i++)
-        {
-            GameObject instantiatedObject = Instantiate(Prefab);
-            instantiatedObject.SetActive(false);
-            ObjectPool.AddObjectToPool(instantiatedObject);
-        }
+        var playerMovement = new PlayerMovement(fsm);
+        var fireGun = new FireGunCommand(fsm);
+        inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
+        inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.up });
+
+
+        fsm.AddState(new InstantiateGameObjects(fsm));
+        fsm.AddState(fireGun);
+        fsm.AddState(new IdleState(fsm));
+        fsm.AddState(playerMovement);
+
+        //fsm.SwitchState(typeof(InstantiateGameObjects));
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            GameObject gameObject = ObjectPool?.GetPooledObjects();
-            gameObject.transform.position = transform.position;
-        }
+
     }
 }
