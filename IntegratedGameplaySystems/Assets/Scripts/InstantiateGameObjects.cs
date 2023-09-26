@@ -9,6 +9,7 @@ using UnityEngine;
 //scirpt voor het maken van de game objecten
 public class InstantiateGameObjects : State<GameManager>
 {
+    ObjectPool objectPool = new ObjectPool();
     protected FSM<GameManager> owner;
     //dependency injection (dit geval met de gamemanager monobehaviour)
     public InstantiateGameObjects(FSM<GameManager> _owner)
@@ -21,7 +22,7 @@ public class InstantiateGameObjects : State<GameManager>
     public override void OnEnter()
     {
         //voeg gameobjecten toe aan je dictionary
-        owner.pOwner.PrefabLibrary.Add("player", owner.pOwner.PreFab);
+        owner.pOwner.PrefabLibrary.Add("player", owner.pOwner.Prefab);
         //manager.PrefabLibrary.Add("Bullet", manager.PreFab);
 
         //voeg bullets toe aan de dictionary
@@ -54,7 +55,7 @@ public class InstantiateGameObjects : State<GameManager>
             if (kvp.Key.StartsWith("Bullet"))
             {
                 instantiatedObject.SetActive(false);
-                owner.pOwner.InactivePooledObjects.Add(instantiatedObject);
+                objectPool.InactivePooledObjects.Add(instantiatedObject);
             }
 
             //hier de instantiated object toevoegden aan de library
