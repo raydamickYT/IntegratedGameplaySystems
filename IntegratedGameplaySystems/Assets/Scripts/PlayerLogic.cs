@@ -32,7 +32,8 @@ public class FireGunCommand : State<GameManager>, ICommand
     //deze word constant gecalled terwijl de key naar beneden is
     public void Execute(KeyCode key, object context = null)
     {
-        FireGun(context);
+        //FireGun(context);
+        Debug.Log("pew");
     }
 
     public void FireGun(object context = null)

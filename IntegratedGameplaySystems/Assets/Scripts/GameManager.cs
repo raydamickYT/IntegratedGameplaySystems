@@ -32,12 +32,13 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        var fireGun = new FireGunCommand(fsm);
+        inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
