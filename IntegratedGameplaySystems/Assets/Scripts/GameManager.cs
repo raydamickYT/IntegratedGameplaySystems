@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    FSM<GameManager> fsm;
     #region Adjustable Variables
     public int AmountToPool = 30;
     #endregion
 
     #region Delegates
-    //Delegates
     public delegate void Deactivationhandler(GameObject bullet);
     public Deactivationhandler DeactivationDelegate;
     public delegate GameObject ObjectPoolDelegate();
@@ -18,20 +16,24 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public InputHandler inputHandler;
-    public ObjectPool objectPool;
-    public GameObject PreFab;
-    //scriptable object
+    public ObjectPool ObjectPool;
+    public GameObject Prefab;
+
     #region Dictionaries and Lists
     public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> InstantiatedObjects = new Dictionary<string, GameObject>();
-
-    //alle dictionaries voor mijn simpele object pool
-    public List<GameObject> InactivePooledObjects = new List<GameObject>();
-    public List<GameObject> ActivePooledObjects = new List<GameObject>();
     #endregion
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
+        ObjectPool = new ObjectPool();
+
+        for (int i = 0; i < AmountToPool; i++)
+        {
+            GameObject instantiatedObject = Instantiate(Prefab);
+            instantiatedObject.SetActive(false);
+            ObjectPool.AddObjectToPool(instantiatedObject);
+        }
         //ZORG DAT DIT BOVENAAN STAAT ANDERS KRIJG JE EEN NULLREFERENCE
         fsm = new FSM<GameManager>();
         fsm.Initialize(this);
@@ -51,8 +53,7 @@ public class GameManager : MonoBehaviour
         //fsm.SwitchState(typeof(InstantiateGameObjects));
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
 
     }
