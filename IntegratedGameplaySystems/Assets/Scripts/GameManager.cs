@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private FSM<GameManager> fsm;
+
     #region Adjustable Variables
     public int AmountToPool = 30;
     #endregion
@@ -22,8 +24,6 @@ public class GameManager : MonoBehaviour
     #region Dictionaries and Lists
     public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> InstantiatedObjects = new Dictionary<string, GameObject>();
-
-    public FSM<GameManager> fsm { get; private set; }
     #endregion
 
     private void Start()
@@ -31,13 +31,14 @@ public class GameManager : MonoBehaviour
         //ZORG DAT DIT BOVENAAN STAAT ANDERS KRIJG JE EEN NULLREFERENCE
         fsm = new FSM<GameManager>();
         fsm.Initialize(this);
+
         inputHandler = new InputHandler();
 
         var playerMovement = new PlayerMovement(fsm);
         var fireGun = new FireGunCommand(fsm);
+
         inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
         inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.up });
-
 
         fsm.AddState(new InstantiateGameObjects(fsm));
         fsm.AddState(fireGun);
@@ -47,8 +48,4 @@ public class GameManager : MonoBehaviour
         //fsm.SwitchState(typeof(InstantiateGameObjects));
     }
 
-    private void Update()
-    {
-
-    }
 }
