@@ -18,10 +18,14 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public InputHandler inputHandler;
-    public ObjectPool ObjectPool;
+    public ObjectPool objectPool;
     public GameObject Prefab;
+    public Bullets bullets;
 
     #region Dictionaries and Lists
+    public List<GameObject> InactivePooledObjects = new();
+    public List<GameObject> ActivePooledObjects = new();
+
     public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> InstantiatedObjects = new Dictionary<string, GameObject>();
     #endregion
@@ -32,6 +36,7 @@ public class GameManager : MonoBehaviour
         fsm = new FSM<GameManager>();
         fsm.Initialize(this);
 
+        objectPool = new(this);
         inputHandler = new InputHandler();
 
         var playerMovement = new PlayerMovement(fsm);
@@ -49,11 +54,20 @@ public class GameManager : MonoBehaviour
         fsm.AddState(playerMovement);
 
         fsm.SwitchState(typeof(InstantiateGameObjects));
+
+
+        DeactivationDelegate += objectPool.DeActivate;
+        objectPoolDelegate += objectPool.GetPooledObjects;
     }
 
     private void Update()
     {
         inputHandler.HandleInput();
         fsm.Update();
+    }
+
+    public void RunCoroutine(IEnumerator Routine)
+    {
+        StartCoroutine(Routine);
     }
 }

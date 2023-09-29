@@ -1,3 +1,4 @@
+using System.Buffers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +10,9 @@ using UnityEngine;
 //scirpt voor het maken van de game objecten
 public class InstantiateGameObjects : State<GameManager>
 {
-    ObjectPool objectPool = new ObjectPool();
     protected FSM<GameManager> owner;
+    //private ObjectPool objectPool;
+
 
     //dependency injection (dit geval met de gamemanager monobehaviour)
     public InstantiateGameObjects(FSM<GameManager> _owner)
@@ -48,7 +50,7 @@ public class InstantiateGameObjects : State<GameManager>
             if (kvp.Key.StartsWith("Bullet"))
             {
                 instantiatedObject.SetActive(false);
-                //owner.pOwner.InactivePooledObjects.Add(instantiatedObject);
+                owner.pOwner.InactivePooledObjects.Add(instantiatedObject);
             }
 
             //hier de instantiated object toevoegden aan de library
