@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    FSM<GameManager> fsm;
+    private FSM<GameManager> fsm;
 
     #region Adjustable Variables
     public int AmountToPool = 30;
@@ -33,14 +33,15 @@ public class GameManager : MonoBehaviour
         fsm.Initialize(this);
 
         inputHandler = new InputHandler();
+
         var playerMovement = new PlayerMovement(fsm);
         var fireGun = new FireGunCommand(fsm);
+
         inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
         inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.forward });
         inputHandler.BindInputToCommand(KeyCode.A, playerMovement, new MovementContext { Direction = Vector3.left });
         inputHandler.BindInputToCommand(KeyCode.S, playerMovement, new MovementContext { Direction = Vector3.back });
         inputHandler.BindInputToCommand(KeyCode.D, playerMovement, new MovementContext { Direction = Vector3.right });
-
 
         fsm.AddState(new InstantiateGameObjects(fsm));
         fsm.AddState(fireGun);
