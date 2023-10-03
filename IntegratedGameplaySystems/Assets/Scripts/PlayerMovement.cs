@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 
-public class PlayerMovement : State<GameManager>, ICommand
+public class PlayerMovement : ActorBase, ICommand, IPoolable
 {
     protected FSM<GameManager> fsm;
+    GameManager manager;
 
     private PlayerData playerData;
     public float velocity = 0.0f;
@@ -10,14 +11,12 @@ public class PlayerMovement : State<GameManager>, ICommand
 
     private bool IsMoving = false;
 
-    public PlayerMovement(FSM<GameManager> _fsm, PlayerData _playerData)
+    public PlayerMovement(GameObject Prefab, PlayerData _playerData, GameManager _manager) : base(Prefab)
     {
-        fsm = _fsm;
+        manager = _manager;
         playerData = _playerData;
-    }
-
-    public override void OnEnter()
-    {
+        Registry.AddToRegistry(Prefab.name, this);
+        InstantiateGameObjects.TestInstantiate(Prefab.name, ref manager.InstantiatedObjects, this);
     }
 
     public void Execute(KeyCode key, object context = null)
@@ -29,6 +28,7 @@ public class PlayerMovement : State<GameManager>, ICommand
             var force = playerData.MovementSpeed / 50.0f;
             var acceleration = force / playerData.PlayerMass;
 
+        Debug.Log(velocity);
             velocity += (acceleration) * Time.deltaTime;
 
             velocity = Mathf.Clamp(velocity, -playerData.MovementSpeed, playerData.MovementSpeed);
@@ -37,11 +37,13 @@ public class PlayerMovement : State<GameManager>, ICommand
         }
     }
 
-    public override void OnUpdate()
-    {
-        Deceleration();
-    }
+    // public override void OnUpdate()
+    // {
+    //     Deceleration();
+    // }
+    public void Recycle(){
 
+    }
     private void Deceleration()
     {
         if (IsMoving == true) { return; }

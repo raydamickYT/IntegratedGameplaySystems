@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -216,7 +216,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 6fdd37f6bb8358e4f8bfa96c6e2dfcc0, type: 2}
   AmountToPool: 30
-  Prefab: {fileID: 830673832135509097, guid: 31e7b52c8ccc3fb4e8c692579cbd9d08, type: 3}
+  BulletPrefab: {fileID: 6333040669696545810, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
   bullets: {fileID: 11400000, guid: 14c6882b872803b40859feb46f195847, type: 2}
   InactivePooledObjects: []
   ActivePooledObjects: []

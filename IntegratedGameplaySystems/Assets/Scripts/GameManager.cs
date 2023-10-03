@@ -18,9 +18,9 @@ public class GameManager : MonoBehaviour
     public ObjectPoolDelegate objectPoolDelegate;
     #endregion
 
+    public ObjectPool ObjectPool;
     public InputHandler inputHandler;
-    public ObjectPool ObjectPool = new();
-    public GameObject Prefab;
+    public GameObject BulletPrefab;
     public Bullets bullets;
 
     #region Dictionaries and Lists
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> ActivePooledObjects = new();
 
     public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
-    public Dictionary<string, GameObject> InstantiatedObjects = new Dictionary<string, GameObject>();
+    public Dictionary<string, IPoolable> InstantiatedObjects = new Dictionary<string, IPoolable>();
     #endregion
 
     private void Start()
@@ -45,7 +45,8 @@ public class GameManager : MonoBehaviour
 
     private void SetupInputsAndStates()
     {
-        var playerMovement = new PlayerMovement(fsm, playerData);
+        ObjectPool = new(this);
+        var playerMovement = new PlayerMovement(BulletPrefab, playerData, this);
         var fireGun = new FireGunCommand(fsm);
         var sliding = new Sliding(fsm, playerData);
         var jumping = new Jumping(fsm, playerData);
@@ -63,11 +64,13 @@ public class GameManager : MonoBehaviour
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.AddState(fireGun);
         fsm.AddState(new IdleState(fsm));
-        fsm.AddState(playerMovement);
+        //fsm.AddState(playerMovement);
     }
 
     private void Update()
     {
+        Debug.Log(InstantiatedObjects.Count);
+        Debug.Log($" [{string.Join(",", InstantiatedObjects)}]");
         inputHandler.HandleInput();
         fsm.OnUpdate();
     }

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class ObjectPool
 {
     private GameManager manager;
-
+    public List<GameObject> InactivePooledObjects = new();
+    public List<GameObject> ActivePooledObjects = new();
     public ObjectPool(GameManager manager)
     {
         this.manager = manager;
@@ -32,6 +32,14 @@ public class ObjectPool
         }
 
         return null;
+    }
+
+    public void AddObjectToPool(GameObject item)
+    {
+        if (!InactivePooledObjects.Contains(item) && !ActivePooledObjects.Contains(item))
+        {
+            InactivePooledObjects.Add(item);
+        }
     }
 
     //de functie die alle bullets van de active pool naar de inactive pool verplaatst.
