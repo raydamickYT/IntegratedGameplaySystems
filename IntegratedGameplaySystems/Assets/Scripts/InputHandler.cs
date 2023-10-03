@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-//dit is een class om de command pattern uit te voeren. de command pattern heeft altijd: een client, concrete command, abstract command, invoker en receiver.
 public interface ICommand
 {
     void Execute(KeyCode key, object context = null);
     void OnKeyDownExecute();
     void OnKeyUpExecute();
 }
+
 public class InputHandler
 {
     private List<KeyCommand> keyCommands = new List<KeyCommand>();
@@ -32,8 +31,6 @@ public class InputHandler
         }
     }
 
-
-    //deze snap ik niet helemaal, vraag even in de les voor uitleg
     public void BindInputToCommand(KeyCode keyCode, ICommand command, object context = null)
     {
         keyCommands.Add(new KeyCommand()
@@ -57,6 +54,7 @@ public class KeyCommand
     public ICommand command;
     public object context;
 }
+
 public class MovementContext
 {
     public Vector3 Direction { get; set; }

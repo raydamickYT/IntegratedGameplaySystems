@@ -14,7 +14,8 @@ public class ObjectPool
     //verplaatst objecten van de inactive pool naar de active pool
     public GameObject GetPooledObjects()
     {
-        if (manager.InactivePooledObjects.Count > 0)
+        Debug.Log(InactivePooledObjects.Count);
+        if (InactivePooledObjects.Count > 0)
         {
             if (!manager.InactivePooledObjects[0].activeInHierarchy && FireGunCommand._canFire)
             {
@@ -34,13 +35,13 @@ public class ObjectPool
     }
 
     //de functie die alle bullets van de active pool naar de inactive pool verplaatst.
-    public void DeActivate(GameObject bullet)
+    public void DeActivate(GameObject _object)
     {
-        if (manager.ActivePooledObjects.Contains(bullet))
+        if (ActivePooledObjects.Contains(_object))
         {
-            manager.ActivePooledObjects.Remove(bullet);
-            manager.InactivePooledObjects.Add(bullet);
-            bullet.SetActive(false);
+            ActivePooledObjects.Remove(_object);
+            InactivePooledObjects.Add(_object);
+            _object.SetActive(false);
         }
     }
 }

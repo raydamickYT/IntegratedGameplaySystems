@@ -1,39 +1,37 @@
 using System.Buffers;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Unity.VisualScripting;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
-//scirpt voor het maken van de game objecten
 public class InstantiateGameObjects : State<GameManager>
 {
+    private readonly ObjectPool objectPool;
     protected FSM<GameManager> owner;
-    //private ObjectPool objectPool;
-
+    private GameManager manager;
 
     //dependency injection (dit geval met de gamemanager monobehaviour)
-    public InstantiateGameObjects(FSM<GameManager> _owner)
+    public InstantiateGameObjects(FSM<GameManager> _owner, ObjectPool _objectPool, GameManager _manager)
     {
         owner = _owner;
+        objectPool = _objectPool;
+        manager = _manager;
     }
 
     public override void OnEnter()
     {
-        owner.pOwner.PrefabLibrary.Add("player", owner.pOwner.Prefab);
+        //manager.PrefabLibrary.Add("player", manager.Prefab);
 
-        for (int i = 0; i < owner.pOwner.AmountToPool; i++)
+        for (int i = 0; i < manager.AmountToPool; i++)
         {
-            owner.pOwner.PrefabLibrary.Add("Bullet" + i.ToString(), owner.pOwner.Prefab);
+            GameObject instantiatedObject = GameObject.Instantiate(manager.Prefab);
+            instantiatedObject.SetActive(false);
+
+            objectPool.AddObjectToPool(instantiatedObject);
+            //owner.pOwner.PrefabLibrary.Add("Bullet" + i.ToString(), owner.pOwner.bullets.BulletObject);
         }
 
-        //instantiaten van alle objecten in de dictionary
-        //kvp staat voor keyvaluepair 
-        foreach (var kvp in owner.pOwner.PrefabLibrary)
+        foreach (var kvp in manager.PrefabLibrary)
         {
-            Vector3 startPos = new Vector3(0, 0, 0);
+            Vector3 startPos = Vector3.zero;
 
             if (kvp.Key == "player")
             {
@@ -41,7 +39,7 @@ public class InstantiateGameObjects : State<GameManager>
             }
             if (kvp.Key.StartsWith("Bullet"))
             {
-                GameObject test = owner.pOwner.InstantiatedObjects["player"];
+                GameObject test = manager.InstantiatedObjects["player"];
                 startPos = test.transform.position;
             }
 
@@ -51,12 +49,13 @@ public class InstantiateGameObjects : State<GameManager>
             if (kvp.Key.StartsWith("Bullet"))
             {
                 instantiatedObject.SetActive(false);
-                owner.pOwner.InactivePooledObjects.Add(instantiatedObject);
+                objectPool.AddObjectToPool(instantiatedObject);
             }
 
             //hier de instantiated object toevoegden aan de library
-            owner.pOwner.InstantiatedObjects.Add(kvp.Key, instantiatedObject);
+            manager.InstantiatedObjects.Add(kvp.Key, instantiatedObject);
         }
+
         owner.SwitchState(typeof(IdleState));
     }
 }

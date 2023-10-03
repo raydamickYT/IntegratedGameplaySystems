@@ -1,10 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private FSM<GameManager> fsm;
+    private readonly FSM<GameManager> fsm = new();
+
+    public PlayerData playerData;
 
     #region Adjustable Variables
     public int AmountToPool = 30;
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     public InputHandler inputHandler;
-    public ObjectPool objectPool;
+    public ObjectPool ObjectPool = new();
     public GameObject Prefab;
     public Bullets bullets;
 
@@ -32,20 +33,22 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        //ZORG DAT DIT BOVENAAN STAAT ANDERS KRIJG JE EEN NULLREFERENCE
-        fsm = new FSM<GameManager>();
-        fsm.Initialize(this);
-
-        objectPool = new(this);
         inputHandler = new InputHandler();
 
-        var playerMovement = new PlayerMovement(fsm);
+        playerData.PlayerMesh = Instantiate(playerData.PlayerPrefab);
+        playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
+
+        SetupInputsAndStates();
+
+        fsm.SwitchState(typeof(InstantiateGameObjects));
+    }
+
+    private void SetupInputsAndStates()
+    {
+        var playerMovement = new PlayerMovement(fsm, playerData);
         var fireGun = new FireGunCommand(fsm);
-        inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
-        inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.forward });
-        inputHandler.BindInputToCommand(KeyCode.A, playerMovement, new MovementContext { Direction = Vector3.left });
-        inputHandler.BindInputToCommand(KeyCode.S, playerMovement, new MovementContext { Direction = Vector3.back });
-        inputHandler.BindInputToCommand(KeyCode.D, playerMovement, new MovementContext { Direction = Vector3.right });
+        var sliding = new Sliding(fsm, playerData);
+        var jumping = new Jumping(fsm, playerData);
 
         inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
         inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.forward });
@@ -53,26 +56,19 @@ public class GameManager : MonoBehaviour
         inputHandler.BindInputToCommand(KeyCode.S, playerMovement, new MovementContext { Direction = Vector3.back });
         inputHandler.BindInputToCommand(KeyCode.D, playerMovement, new MovementContext { Direction = Vector3.right });
 
-        fsm.AddState(new InstantiateGameObjects(fsm));
+        inputHandler.BindInputToCommand(KeyCode.LeftControl, sliding, new MovementContext { Direction = Vector3.down });
+        inputHandler.BindInputToCommand(KeyCode.Space, jumping, new MovementContext { Direction = Vector3.up });
+
+        fsm.AddState(jumping);
+        fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.AddState(fireGun);
         fsm.AddState(new IdleState(fsm));
         fsm.AddState(playerMovement);
-
-        fsm.SwitchState(typeof(InstantiateGameObjects));
-
-
-        DeactivationDelegate += objectPool.DeActivate;
-        objectPoolDelegate += objectPool.GetPooledObjects;
     }
 
     private void Update()
     {
         inputHandler.HandleInput();
-        fsm.Update();
-    }
-
-    public void RunCoroutine(IEnumerator Routine)
-    {
-        StartCoroutine(Routine);
+        fsm.OnUpdate();
     }
 }

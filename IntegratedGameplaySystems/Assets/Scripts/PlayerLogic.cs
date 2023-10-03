@@ -111,3 +111,4 @@ public class PlayerMovement : State<GameManager>, ICommand
         owner.SwitchState(typeof(IdleState));
     }
 }
+﻿
