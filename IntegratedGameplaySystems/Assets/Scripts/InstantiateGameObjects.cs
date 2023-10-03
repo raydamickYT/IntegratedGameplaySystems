@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class InstantiateGameObjects : State<GameManager>
@@ -7,7 +6,6 @@ public class InstantiateGameObjects : State<GameManager>
     protected FSM<GameManager> owner;
     private GameManager manager;
 
-    //dependency injection (dit geval met de gamemanager monobehaviour)
     public InstantiateGameObjects(FSM<GameManager> _owner, ObjectPool _objectPool, GameManager _manager)
     {
         owner = _owner;

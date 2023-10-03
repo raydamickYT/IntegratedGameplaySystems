@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Sliding : State<GameManager>, ICommand
 {
-    private FSM<GameManager> fsm;
-    private PlayerData playerData;
+    private readonly FSM<GameManager> fsm;
+    private readonly PlayerData playerData;
 
     public Sliding(FSM<GameManager> _fsm, PlayerData _playerData)
     {
@@ -13,12 +13,12 @@ public class Sliding : State<GameManager>, ICommand
 
     public void Execute(KeyCode key, object context = null)
     {
-        if (playerData.playerRigidBody != null && context is MovementContext movementContext)
+        if (playerData.playerRigidBody != null && context is MovementContext)
         {
             playerData.MovementSpeed = playerData.SlideSpeedBoost;
         }
-
     }
+
     public void OnKeyDownExecute()
     {
         playerData.PlayerMesh.transform.localScale = new Vector3(1, 0.5f, 1);
@@ -29,6 +29,5 @@ public class Sliding : State<GameManager>, ICommand
     {
         playerData.MovementSpeed = 10.0f;
         playerData.PlayerMesh.transform.localScale = Vector3.one;
-        Debug.Log(playerData.MovementSpeed);
     }
 }

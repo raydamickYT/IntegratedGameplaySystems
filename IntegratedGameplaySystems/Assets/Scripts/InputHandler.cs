@@ -16,43 +16,50 @@ public class InputHandler
     {
         foreach (var keyCommand in keyCommands)
         {
-            if (Input.GetKeyDown(keyCommand.key))
+            if (Input.GetKeyDown(keyCommand.Key))
             {
-                keyCommand.command.OnKeyDownExecute();
+                keyCommand.Pressed = true;
+                keyCommand.Command.OnKeyDownExecute();
             }
-            if (Input.GetKeyUp(keyCommand.key))
+            if (Input.GetKeyUp(keyCommand.Key))
             {
-                keyCommand.command.OnKeyUpExecute();
+                keyCommand.Pressed = false;
+                keyCommand.Command.OnKeyUpExecute();
             }
-            if (Input.GetKey(keyCommand.key))
+            if (Input.GetKey(keyCommand.Key))
             {
-                keyCommand.command.Execute(keyCommand.key, keyCommand.context);
+                keyCommand.Command.Execute(keyCommand.Key, keyCommand.Context);
             }
         }
     }
 
-    public void BindInputToCommand(KeyCode keyCode, ICommand command, object context = null)
+    public KeyCommand BindInputToCommand(KeyCode keyCode, ICommand command, object context = null)
     {
-        keyCommands.Add(new KeyCommand()
+        KeyCommand keyCommand = new KeyCommand()
         {
-            key = keyCode,
-            command = command,
-            context = context
-        });
+            Key = keyCode,
+            Command = command,
+            Context = context
+        };
+
+        keyCommands.Add(keyCommand);
+
+        return keyCommand;
     }
 
     public void UnBindInput(KeyCode keyCode)
     {
-        var items = keyCommands.FindAll(x => x.key == keyCode);
+        var items = keyCommands.FindAll(x => x.Key == keyCode);
         items.ForEach(x => keyCommands.Remove(x));
     }
 }
 
 public class KeyCommand
 {
-    public KeyCode key;
-    public ICommand command;
-    public object context;
+    public bool Pressed;
+    public KeyCode Key;
+    public ICommand Command;
+    public object Context;
 }
 
 public class MovementContext

@@ -18,7 +18,7 @@ public class Jumping : State<GameManager>, ICommand
     {
         if (context is MovementContext movementContext)
         {
-            playerData.playerRigidBody.AddForce(movementContext.Direction.normalized * 10.0f, ForceMode.Impulse);
+            playerData.playerRigidBody.AddForce(movementContext.Direction.normalized * 50.0f * Time.deltaTime, ForceMode.Impulse);
         }
     }
 

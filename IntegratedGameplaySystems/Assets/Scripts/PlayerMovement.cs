@@ -6,7 +6,7 @@ public class PlayerMovement : State<GameManager>, ICommand
 
     private PlayerData playerData;
     public float velocity = 0.0f;
-    private float deceleration = 0.01f;
+    private float deceleration = 2.0f;
 
     private bool IsMoving = false;
 
@@ -16,17 +16,12 @@ public class PlayerMovement : State<GameManager>, ICommand
         playerData = _playerData;
     }
 
-    public override void OnEnter()
-    {
-    }
-
     public void Execute(KeyCode key, object context = null)
     {
         if (playerData.playerRigidBody != null && context is MovementContext movementContext)
         {
             IsMoving = true;
-            playerData.playerRigidBody.drag = 0.0f;
-            var force = playerData.MovementSpeed / 50.0f;
+            var force = playerData.MovementSpeed / 20.0f;
             var acceleration = force / playerData.PlayerMass;
 
             velocity += (acceleration) * Time.deltaTime;
@@ -50,11 +45,11 @@ public class PlayerMovement : State<GameManager>, ICommand
 
         if (left)
         {
-            velocity = Mathf.Min(0, velocity + deceleration);
+            velocity = Mathf.Min(0, velocity + (deceleration * Time.deltaTime));
         }
         else if (!left && velocity != 0)
         {
-            velocity = Mathf.Max(0, velocity - deceleration);
+            velocity = Mathf.Max(0, velocity - (deceleration * Time.deltaTime));
         }
     }
 
@@ -65,6 +60,14 @@ public class PlayerMovement : State<GameManager>, ICommand
 
     public void OnKeyUpExecute()
     {
+        foreach (KeyCommand keyCommand in playerData.playerWASDKeys)
+        {
+            if (keyCommand.Pressed == true)
+            {
+                IsMoving = true;
+                return;
+            }
+        }
         IsMoving = false;
     }
 }

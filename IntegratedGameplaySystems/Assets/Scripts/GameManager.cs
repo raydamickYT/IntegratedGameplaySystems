@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     public ObjectPool ObjectPool = new();
     public GameObject Prefab;
 
+    public List<KeyCommand> playerWASDKeys = new List<KeyCommand>();
+
     #region Dictionaries and Lists
     public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> InstantiatedObjects = new Dictionary<string, GameObject>();
@@ -46,11 +48,17 @@ public class GameManager : MonoBehaviour
         var sliding = new Sliding(fsm, playerData);
         var jumping = new Jumping(fsm, playerData);
 
+        var wallRun = new WallRunning(playerData);
+
         inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
-        inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.forward });
-        inputHandler.BindInputToCommand(KeyCode.A, playerMovement, new MovementContext { Direction = Vector3.left });
-        inputHandler.BindInputToCommand(KeyCode.S, playerMovement, new MovementContext { Direction = Vector3.back });
-        inputHandler.BindInputToCommand(KeyCode.D, playerMovement, new MovementContext { Direction = Vector3.right });
+
+        playerWASDKeys.Clear();
+        playerData.playerWASDKeys.Clear();
+        playerWASDKeys.Add(inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.forward }));
+        playerWASDKeys.Add(inputHandler.BindInputToCommand(KeyCode.A, playerMovement, new MovementContext { Direction = Vector3.left }));
+        playerWASDKeys.Add(inputHandler.BindInputToCommand(KeyCode.S, playerMovement, new MovementContext { Direction = Vector3.back }));
+        playerWASDKeys.Add(inputHandler.BindInputToCommand(KeyCode.D, playerMovement, new MovementContext { Direction = Vector3.right }));
+        playerData.playerWASDKeys = playerWASDKeys;
 
         inputHandler.BindInputToCommand(KeyCode.LeftControl, sliding, new MovementContext { Direction = Vector3.down });
         inputHandler.BindInputToCommand(KeyCode.Space, jumping, new MovementContext { Direction = Vector3.up });
