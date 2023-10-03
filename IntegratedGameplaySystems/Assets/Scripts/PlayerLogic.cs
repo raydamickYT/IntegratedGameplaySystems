@@ -8,8 +8,6 @@ using Unity.VisualScripting;
 public class FireGunCommand : State<GameManager>, ICommand
 {
     protected FSM<GameManager> owner;
-
-
     public static bool _canFire = true;
 
     //dependency injection via de Finite state machine.
@@ -21,19 +19,19 @@ public class FireGunCommand : State<GameManager>, ICommand
     //dit is de uitvoering van de concrete command die geroepen wordt door de inputmanager.
     public void OnKeyDownExecute()
     {
-        //owner.SwitchState(typeof(FireGunCommand));
+        owner.SwitchState(typeof(FireGunCommand));
     }
     //deze wordt gecalled wanneer de key omhoog komt
     public void OnKeyUpExecute()
     {
-        //owner.SwitchState(typeof(IdleState));
+        owner.SwitchState(typeof(IdleState));
     }
 
     //deze word constant gecalled terwijl de key naar beneden is
     public void Execute(KeyCode key, object context = null)
     {
-        //FireGun(context);
-        Debug.Log("pew");
+        FireGun(context);
+        //Debug.Log("test");
     }
 
     public void FireGun(object context = null)
@@ -52,29 +50,29 @@ public class FireGunCommand : State<GameManager>, ICommand
             Rigidbody rb = bullet.gameObject.GetComponent<Rigidbody>();
             if (rb != null && context is MovementContext movementContext)
             {
-                //rb.velocity = movementContext.Direction.normalized * owner.pOwner.bullets.BulletSpeed; //bulletspeed is te veranderen in de scriptable object
+                rb.velocity = movementContext.Direction.normalized * owner.pOwner.bullets.BulletSpeed; //bulletspeed is te veranderen in de scriptable object
             }
 
             //logic voor fire rate en bullet life
-            //owner.pOwner.RunCoroutine(Wait());
-            //owner.pOwner.RunCoroutine(BulletLifeTime(bullet));
+            owner.pOwner.RunCoroutine(Wait());
+            owner.pOwner.RunCoroutine(BulletLifeTime(bullet));
         }
     }
 
-    // public IEnumerator Wait()
-    // {
-    //     //vrij simpel, we zorgen dat de speler even niet meer kan schieten en dan na een bepaalde tijd kan de speler weer schieten
-    //     _canFire = false;
-    //     yield return new WaitForSeconds(owner.pOwner.bullets.FireRate); //FireRate kan je in de "GameManager" aanpassen, kleiner getal = sneller schieten.
-    //     _canFire = true;
-    // }
+    public IEnumerator Wait()
+    {
+        //vrij simpel, we zorgen dat de speler even niet meer kan schieten en dan na een bepaalde tijd kan de speler weer schieten
+        _canFire = false;
+        yield return new WaitForSeconds(owner.pOwner.bullets.FireRate); //FireRate kan je in de "GameManager" aanpassen, kleiner getal = sneller schieten.
+        _canFire = true;
+    }
 
-    // public IEnumerator BulletLifeTime(GameObject bullet)
-    // {
-    //     //net zo simpel, als er een bepaalde tijd verstreken is, dan word de bullet weer naar de inactive pool verplaatst.
-    //     yield return new WaitForSeconds(owner.pOwner.bullets.BulletLife); //bulletlife kan je in de "GameManager" aanpassen.
-    //     owner.pOwner.DeactivationDelegate?.Invoke(bullet);
-    // }
+    public IEnumerator BulletLifeTime(GameObject bullet)
+    {
+        //net zo simpel, als er een bepaalde tijd verstreken is, dan word de bullet weer naar de inactive pool verplaatst.
+        yield return new WaitForSeconds(owner.pOwner.bullets.BulletLife); //bulletlife kan je in de "GameManager" aanpassen.
+        owner.pOwner.DeactivationDelegate?.Invoke(bullet);
+    }
 }
 
 public class PlayerMovement : State<GameManager>, ICommand
@@ -110,6 +108,6 @@ public class PlayerMovement : State<GameManager>, ICommand
     {
         rb.velocity = new Vector3(0, 0, 0);
 
-        //owner.SwitchState(typeof(IdleState));
+        owner.SwitchState(typeof(IdleState));
     }
 }
