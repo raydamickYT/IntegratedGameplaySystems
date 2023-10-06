@@ -51,29 +51,26 @@ public class GameManager : MonoBehaviour
     {
         inputHandler = new InputHandler();
 
-        PlayerMovement playerMovement = new(playerData, this);
-        FireGunCommand fireGun = new(fsm);
-        Sliding sliding = new(fsm, playerData);
-        Jumping jumping = new(playerData, this);
+        var playerMovement = new PlayerMovement(playerData, this);
+        var cameraControl = new CameraControl(playerData);
+        var jumping = new Jumping(playerData, this);
+        var sliding = new Sliding(playerData);
+        var sprinting = new Sprinting(playerData);
         //WallRunning wallRun = new(playerData);
-        CameraControl cameraControl = new(playerData);
 
-        List<KeyCommand> playerWASDKeys = new();
-        playerWASDKeys.Clear();
         playerData.playerWASDKeys.Clear();
-        playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward }));
-        playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.A, new MovementContext { Direction = Vector3.left }));
-        playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.S, new MovementContext { Direction = Vector3.back }));
-        playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.D, new MovementContext { Direction = Vector3.right }));
-        playerData.playerWASDKeys = playerWASDKeys;
+        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward }));
+        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.A, new MovementContext { Direction = Vector3.left }));
+        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.S, new MovementContext { Direction = Vector3.back }));
+        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.D, new MovementContext { Direction = Vector3.right }));
 
         inputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
 
         inputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
-        inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
+        inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
+        inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
 
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
-        fsm.AddState(fireGun);
         fsm.SwitchState(typeof(InstantiateGameObjects));
     }
 
@@ -83,8 +80,6 @@ public class GameManager : MonoBehaviour
 
         UpdatableObjects.Add(objectToUpdate);
     }
-
-    float xRotation, yRotation;
 
     private void Update()
     {

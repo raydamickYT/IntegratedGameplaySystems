@@ -11,6 +11,8 @@ public class Jumping : ICommand, IUpdate
     private bool hasExtraJump = true;
     private Rigidbody rb;
 
+    private bool grounded = true;
+
     public Jumping(PlayerData playerData, GameManager gameManager)
     {
         this.playerData = playerData;
@@ -36,10 +38,6 @@ public class Jumping : ICommand, IUpdate
     {
         if (context is not MovementContext movementContext) { return; }
 
-        var playerMeshTransform = playerData.PlayerMesh.transform;
-
-        bool grounded = Physics.SphereCast(playerMeshTransform.position, radius: 0.5f, direction: -playerMeshTransform.up, out RaycastHit hit, 1f, layerMask: playerData.GroundLayerMask);
-
         if (grounded && canJump)
         {
             canJump = false;
@@ -63,7 +61,9 @@ public class Jumping : ICommand, IUpdate
     private void CheckForExtraJumpReset()
     {
         var playerMeshTransform = playerData.PlayerMesh.transform;
-        bool grounded = Physics.SphereCast(playerMeshTransform.position, radius: .5f, direction: -playerMeshTransform.up, out RaycastHit hit, 1f, layerMask: playerData.GroundLayerMask);
+        var ray = new Ray(playerMeshTransform.position, -playerMeshTransform.up);
+        bool grounded = Physics.SphereCast(ray, 0.5f, 1f, layerMask: playerData.GroundLayerMask);
+
         if (grounded)
         {
             hasExtraJump = true;

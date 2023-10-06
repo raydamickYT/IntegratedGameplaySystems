@@ -4,8 +4,6 @@ public class PlayerMovement : ICommand, IUpdate
 {
     private PlayerData playerData;
     public float velocity = 0.0f;
-    private float deceleration = 20.0f;
-
     private bool IsMoving = false;
 
     public PlayerMovement(PlayerData _playerData, GameManager gameManager)
@@ -20,12 +18,12 @@ public class PlayerMovement : ICommand, IUpdate
         if (playerData.playerRigidBody == null || context is not MovementContext movementContext) { return; }
 
         IsMoving = true;
-        var force = playerData.MovementSpeed / 20.0f;
+        var force = playerData.CurrentMoveSpeed / 20.0f;
         var acceleration = force / playerData.PlayerMass;
 
         velocity += acceleration;
 
-        velocity = Mathf.Clamp(velocity, -playerData.SlideSpeedBoost, playerData.SlideSpeedBoost);
+        velocity = Mathf.Clamp(velocity, -playerData.CurrentMoveSpeed, playerData.CurrentMoveSpeed);
 
         playerData.PlayerMesh.transform.Translate(Time.deltaTime * velocity * movementContext.Direction.normalized);
     }
@@ -43,11 +41,11 @@ public class PlayerMovement : ICommand, IUpdate
 
         if (left)
         {
-            velocity = Mathf.Min(0, velocity + (deceleration * Time.deltaTime));
+            velocity = Mathf.Min(0, velocity + (20.0f * Time.deltaTime));
         }
         else if (!left && velocity != 0)
         {
-            velocity = Mathf.Max(0, velocity - (deceleration * Time.deltaTime));
+            velocity = Mathf.Max(0, velocity - (20.0f * Time.deltaTime));
         }
     }
 
