@@ -11,7 +11,7 @@ public class Sliding : State<GameManager>, ICommand
         playerData = _playerData;
     }
 
-    public void Execute(KeyCode key, object context = null)
+    public void Execute(object context = null)
     {
         if (playerData.playerRigidBody != null && context is MovementContext)
         {
@@ -27,7 +27,7 @@ public class Sliding : State<GameManager>, ICommand
 
     public void OnKeyUpExecute()
     {
-        playerData.MovementSpeed = 10.0f;
+        playerData.MovementSpeed = 20.0f;
         playerData.PlayerMesh.transform.localScale = Vector3.one;
     }
 }

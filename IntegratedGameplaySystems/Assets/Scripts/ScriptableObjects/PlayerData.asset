@@ -12,9 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6c88781113afa54facd4f87ff75b068, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  PlayerMesh: {fileID: 0}
   PlayerPrefab: {fileID: 6101170080697193124, guid: 2cb3e5258bc44a04b9d43015e4a1024e, type: 3}
-  playerRigidBody: {fileID: 0}
   playerPosition: {x: 0, y: 0, z: 0}
-  MovementSpeed: 1
-  PlayerMass: 500
+  MovementSpeed: 15
+  SlideSpeedBoost: 20
+  PlayerMass: 50
+  WallRunLayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  GroundLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
+  playerCameraTransform: {fileID: 0}

@@ -20,7 +20,12 @@ public class PlayerData : ScriptableObject
 
     public float PlayerMass = 10.0f;
 
-    public LayerMask WallRunLayerMask;
+    public LayerMask WallRunLayerMask = 0;
+
+    public LayerMask GroundLayerMask = 0;
+
+    [NonSerialized] public Transform playerCameraTransform;
+    [NonSerialized] public Transform playerCameraHolderTransform;
 
     [NonSerialized] public List<KeyCommand> playerWASDKeys = new List<KeyCommand>();
 }

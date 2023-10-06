@@ -22,7 +22,7 @@ public class FireGunCommand : State<GameManager>, ICommand
         //owner.SwitchState(typeof(IdleState));
     }
 
-    public void Execute(KeyCode key, object context = null)
+    public void Execute(object context = null)
     {
     }
 }

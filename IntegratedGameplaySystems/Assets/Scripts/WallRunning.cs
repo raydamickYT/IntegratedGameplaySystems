@@ -9,7 +9,7 @@ public class WallRunning : State<GameManager>, ICommand
         playerData = _playerData;
     }
 
-    public void Execute(KeyCode key, object context = null)
+    public void Execute(object context = null)
     {
         if (playerData.playerRigidBody != null && context is MovementContext movementContext)
         {

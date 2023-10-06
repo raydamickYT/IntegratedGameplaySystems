@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public ObjectPool ObjectPool = new();
     public GameObject Prefab;
 
-    public List<KeyCommand> playerWASDKeys = new List<KeyCommand>();
+    public List<IUpdate> UpdatableObjects = new();
 
     #region Dictionaries and Lists
     public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
@@ -31,48 +31,69 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        inputHandler = new InputHandler();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
-        playerData.PlayerMesh = Instantiate(playerData.PlayerPrefab);
-        playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
-
+        SetUpPlayerData();
         SetupInputsAndStates();
 
-        fsm.SwitchState(typeof(InstantiateGameObjects));
+    }
+
+    private void SetUpPlayerData()
+    {
+        playerData.PlayerMesh = Instantiate(playerData.PlayerPrefab, transform.position, Quaternion.identity);
+        playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
+        playerData.playerCameraTransform = FindObjectOfType<Camera>().gameObject.transform;
+        playerData.playerCameraHolderTransform = playerData.PlayerMesh.GetComponentInChildren<Grid>().gameObject.transform;
     }
 
     private void SetupInputsAndStates()
     {
-        var playerMovement = new PlayerMovement(fsm, playerData);
-        var fireGun = new FireGunCommand(fsm);
-        var sliding = new Sliding(fsm, playerData);
-        var jumping = new Jumping(fsm, playerData);
+        inputHandler = new InputHandler();
 
-        var wallRun = new WallRunning(playerData);
+        PlayerMovement playerMovement = new(playerData, this);
+        FireGunCommand fireGun = new(fsm);
+        Sliding sliding = new(fsm, playerData);
+        Jumping jumping = new(playerData, this);
+        //WallRunning wallRun = new(playerData);
+        CameraControl cameraControl = new(playerData);
 
-        inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
-
+        List<KeyCommand> playerWASDKeys = new();
         playerWASDKeys.Clear();
         playerData.playerWASDKeys.Clear();
-        playerWASDKeys.Add(inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.forward }));
-        playerWASDKeys.Add(inputHandler.BindInputToCommand(KeyCode.A, playerMovement, new MovementContext { Direction = Vector3.left }));
-        playerWASDKeys.Add(inputHandler.BindInputToCommand(KeyCode.S, playerMovement, new MovementContext { Direction = Vector3.back }));
-        playerWASDKeys.Add(inputHandler.BindInputToCommand(KeyCode.D, playerMovement, new MovementContext { Direction = Vector3.right }));
+        playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward }));
+        playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.A, new MovementContext { Direction = Vector3.left }));
+        playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.S, new MovementContext { Direction = Vector3.back }));
+        playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.D, new MovementContext { Direction = Vector3.right }));
         playerData.playerWASDKeys = playerWASDKeys;
 
-        inputHandler.BindInputToCommand(KeyCode.LeftControl, sliding, new MovementContext { Direction = Vector3.down });
-        inputHandler.BindInputToCommand(KeyCode.Space, jumping, new MovementContext { Direction = Vector3.up });
+        inputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
 
-        fsm.AddState(jumping);
+        inputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
+        inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
+
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.AddState(fireGun);
-        fsm.AddState(new IdleState(fsm));
-        fsm.AddState(playerMovement);
+        fsm.SwitchState(typeof(InstantiateGameObjects));
     }
+
+    public void AddToUpdatableList(IUpdate objectToUpdate)
+    {
+        if (UpdatableObjects.Contains(objectToUpdate)) { return; }
+
+        UpdatableObjects.Add(objectToUpdate);
+    }
+
+    float xRotation, yRotation;
 
     private void Update()
     {
         inputHandler.HandleInput();
         fsm.OnUpdate();
+
+        foreach (IUpdate objectToUpdate in UpdatableObjects)
+        {
+            objectToUpdate.OnUpdate();
+        }
     }
 }

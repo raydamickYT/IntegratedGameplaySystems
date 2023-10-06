@@ -1,38 +1,36 @@
 ﻿using UnityEngine;
 
-public class PlayerMovement : State<GameManager>, ICommand
+public class PlayerMovement : ICommand, IUpdate
 {
-    protected FSM<GameManager> fsm;
-
     private PlayerData playerData;
     public float velocity = 0.0f;
-    private float deceleration = 2.0f;
+    private float deceleration = 20.0f;
 
     private bool IsMoving = false;
 
-    public PlayerMovement(FSM<GameManager> _fsm, PlayerData _playerData)
+    public PlayerMovement(PlayerData _playerData, GameManager gameManager)
     {
-        fsm = _fsm;
         playerData = _playerData;
+
+        gameManager.AddToUpdatableList(this);
     }
 
-    public void Execute(KeyCode key, object context = null)
+    public void Execute(object context = null)
     {
-        if (playerData.playerRigidBody != null && context is MovementContext movementContext)
-        {
-            IsMoving = true;
-            var force = playerData.MovementSpeed / 20.0f;
-            var acceleration = force / playerData.PlayerMass;
+        if (playerData.playerRigidBody == null || context is not MovementContext movementContext) { return; }
 
-            velocity += (acceleration) * Time.deltaTime;
+        IsMoving = true;
+        var force = playerData.MovementSpeed / 20.0f;
+        var acceleration = force / playerData.PlayerMass;
 
-            velocity = Mathf.Clamp(velocity, -playerData.MovementSpeed, playerData.MovementSpeed);
+        velocity += acceleration;
 
-            playerData.PlayerMesh.transform.Translate(movementContext.Direction.normalized * velocity);
-        }
+        velocity = Mathf.Clamp(velocity, -playerData.SlideSpeedBoost, playerData.SlideSpeedBoost);
+
+        playerData.PlayerMesh.transform.Translate(Time.deltaTime * velocity * movementContext.Direction.normalized);
     }
 
-    public override void OnUpdate()
+    public void OnUpdate()
     {
         Deceleration();
     }
@@ -55,7 +53,6 @@ public class PlayerMovement : State<GameManager>, ICommand
 
     public void OnKeyDownExecute()
     {
-        fsm.SwitchState(typeof(PlayerMovement));
     }
 
     public void OnKeyUpExecute()
