@@ -69,7 +69,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(playerData.GunHolder.transform.position);
         fsm.OnUpdate();
 
         OnUpdate?.Invoke();

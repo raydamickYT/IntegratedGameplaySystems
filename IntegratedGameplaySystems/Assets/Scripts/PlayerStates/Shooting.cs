@@ -14,7 +14,6 @@ public class Shooting : ICommand
     {
         playerData = _playerData;
         this.manager = _manager;
-        Debug.Log(manager.playerData.GunHolder.transform.position);
     }
 
     public async void FireGun(object context = null)
@@ -53,7 +52,8 @@ public class Shooting : ICommand
             bullet.ActiveObjectInScene.SetActive(true);
 
             Rigidbody rb = bullet.ActiveObjectInScene.GetComponent<Rigidbody>();
-            rb.AddForce(directionWithoutSpread.normalized * manager.bullets.BulletSpeed, ForceMode.Impulse);
+            
+            rb.AddForce(directionWithoutSpread.normalized * EquipmentManager.currentlyEquippedWeapon.BulletForce, ForceMode.Impulse);
 
             //logic voor fire rate en bullet life
             await Wait();
@@ -66,16 +66,15 @@ public class Shooting : ICommand
     public async Task Wait()
     {
         _canFire = false;
-        // yield return new WaitForSeconds(manager.bullets.FireRate); //FireRate kan je in de "GameManager" aanpassen, kleiner getal = sneller schieten.
-        await Task.Delay(TimeSpan.FromSeconds(manager.bullets.FireRate));
+        Debug.Log(EquipmentManager.currentlyEquippedWeapon.FireRate);
+        await Task.Delay(TimeSpan.FromSeconds(EquipmentManager.currentlyEquippedWeapon.FireRate));
         _canFire = true;
     }
 
     public async Task BulletLifeTime(ActorBase bullet)
     {
         //net zo simpel, als er een bepaalde tijd verstreken is, dan word de bullet weer naar de inactive pool verplaatst.
-        //yield return new WaitForSeconds(manager.bullets.BulletLife); //bulletlife kan je in de "GameManager" aanpassen.
-        await Task.Delay(TimeSpan.FromSeconds(manager.bullets.BulletLife));
+        await Task.Delay(TimeSpan.FromSeconds(EquipmentManager.currentlyEquippedWeapon.BulletLife));
         manager.DeactivationDelegate?.Invoke(bullet);
     }
 

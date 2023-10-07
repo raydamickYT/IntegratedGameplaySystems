@@ -6,7 +6,6 @@ public class Player : ActorBase, IUpdate
     private InputHandler inputHandler;
     private GameManager gameManager;
     private PlayerData playerData;
-    private Inventory inventory;
     private FSM<Player> fsm;
 
     public Player(GameManager gameManager, PlayerData playerData) : base(playerData.PlayerMesh)
@@ -44,8 +43,7 @@ public class Player : ActorBase, IUpdate
 
     private void SetupInputsAndStates()
     {
-        inventory = new Inventory(gameManager, null);
-        var EquipmentManager = new EquipmentManager(gameManager, inventory);
+        var EquipmentManager = new EquipmentManager(gameManager);
         inputHandler = new InputHandler();
         
         var shooting = new Shooting(gameManager, playerData);
