@@ -1,70 +1,87 @@
+using System;
+using System.Threading;
 using UnityEngine;
 
 public class WallRunning : State
 {
-    private PlayerData playerData;
+    private ActorData playerData;
 
     private float maxWallDistance = .5f;
     private float minJumpHeight = .5f;
 
-    private RaycastHit leftWallHit;
-    private RaycastHit rightWallHit;
     private bool wallLeft, wallRight;
 
-    private bool wallRunning = false;
+    private float speedIncrease;
+    private float amountOfSpeedIncreaseWhileWallRunning = 2.0f;
+    private bool speedIncreased = false;
 
-    public WallRunning(PlayerData _playerData, GameManager gameManager)
+    private bool isWallRunning = false;
+
+    public WallRunning(ActorData _playerData, ActorBase owner)
     {
         playerData = _playerData;
 
-        gameManager.OnUpdate += OnUpdate;
-        gameManager.OnFixedUpdate += OnFixedUpdate;
+        owner.OnUpdateEvent += OnUpdate;
+        owner.OnFixedUpdateEvent += OnFixedUpdate;
+
+        owner.NoLongerMoving += MovementStopped;
     }
 
     private bool GroundCheck()
     {
-        return !Physics.Raycast(playerData.PlayerMesh.transform.position, -playerData.PlayerMesh.transform.up, minJumpHeight, playerData.GroundLayerMask);
+        return !Physics.Raycast(playerData.ActorMesh.transform.position, -playerData.ActorMesh.transform.up, minJumpHeight, playerData.GroundLayerMask);
     }
 
     private void StartWallRun()
     {
-        wallRunning = true;
+        if (isWallRunning) { return; }
+
+        speedIncreased = true;
+        isWallRunning = true;
         playerData.isWallRunning = true;
-        playerData.playerRigidBody.useGravity = false;
+        playerData.ActorRigidBody.useGravity = false;
+    }
+
+    private void MovementStopped()
+    {
+        if (speedIncreased == false) { return; }
+        speedIncreased = false;
+        playerData.CurrentMoveSpeed -= speedIncrease;
+        speedIncrease = 0.0f;
     }
 
     private void StopWallRun()
     {
-        wallRunning = false;
-        playerData.playerRigidBody.useGravity = true;
+        if (!isWallRunning) { return; }
+
+        isWallRunning = false;
+        playerData.ActorRigidBody.useGravity = true;
         playerData.isWallRunning = false;
     }
 
     private void WallRunningMovement()
     {
-        var rb = playerData.playerRigidBody;
+        var rb = playerData.ActorRigidBody;
+
+        playerData.CurrentMoveSpeed += amountOfSpeedIncreaseWhileWallRunning * Time.deltaTime;
+        speedIncrease += amountOfSpeedIncreaseWhileWallRunning * Time.deltaTime;
 
         rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
 
-        Vector3 wallNormal = wallLeft ? leftWallHit.normal : rightWallHit.normal;
-        Vector3 wallForward = Vector3.Cross(playerData.PlayerMesh.transform.up, wallNormal);
-
         Vector3 directionToWall = wallLeft ? Vector3.left : Vector3.right;
 
-        rb.AddRelativeForce(wallForward * playerData.CurrentMoveSpeed);
-
-        rb.AddRelativeForce(directionToWall * 2.0f);
+        rb.AddRelativeForce(directionToWall.normalized * 2.0f);
     }
 
     private void WallCheck()
     {
-        wallLeft = Physics.SphereCast(playerData.PlayerMesh.transform.position, .5f, playerData.PlayerMesh.transform.right, out leftWallHit, maxWallDistance, playerData.WallRunLayerMask);
-        wallRight = Physics.SphereCast(playerData.PlayerMesh.transform.position, .5f, -playerData.PlayerMesh.transform.right, out rightWallHit, maxWallDistance, playerData.WallRunLayerMask);
+        wallLeft = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, playerData.ActorMesh.transform.right, out RaycastHit leftWallHit, maxWallDistance, playerData.WallRunLayerMask);
+        wallRight = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, -playerData.ActorMesh.transform.right, out RaycastHit rightWallHit, maxWallDistance, playerData.WallRunLayerMask);
     }
 
     private void OnFixedUpdate()
     {
-        if (wallRunning)
+        if (playerData.isWallRunning)
         {
             WallRunningMovement();
         }
@@ -76,7 +93,7 @@ public class WallRunning : State
 
         if ((wallLeft || wallRight) && GroundCheck())
         {
-            if (!wallRunning)
+            if (!isWallRunning)
             {
                 StartWallRun();
             }

@@ -1,15 +1,16 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/PlayerData")]
-public class PlayerData : ScriptableObject
+public class ActorData : ScriptableObject
 {
-    [NonSerialized] public GameObject PlayerMesh;
+    [NonSerialized] public GameObject ActorMesh;
 
-    [NonSerialized] public Rigidbody playerRigidBody;
+    [NonSerialized] public Rigidbody ActorRigidBody;
 
-    public GameObject PlayerPrefab;
+    public GameObject ActorPrefab;
+
+    public float JumpForce = 10.0f;
 
     public float StandardMovementSpeed = 10.0f;
 
@@ -17,9 +18,9 @@ public class PlayerData : ScriptableObject
 
     [NonSerialized] public float CurrentMoveSpeed;
 
-    public float SlideSpeedBoost = 25.0f;
+    public float SlideSpeedIncrase = 25.0f;
 
-    public float SprintSpeedBoost = 20.0f;
+    public float SprintSpeedIncrease = 20.0f;
 
     public LayerMask WallRunLayerMask = 0;
 

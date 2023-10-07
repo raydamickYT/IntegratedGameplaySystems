@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     private readonly FSM<GameManager> fsm = new();
 
-    public PlayerData playerData;
+    public ActorData playerData;
 
     #region Adjustable Variables
     public int AmountToPool = 30;
@@ -21,12 +21,11 @@ public class GameManager : MonoBehaviour
 
     public event Action OnUpdate;
     public event Action OnFixedUpdate;
+    public event Action OnDisableEvent;
 
     public InputHandler inputHandler;
     public ObjectPool ObjectPool = new();
     public GameObject Prefab;
-
-    public List<IUpdate> UpdatableObjects = new();
 
     #region Dictionaries and Lists
     public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
@@ -51,13 +50,6 @@ public class GameManager : MonoBehaviour
         fsm.SwitchState(typeof(InstantiateGameObjects));
     }
 
-    public void AddToUpdatableList(IUpdate objectToUpdate)
-    {
-        if (UpdatableObjects.Contains(objectToUpdate)) { return; }
-
-        UpdatableObjects.Add(objectToUpdate);
-    }
-
     private void Update()
     {
         fsm.OnUpdate();
@@ -68,5 +60,13 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         OnFixedUpdate?.Invoke();
+    }
+
+    private void OnDisable()
+    {
+        OnDisableEvent?.Invoke();
+        OnFixedUpdate = null;
+        OnUpdate = null;
+        OnDisableEvent = null;
     }
 }

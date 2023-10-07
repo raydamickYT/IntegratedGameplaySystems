@@ -1,31 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
-public class Player : ActorBase, IUpdate
+public class Player : ActorBase
 {
-    private InputHandler inputHandler;
+    public readonly InputHandler InputHandler = new();
     private GameManager gameManager;
-    private PlayerData playerData;
-    private FSM<Player> fsm;
+    private ActorData playerData;
+    private readonly FSM<Player> fsm = new();
 
-    public Player(GameManager gameManager, PlayerData playerData)
+    public Player(GameManager gameManager, ActorData playerData)
     {
         this.playerData = playerData;
         this.gameManager = gameManager;
 
+        Initialization();
+
         gameManager.OnUpdate += OnUpdate;
         gameManager.OnFixedUpdate += OnFixedUpdate;
+        gameManager.OnDisableEvent += OnDisable;
+    }
 
-        fsm = new FSM<Player>();
-
-        Initialization();
+    private void OnDisable()
+    {
+        NoLongerMoving = null;
+        StartedMoving = null;
     }
 
     private void Initialization()
     {
-        playerData.PlayerMesh = GameObject.Instantiate(playerData.PlayerPrefab, gameManager.transform.position, Quaternion.identity);
-        playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
+        playerData.ActorMesh = GameObject.Instantiate(playerData.ActorPrefab, gameManager.transform.position, Quaternion.identity);
+        playerData.ActorRigidBody = playerData.ActorMesh.GetComponent<Rigidbody>();
         playerData.playerCameraTransform = GameObject.FindObjectOfType<Camera>().gameObject.transform;
-        playerData.playerCameraHolderTransform = playerData.PlayerMesh.GetComponentInChildren<Grid>().gameObject.transform;
+        playerData.playerCameraHolderTransform = playerData.ActorMesh.GetComponentInChildren<Grid>().gameObject.transform;
 
         playerData.CurrentMoveSpeed = playerData.StandardMovementSpeed;
 
@@ -34,36 +42,36 @@ public class Player : ActorBase, IUpdate
 
     private void SetupInputsAndStates()
     {
-        inputHandler = new InputHandler();
-
-        var playerMovement = new PlayerMovement(playerData, gameManager);
+        var playerMovement = new PlayerMovement(playerData, this);
         var cameraControl = new CameraControl(playerData);
-        var jumping = new Jumping(playerData, gameManager);
+        var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);
         var sprinting = new Sprinting(playerData);
-        var wallRun = new WallRunning(playerData, gameManager);
+        var wallRun = new WallRunning(playerData, this);
 
-        inputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward });
-        inputHandler.BindInputToCommand(playerMovement, KeyCode.A, new MovementContext { Direction = Vector3.left });
-        inputHandler.BindInputToCommand(playerMovement, KeyCode.S, new MovementContext { Direction = Vector3.back });
-        inputHandler.BindInputToCommand(playerMovement, KeyCode.D, new MovementContext { Direction = Vector3.right });
+        InputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward }, isMovementKey: true);
+        InputHandler.BindInputToCommand(playerMovement, KeyCode.A, new MovementContext { Direction = Vector3.left }, isMovementKey: true);
+        InputHandler.BindInputToCommand(playerMovement, KeyCode.S, new MovementContext { Direction = Vector3.back }, isMovementKey: true);
+        InputHandler.BindInputToCommand(playerMovement, KeyCode.D, new MovementContext { Direction = Vector3.right }, isMovementKey: true);
 
-        inputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
+        InputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
 
-        inputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
-        inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
-        inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
+        InputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
+        InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
+        InputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
 
         fsm.AddState(wallRun);
     }
 
-    public void OnFixedUpdate()
+    private void OnFixedUpdate()
     {
+        OnFixedUpdateEvent?.Invoke();
     }
 
-    public void OnUpdate()
+    private void OnUpdate()
     {
-        inputHandler.HandleInput();
+        OnUpdateEvent?.Invoke();
+        InputHandler.HandleInput();
         fsm.OnUpdate();
     }
 }

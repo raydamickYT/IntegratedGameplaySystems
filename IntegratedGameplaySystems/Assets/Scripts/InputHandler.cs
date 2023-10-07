@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -28,6 +29,18 @@ public class InputHandler
         }
     }
 
+    public bool IsAKeyPressed()
+    {
+        foreach (var keyCommand in keyCommands)
+        {
+            if (keyCommand.Pressed && keyCommand.IsMovementKey)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void CheckForKeyInput(KeyCommand keyCommand)
     {
         if (Input.GetKeyDown(keyCommand.Key))
@@ -46,14 +59,15 @@ public class InputHandler
         }
     }
 
-    public KeyCommand BindInputToCommand(ICommand command, KeyCode keyCode = KeyCode.None, object context = null, bool isMouseControl = false)
+    public KeyCommand BindInputToCommand(ICommand command, KeyCode keyCode = KeyCode.None, object context = null, bool isMouseControl = false, bool isMovementKey = false)
     {
         KeyCommand keyCommand = new()
         {
             Key = keyCode,
             Command = command,
             Context = context,
-            IsMouseControll = isMouseControl
+            IsMouseControll = isMouseControl,
+            IsMovementKey = isMovementKey
         };
 
         keyCommands.Add(keyCommand);
@@ -70,6 +84,7 @@ public class InputHandler
 
 public class KeyCommand
 {
+    public bool IsMovementKey = false;
     public bool Pressed;
     public bool IsMouseControll = false;
     public KeyCode Key;

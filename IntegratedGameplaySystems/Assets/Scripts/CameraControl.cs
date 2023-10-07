@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class CameraControl : ICommand
 {
-    private PlayerData playerData;
+    private ActorData playerData;
     float yRotation, xRotation;
 
-    public CameraControl(PlayerData playerData)
+    public CameraControl(ActorData playerData)
     {
         this.playerData = playerData;
     }
@@ -21,7 +21,7 @@ public class CameraControl : ICommand
         xRotation = Mathf.Clamp(xRotation, -90, 90);
 
         playerData.playerCameraHolderTransform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-        playerData.PlayerMesh.transform.rotation = Quaternion.Euler(0, yRotation, 0);
+        playerData.ActorMesh.transform.rotation = Quaternion.Euler(0, yRotation, 0);
 
         playerData.playerCameraTransform.SetPositionAndRotation(playerData.playerCameraHolderTransform.position, playerData.playerCameraHolderTransform.rotation);
     }

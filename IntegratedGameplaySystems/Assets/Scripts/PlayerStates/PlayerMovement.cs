@@ -3,25 +3,27 @@ using UnityEngine;
 
 public class PlayerMovement : ICommand
 {
-    private PlayerData playerData;
+    private ActorData playerData;
+    private Player owner;
 
-    public PlayerMovement(PlayerData _playerData, GameManager gameManager)
+    public PlayerMovement(ActorData _playerData, Player owner)
     {
         playerData = _playerData;
+        this.owner = owner;
     }
 
     public void Execute(object context = null)
     {
-        if (playerData.playerRigidBody == null || context is not MovementContext movementContext) { return; }
+        if (playerData.ActorRigidBody == null || context is not MovementContext movementContext) { return; }
 
-        playerData.playerRigidBody.AddRelativeForce(playerData.CurrentMoveSpeed * movementContext.Direction, ForceMode.Force);
+        playerData.ActorRigidBody.AddRelativeForce(playerData.CurrentMoveSpeed * movementContext.Direction.normalized, ForceMode.Force);
 
         SpeedControl();
     }
 
     private void SpeedControl()
     {
-        var rb = playerData.playerRigidBody;
+        var rb = playerData.ActorRigidBody;
         Vector3 flatVelocity = new(rb.velocity.x, 0.0f, rb.velocity.z);
 
         if (flatVelocity.magnitude > playerData.CurrentMoveSpeed)
@@ -38,5 +40,9 @@ public class PlayerMovement : ICommand
 
     public void OnKeyUpExecute()
     {
+        if (!owner.InputHandler.IsAKeyPressed())
+        {
+            owner.NoLongerMoving?.Invoke();
+        }
     }
 }

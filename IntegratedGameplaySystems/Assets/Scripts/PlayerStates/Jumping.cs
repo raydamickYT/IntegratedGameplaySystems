@@ -3,19 +3,18 @@ using UnityEngine;
 
 public class Jumping : ICommand
 {
-    private PlayerData playerData;
+    private ActorData playerData;
     private bool canJump = true;
-    private float jumpMagnitude = 10.0f;
     private float jumpCooldownDuration = 0.5f;
     private Timer jumpCooldownTimer;
     private bool hasExtraJump = true;
     private Rigidbody rb;
 
-    public Jumping(PlayerData playerData, GameManager gameManager)
+    public Jumping(ActorData playerData, ActorBase owner)
     {
         this.playerData = playerData;
 
-        rb = playerData.playerRigidBody;
+        rb = playerData.ActorRigidBody;
 
         jumpCooldownTimer = new Timer()
         {
@@ -23,7 +22,7 @@ public class Jumping : ICommand
         };
         jumpCooldownTimer.Elapsed += ResetJump;
 
-        gameManager.OnUpdate += OnUpdate;
+        owner.OnUpdateEvent += OnUpdate;
     }
 
     private void ResetJump(object sender, ElapsedEventArgs e)
@@ -50,11 +49,12 @@ public class Jumping : ICommand
         }
         else
         {
-            var playerMeshTransform = playerData.PlayerMesh.transform;
+            var playerMeshTransform = playerData.ActorMesh.transform;
             var ray = new Ray(playerMeshTransform.position, -playerMeshTransform.up);
-            return Physics.SphereCast(ray, 0.5f, 1f, layerMask: playerData.GroundLayerMask);
+            return Physics.SphereCast(ray, 1.0f, 1.0f, layerMask: playerData.GroundLayerMask);
         }
     }
+
     public void OnUpdate()
     {
         CheckForExtraJumpReset();
@@ -66,9 +66,9 @@ public class Jumping : ICommand
 
         if (grounded)
         {
-            if (playerData.playerRigidBody.drag == 0)
+            if (playerData.ActorRigidBody.drag == 0)
             {
-                playerData.playerRigidBody.drag = 1.0f;
+                playerData.ActorRigidBody.drag = 1.0f;
             }
             hasExtraJump = true;
         }
@@ -80,17 +80,18 @@ public class Jumping : ICommand
         {
             hasExtraJump = false;
         }
+
         canJump = false;
         rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
 
-        rb.AddForce(jumpMagnitude * direction.normalized, ForceMode.Impulse);
+        rb.AddForce(playerData.JumpForce * direction.normalized, ForceMode.Impulse);
 
         jumpCooldownTimer.Start();
     }
 
     public void OnKeyDownExecute()
     {
-        playerData.playerRigidBody.drag = 0.0f;
+        playerData.ActorRigidBody.drag = 0.0f;
     }
 
     public void OnKeyUpExecute()
