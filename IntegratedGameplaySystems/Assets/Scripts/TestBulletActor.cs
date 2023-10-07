@@ -17,7 +17,6 @@ public class TestBulletActor : ActorBase, IPoolable
         Registry.AddToRegistry(Prefab.name + NameInt, this);
         ActiveObjectInScene = InstantiateGameObjects.Instantiate(Prefab.name + NameInt);
 
-        // objectPool.DeActivate(this);
     }
 
     public void Recycle(Vector3 direction)
@@ -26,5 +25,8 @@ public class TestBulletActor : ActorBase, IPoolable
         ActiveObjectInScene.transform.position = manager.playerData.GunHolder.transform.position;
         ActiveObjectInScene.transform.rotation = manager.playerData.GunHolder.transform.rotation;
         ActiveObjectInScene.transform.forward = direction.normalized;
+        Rigidbody rb = ActiveObjectInScene.GetComponent<Rigidbody>();
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 }

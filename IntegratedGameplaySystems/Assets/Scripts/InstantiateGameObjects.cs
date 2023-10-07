@@ -8,7 +8,7 @@ public class InstantiateGameObjects : State
 
     protected FSM<GameManager> owner;
     private GameManager manager;
-    public int AmountToPool = 30;
+    public int AmountToPool = 60;
 
 
     public InstantiateGameObjects(FSM<GameManager> _owner, ObjectPool _objectPool, GameManager _manager)
@@ -58,6 +58,7 @@ public class InstantiateGameObjects : State
             //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
             if (e.StartsWith("Bullet"))
             {
+                EenObject.transform.SetParent(GameObject.Find("BulletHolder").transform);
                 objectPool.DeActivate(actorBase);
             }
             return EenObject;

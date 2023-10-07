@@ -53,7 +53,9 @@ public class Shooting : ICommand
 
             Rigidbody rb = bullet.ActiveObjectInScene.GetComponent<Rigidbody>();
             
-            rb.AddForce(directionWithoutSpread.normalized * EquipmentManager.currentlyEquippedWeapon.BulletForce, ForceMode.Impulse);
+            //rb.AddForce(directionWithoutSpread.normalized * EquipmentManager.currentlyEquippedWeapon.BulletForce, ForceMode.Impulse);
+            rb.AddForce(directionWithoutSpread.normalized * 100f, ForceMode.Impulse);
+
 
             //logic voor fire rate en bullet life
             await Wait();
