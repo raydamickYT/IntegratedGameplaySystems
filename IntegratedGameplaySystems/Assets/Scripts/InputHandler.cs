@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public interface ICommand
 {
-    void Execute(KeyCode key, object context = null);
+    void Execute(object context = null);
     void OnKeyDownExecute();
     void OnKeyUpExecute();
 }
@@ -16,49 +17,67 @@ public class InputHandler
     {
         foreach (var keyCommand in keyCommands)
         {
-            if (Input.GetKeyDown(keyCommand.key))
+            if (keyCommand.IsMouseControll)
             {
-                keyCommand.command.OnKeyDownExecute();
+                keyCommand.Command.Execute();
             }
-            if (Input.GetKeyUp(keyCommand.key))
+            else
             {
-                keyCommand.command.OnKeyUpExecute();
-            }
-            if (Input.GetKey(keyCommand.key))
-            {
-                keyCommand.command.Execute(keyCommand.key, keyCommand.context);
+                CheckForKeyInput(keyCommand);
             }
         }
     }
 
-    public void BindInputToCommand(KeyCode keyCode, ICommand command, object context = null)
+    private void CheckForKeyInput(KeyCommand keyCommand)
     {
-        keyCommands.Add(new KeyCommand()
+        if (Input.GetKeyDown(keyCommand.Key))
         {
-            key = keyCode,
-            command = command,
-            context = context
-        });
+            keyCommand.Pressed = true;
+            keyCommand.Command.OnKeyDownExecute();
+        }
+        if (Input.GetKeyUp(keyCommand.Key))
+        {
+            keyCommand.Pressed = false;
+            keyCommand.Command.OnKeyUpExecute();
+        }
+        if (Input.GetKey(keyCommand.Key))
+        {
+            keyCommand.Command.Execute(keyCommand.Context);
+        }
+    }
+
+    public KeyCommand BindInputToCommand(ICommand command, KeyCode keyCode = KeyCode.None, object context = null, bool isMouseControl = false)
+    {
+        KeyCommand keyCommand = new()
+        {
+            Key = keyCode,
+            Command = command,
+            Context = context,
+            IsMouseControll = isMouseControl
+        };
+
+        keyCommands.Add(keyCommand);
+
+        return keyCommand;
     }
 
     public void UnBindInput(KeyCode keyCode)
     {
-        var items = keyCommands.FindAll(x => x.key == keyCode);
+        var items = keyCommands.FindAll(x => x.Key == keyCode);
         items.ForEach(x => keyCommands.Remove(x));
     }
 }
 
 public class KeyCommand
 {
-    public KeyCode key;
-    public ICommand command;
-    public object context;
+    public bool Pressed;
+    public bool IsMouseControll = false;
+    public KeyCode Key;
+    public ICommand Command;
+    public object Context;
 }
 
 public class MovementContext
 {
     public Vector3 Direction { get; set; }
 }
-
-
-

@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public GameObject BulletPrefab;
     public Bullets bullets;
 
+    public List<IUpdate> UpdatableObjects = new();
+
     #region Dictionaries and Lists
     public List<GameObject> InactivePooledObjects = new();
     public List<GameObject> ActivePooledObjects = new();
@@ -33,38 +35,54 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        inputHandler = new InputHandler();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
-        playerData.PlayerMesh = Instantiate(playerData.PlayerPrefab);
-        playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
-
+        SetUpPlayerData();
         SetupInputsAndStates();
 
-        fsm.SwitchState(typeof(InstantiateGameObjects));
+    }
+
+    private void SetUpPlayerData()
+    {
+        playerData.PlayerMesh = Instantiate(playerData.PlayerPrefab, transform.position, Quaternion.identity);
+        playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
+        playerData.playerCameraTransform = FindObjectOfType<Camera>().gameObject.transform;
+        playerData.playerCameraHolderTransform = playerData.PlayerMesh.GetComponentInChildren<Grid>().gameObject.transform;
     }
 
     private void SetupInputsAndStates()
     {
-        ObjectPool = new(this);
-        var playerMovement = new PlayerMovement(BulletPrefab, playerData, this);
-        var fireGun = new FireGunCommand(fsm);
-        var sliding = new Sliding(fsm, playerData);
-        var jumping = new Jumping(fsm, playerData);
+        inputHandler = new InputHandler();
 
-        inputHandler.BindInputToCommand(KeyCode.X, fireGun, new MovementContext { Direction = Vector3.up });
-        inputHandler.BindInputToCommand(KeyCode.W, playerMovement, new MovementContext { Direction = Vector3.forward });
-        inputHandler.BindInputToCommand(KeyCode.A, playerMovement, new MovementContext { Direction = Vector3.left });
-        inputHandler.BindInputToCommand(KeyCode.S, playerMovement, new MovementContext { Direction = Vector3.back });
-        inputHandler.BindInputToCommand(KeyCode.D, playerMovement, new MovementContext { Direction = Vector3.right });
+        var playerMovement = new PlayerMovement(playerData, this);
+        var cameraControl = new CameraControl(playerData);
+        var jumping = new Jumping(playerData, this);
+        var sliding = new Sliding(playerData);
+        var sprinting = new Sprinting(playerData);
+        //WallRunning wallRun = new(playerData);
 
-        inputHandler.BindInputToCommand(KeyCode.LeftControl, sliding, new MovementContext { Direction = Vector3.down });
-        inputHandler.BindInputToCommand(KeyCode.Space, jumping, new MovementContext { Direction = Vector3.up });
+        playerData.playerWASDKeys.Clear();
+        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward }));
+        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.A, new MovementContext { Direction = Vector3.left }));
+        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.S, new MovementContext { Direction = Vector3.back }));
+        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.D, new MovementContext { Direction = Vector3.right }));
 
-        fsm.AddState(jumping);
+        inputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
+
+        inputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
+        inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
+        inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
+
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
-        fsm.AddState(fireGun);
-        fsm.AddState(new IdleState(fsm));
-        //fsm.AddState(playerMovement);
+        fsm.SwitchState(typeof(InstantiateGameObjects));
+    }
+
+    public void AddToUpdatableList(IUpdate objectToUpdate)
+    {
+        if (UpdatableObjects.Contains(objectToUpdate)) { return; }
+
+        UpdatableObjects.Add(objectToUpdate);
     }
 
     private void Update()
@@ -73,5 +91,10 @@ public class GameManager : MonoBehaviour
         Debug.Log($" [{string.Join(",", InstantiatedObjects)}]");
         inputHandler.HandleInput();
         fsm.OnUpdate();
+
+        foreach (IUpdate objectToUpdate in UpdatableObjects)
+        {
+            objectToUpdate.OnUpdate();
+        }
     }
 }
