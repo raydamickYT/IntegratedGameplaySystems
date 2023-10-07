@@ -5,10 +5,12 @@ using UnityEngine;
 
 public class ActorBase
 {
-    public GameObject GameObject {get; private set;}
+    public GameObject ActorObject { get; private set; }
+    public GameObject ActiveObjectInScene { get; set; }
 
-    public ActorBase(GameObject Prefab){
-        this.GameObject = Prefab;
+    public ActorBase(GameObject Prefab)
+    {
+        this.ActorObject = Prefab;
     }
 
 }

@@ -4,25 +4,27 @@ using UnityEngine;
 public class ObjectPool
 {
     private GameManager manager;
-    public List<GameObject> InactivePooledObjects = new();
-    public List<GameObject> ActivePooledObjects = new();
+    public List<ActorBase> InactivePooledObjects = new();
+    public List<ActorBase> ActivePooledObjects = new();
     public ObjectPool(GameManager manager)
     {
         this.manager = manager;
     }
 
     //verplaatst objecten van de inactive pool naar de active pool
-    public GameObject GetPooledObjects()
+    public ActorBase GetPooledObjects()
     {
-        Debug.Log(InactivePooledObjects.Count);
+//        Debug.Log(InactivePooledObjects.Count);
         if (InactivePooledObjects.Count > 0)
         {
-            if (!manager.InactivePooledObjects[0].activeInHierarchy && FireGunCommand._canFire)
+            if (!InactivePooledObjects[0].ActiveObjectInScene.activeInHierarchy && Shooting._canFire)
             {
-                GameObject _object = manager.InactivePooledObjects[0];
-                manager.ActivePooledObjects.Add(_object);
-                manager.InactivePooledObjects.Remove(_object);
-                _object.SetActive(true);
+                ActorBase _object = InactivePooledObjects[0];
+                ActivePooledObjects.Add(_object);
+                InactivePooledObjects.Remove(_object);
+                
+                _object.ActiveObjectInScene.SetActive(true);
+                Debug.Log(_object.ActiveObjectInScene.activeSelf);
                 return _object;
             }
         }
@@ -34,22 +36,30 @@ public class ObjectPool
         return null;
     }
 
-    public void AddObjectToPool(GameObject item)
+    public void AddObjectToPool(ActorBase item)
     {
         if (!InactivePooledObjects.Contains(item) && !ActivePooledObjects.Contains(item))
         {
             InactivePooledObjects.Add(item);
+//            Debug.Log(InactivePooledObjects.Count);
         }
     }
 
     //de functie die alle bullets van de active pool naar de inactive pool verplaatst.
-    public void DeActivate(GameObject _object)
+    public void DeActivate(ActorBase _object)
     {
+        Debug.Log(InactivePooledObjects.Count);
         if (ActivePooledObjects.Contains(_object))
         {
             ActivePooledObjects.Remove(_object);
             InactivePooledObjects.Add(_object);
-            _object.SetActive(false);
+            _object.ActiveObjectInScene.SetActive(false);
+        }
+        else
+        {
+            Debug.Log(_object);
+            //_object.ActiveObjectInScene.SetActive(false);
+            AddObjectToPool(_object);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -14,7 +15,7 @@ public class GameManager : MonoBehaviour
     #region Delegates
     public delegate void Deactivationhandler(GameObject bullet);
     public Deactivationhandler DeactivationDelegate;
-    public delegate GameObject ObjectPoolDelegate();
+    public delegate ActorBase ObjectPoolDelegate();
     public ObjectPoolDelegate objectPoolDelegate;
     #endregion
 
@@ -26,11 +27,8 @@ public class GameManager : MonoBehaviour
     public List<IUpdate> UpdatableObjects = new();
 
     #region Dictionaries and Lists
-    public List<GameObject> InactivePooledObjects = new();
-    public List<GameObject> ActivePooledObjects = new();
 
-    public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
-    public Dictionary<string, IPoolable> InstantiatedObjects = new Dictionary<string, IPoolable>();
+
     #endregion
 
     private void Start()
@@ -40,7 +38,7 @@ public class GameManager : MonoBehaviour
 
         SetUpPlayerData();
         SetupInputsAndStates();
-
+        objectPoolDelegate += ObjectPool.GetPooledObjects;
     }
 
     private void SetUpPlayerData()
@@ -54,9 +52,11 @@ public class GameManager : MonoBehaviour
     private void SetupInputsAndStates()
     {
         inputHandler = new InputHandler();
+        ObjectPool = new(this);
 
         var playerMovement = new PlayerMovement(playerData, this);
         var cameraControl = new CameraControl(playerData);
+        var shooting = new Shooting(this);
         var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);
         var sprinting = new Sprinting(playerData);
@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour
         inputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
         inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
         inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
+        inputHandler.BindInputToCommand(shooting, KeyCode.Mouse0, new MovementContext { Direction = Vector3.forward});
 
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.SwitchState(typeof(InstantiateGameObjects));
@@ -87,8 +88,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(InstantiatedObjects.Count);
-        Debug.Log($" [{string.Join(",", InstantiatedObjects)}]");
         inputHandler.HandleInput();
         fsm.OnUpdate();
 
