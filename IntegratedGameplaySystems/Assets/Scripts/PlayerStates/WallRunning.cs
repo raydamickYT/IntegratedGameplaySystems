@@ -82,7 +82,7 @@ public class WallRunning
         }
     }
 
-    private void OnUpdate()
+    private void WallRunningOnUpdate()
     {
         WallCheck();
 

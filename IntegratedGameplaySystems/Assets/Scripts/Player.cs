@@ -1,3 +1,4 @@
+using UnityEditor.Scripting;
 using UnityEngine;
 
 public class Player : ActorBase
@@ -26,19 +27,32 @@ public class Player : ActorBase
 
     private void Initialization()
     {
-        playerData.ActorMesh = GameObject.Instantiate(playerData.ActorPrefab, gameManager.transform.position, Quaternion.identity);
-        playerData.ActorRigidBody = playerData.ActorMesh.GetComponent<Rigidbody>();
-        playerData.playerCameraTransform = GameObject.FindObjectOfType<Camera>().gameObject.transform;
-        playerData.playerCameraHolderTransform = playerData.ActorMesh.GetComponentInChildren<Grid>().gameObject.transform;
+        playerData.PlayerMesh = GameObject.Instantiate(playerData.PlayerPrefab, gameManager.transform.position, Quaternion.identity);
+        playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
+        playerData.playerCamera = GameObject.FindObjectOfType<Camera>();
+        playerData.playerCameraTransform = playerData.playerCamera.gameObject.transform;
+        playerData.playerCameraHolderTransform = playerData.PlayerMesh.GetComponentInChildren<Grid>().gameObject.transform;
+
 
         playerData.CurrentMoveSpeed = playerData.StandardMovementSpeed;
+        //niet heel netjes, maar moet even voor nu.
+        playerData.GunHolder = GameObject.Find("GunHolder");
+        if (playerData.GunHolder == null)
+        {
+            Debug.LogWarning("GunHolder is niet gevonden in de scene");
+        }
 
         SetupInputsAndStates();
     }
 
     private void SetupInputsAndStates()
     {
-        var playerMovement = new PlayerMovement(playerData, this);
+        inventory = new Inventory(gameManager, null);
+        var EquipmentManager = new EquipmentManager(gameManager, inventory);
+        inputHandler = new InputHandler();
+        
+        var shooting = new Shooting(gameManager, playerData);
+        var playerMovement = new PlayerMovement(playerData, gameManager);
         var cameraControl = new CameraControl(playerData);
         var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);
@@ -52,9 +66,18 @@ public class Player : ActorBase
 
         InputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
 
-        InputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
-        InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
-        InputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
+
+        inputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
+        inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
+        inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
+        inputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
+
+        //equipment
+        inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext {WeaponIndex = 0});
+        inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext {WeaponIndex = 1});
+        //inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha3, new WeaponSelectContext {WeaponIndex = 2});
+
+        fsm.AddState(wallRun);
     }
 
     private void OnFixedUpdate()

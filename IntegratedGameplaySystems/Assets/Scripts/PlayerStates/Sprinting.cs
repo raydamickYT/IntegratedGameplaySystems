@@ -11,7 +11,7 @@ public class Sprinting : ICommand
     {
     }
 
-    public void OnKeyDownExecute()
+    public void OnKeyDownExecute(object context = null)
     {
         playerData.CurrentMoveSpeed += 5.0f;
     }

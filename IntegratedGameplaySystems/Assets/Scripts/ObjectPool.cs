@@ -3,29 +3,27 @@ using UnityEngine;
 
 public class ObjectPool
 {
-    public List<GameObject> InactivePooledObjects = new();
-    public List<GameObject> ActivePooledObjects = new();
-
-    public void AddObjectToPool(GameObject item)
+    private GameManager manager;
+    public List<ActorBase> InactivePooledObjects = new();
+    public List<ActorBase> ActivePooledObjects = new();
+    public ObjectPool(GameManager manager)
     {
-        if (!InactivePooledObjects.Contains(item) && !ActivePooledObjects.Contains(item))
-        {
-            InactivePooledObjects.Add(item);
-        }
+        this.manager = manager;
     }
 
     //verplaatst objecten van de inactive pool naar de active pool
-    public GameObject GetPooledObjects()
+    public ActorBase GetPooledObjects()
     {
-        Debug.Log(InactivePooledObjects.Count);
+        //        Debug.Log(InactivePooledObjects.Count);
         if (InactivePooledObjects.Count > 0)
         {
-            if (!InactivePooledObjects[0].activeInHierarchy && FireGunCommand._canFire)
+            if (!InactivePooledObjects[0].ActiveObjectInScene.activeInHierarchy && Shooting._canFire)
             {
-                GameObject _object = InactivePooledObjects[0];
+                ActorBase _object = InactivePooledObjects[0];
                 ActivePooledObjects.Add(_object);
                 InactivePooledObjects.Remove(_object);
-                _object.SetActive(true);
+
+                Debug.Log(_object.ActiveObjectInScene.activeSelf);
                 return _object;
             }
         }
@@ -37,14 +35,30 @@ public class ObjectPool
         return null;
     }
 
-    //de functie die alle bullets van de active pool naar de inactive pool verplaatst.
-    public void DeActivate(GameObject _object)
+    public void AddObjectToPool(ActorBase item)
     {
-        if (ActivePooledObjects.Contains(_object))
+        if (!InactivePooledObjects.Contains(item) && !ActivePooledObjects.Contains(item))
         {
+            InactivePooledObjects.Add(item);
+            //            Debug.Log(InactivePooledObjects.Count);
+        }
+    }
+
+    //de functie die alle bullets van de active pool naar de inactive pool verplaatst.
+    public void DeActivate(ActorBase _object)
+    {
+        if (ActivePooledObjects.Contains(_object) && _object.ActiveObjectInScene.activeInHierarchy)
+        {
+//            Debug.Log(InactivePooledObjects.Count);
             ActivePooledObjects.Remove(_object);
             InactivePooledObjects.Add(_object);
-            _object.SetActive(false);
+            _object.ActiveObjectInScene.SetActive(false);
+        }
+        else
+        {
+            //Debug.Log(_object);
+            //_object.ActiveObjectInScene.SetActive(false);
+            AddObjectToPool(_object);
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,9 +14,9 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Delegates
-    public delegate void Deactivationhandler(GameObject bullet);
+    public delegate void Deactivationhandler(ActorBase bullet);
     public Deactivationhandler DeactivationDelegate;
-    public delegate GameObject ObjectPoolDelegate();
+    public delegate ActorBase ObjectPoolDelegate();
     public ObjectPoolDelegate objectPoolDelegate;
     #endregion
 
@@ -23,13 +24,17 @@ public class GameManager : MonoBehaviour
     public event Action OnFixedUpdate;
     public event Action OnDisableEvent;
 
-    public InputHandler inputHandler;
-    public ObjectPool ObjectPool = new();
-    public GameObject Prefab;
+    public ObjectPool ObjectPool;
+
+    public GameObject BulletPrefab;
+    public Bullets bullets;
+
+    public List<IUpdate> UpdatableObjects = new();
+    public WeaponData[] Weapons = new WeaponData[1];
 
     #region Dictionaries and Lists
-    public Dictionary<string, GameObject> PrefabLibrary = new Dictionary<string, GameObject>();
-    public Dictionary<string, GameObject> InstantiatedObjects = new Dictionary<string, GameObject>();
+
+
     #endregion
 
     private Player player;
@@ -40,18 +45,25 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
 
         player = new(this, playerData);
+        ObjectPool = new(this);
 
         SetupGameStates();
+
+        objectPoolDelegate += ObjectPool.GetPooledObjects;
+        DeactivationDelegate += ObjectPool.DeActivate;
+
     }
 
     private void SetupGameStates()
     {
+
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.SwitchState(typeof(InstantiateGameObjects));
     }
 
     private void Update()
     {
+        Debug.Log(playerData.GunHolder.transform.position);
         fsm.OnUpdate();
 
         OnUpdate?.Invoke();

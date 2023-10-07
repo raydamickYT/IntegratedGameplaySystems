@@ -1,10 +1,15 @@
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public class InstantiateGameObjects : State
 {
-    private readonly ObjectPool objectPool;
+    private static ObjectPool objectPool;
+
     protected FSM<GameManager> owner;
     private GameManager manager;
+    public int AmountToPool = 30;
+
 
     public InstantiateGameObjects(FSM<GameManager> _owner, ObjectPool _objectPool, GameManager _manager)
     {
@@ -15,46 +20,55 @@ public class InstantiateGameObjects : State
 
     public override void OnEnter()
     {
-        //manager.PrefabLibrary.Add("player", manager.Prefab);
-
-        for (int i = 0; i < manager.AmountToPool; i++)
+        for (int i = 0; i < AmountToPool; i++)
         {
-            GameObject instantiatedObject = GameObject.Instantiate(manager.Prefab);
-            instantiatedObject.SetActive(false);
-
-            objectPool.AddObjectToPool(instantiatedObject);
-            //owner.pOwner.PrefabLibrary.Add("Bullet" + i.ToString(), owner.pOwner.bullets.BulletObject);
+            // int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
+            new TestBulletActor(manager.bullets.BulletObject, manager, i, objectPool);
         }
-        //manager.PrefabLibrary.Add("enemy", manager.PreFab);
-
-        foreach (var kvp in manager.PrefabLibrary)
+        for (int i = 0; i < manager.Weapons.Length; i++)
         {
-            Vector3 startPos = Vector3.zero;
-
-            if (kvp.Key == "player")
+            if (manager.Weapons[i].ItemPrefab.activeInHierarchy)
             {
-                startPos = new Vector3(0, -4.4f, 0);
+                break;
             }
-            if (kvp.Key.StartsWith("Bullet"))
+            else
             {
-                GameObject test = manager.InstantiatedObjects["player"];
-                startPos = test.transform.position;
+                //niet netjes, maar kan nu omdat we weinig wapens hebben.
+                if (manager.Weapons[i].itemName == WeaponType.Pistol)
+                {
+                    var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                }
+                if (manager.Weapons[i].itemName == WeaponType.AssaultRifle)
+                {
+                    var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                }
+                if (manager.Weapons[i].itemName == WeaponType.Knife)
+                {
+                    //var t = new Pistol(manager.Weapons[i], this, manager.Weapons[i].ItemPrefab);
+                }
             }
-
-            GameObject instantiatedObject = GameObject.Instantiate(kvp.Value, startPos, Quaternion.identity);
-            instantiatedObject.name = kvp.Key;
-
-            if (kvp.Key.StartsWith("Bullet"))
-            {
-                instantiatedObject.SetActive(false);
-                objectPool.AddObjectToPool(instantiatedObject);
-            }
-
-            //hier de instantiated object toevoegden aan de library
-            manager.InstantiatedObjects.Add(kvp.Key, instantiatedObject);
         }
+    }
 
-        owner.SwitchState(typeof(IdleState));
+    public static GameObject Instantiate(string e)
+    {
+        if (Registry.ObjectRegistry[e] is ActorBase actorBase)
+        {
+            var EenObject = GameObject.Instantiate(actorBase.ActorObject);
+            //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
+            if (e.StartsWith("Bullet"))
+            {
+                objectPool.DeActivate(actorBase);
+            }
+            return EenObject;
+        }
+        if (Registry.ObjectRegistry[e] is IWeapon weapon)
+        {
+            var EenObject = GameObject.Instantiate(weapon.WeaponInScene);
+            //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
+            return EenObject;
+        }
+        return null;
     }
 }
 

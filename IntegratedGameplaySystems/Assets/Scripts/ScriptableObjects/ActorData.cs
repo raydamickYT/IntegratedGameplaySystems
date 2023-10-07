@@ -14,6 +14,8 @@ public class ActorData : ScriptableObject
 
     public float CameraSensitivity = 250.0f;
 
+    [NonSerialized] public Rigidbody playerRigidBody;
+
     public float StandardMovementSpeed = 10.0f;
 
     public float AirSpeedMultiplier = 0.5f;
@@ -31,5 +33,6 @@ public class ActorData : ScriptableObject
     public bool isWallRunning = false;
 
     [NonSerialized] public Transform playerCameraTransform;
+    [NonSerialized] public Camera playerCamera;
     [NonSerialized] public Transform playerCameraHolderTransform;
 }

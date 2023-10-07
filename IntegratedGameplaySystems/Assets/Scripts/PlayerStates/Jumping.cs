@@ -85,7 +85,7 @@ public class Jumping : ICommand
         jumpCooldownTimer.Start();
     }
 
-    public void OnKeyDownExecute()
+    public void OnKeyDownExecute(object context = null)
     {
     }
 

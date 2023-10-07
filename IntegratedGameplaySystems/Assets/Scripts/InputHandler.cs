@@ -4,7 +4,7 @@ using UnityEngine;
 public interface ICommand
 {
     void Execute(object context = null);
-    void OnKeyDownExecute();
+    void OnKeyDownExecute(object context = null);
     void OnKeyUpExecute();
 }
 
@@ -44,7 +44,7 @@ public class InputHandler
         if (Input.GetKeyDown(keyCommand.Key))
         {
             keyCommand.Pressed = true;
-            keyCommand.Command.OnKeyDownExecute();
+            keyCommand.Command.OnKeyDownExecute(keyCommand.Context);
         }
         if (Input.GetKeyUp(keyCommand.Key))
         {
@@ -93,4 +93,10 @@ public class KeyCommand
 public class MovementContext
 {
     public Vector3 Direction { get; set; }
+}
+
+public class WeaponSelectContext
+{
+    public int WeaponIndex { get; set; }
+
 }
