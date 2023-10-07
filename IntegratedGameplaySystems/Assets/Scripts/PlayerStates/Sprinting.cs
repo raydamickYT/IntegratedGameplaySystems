@@ -1,23 +1,23 @@
 public class Sprinting : ICommand
 {
-    private PlayerData playerData;
+    private ActorData playerData;
 
-    public Sprinting(PlayerData playerData)
+    public Sprinting(ActorData playerData)
     {
         this.playerData = playerData;
     }
 
     public void Execute(object context = null)
     {
-        playerData.CurrentMoveSpeed = playerData.SprintSpeedBoost;
     }
 
     public void OnKeyDownExecute(object context = null)
     {
+        playerData.CurrentMoveSpeed += 5.0f;
     }
 
     public void OnKeyUpExecute()
     {
-        playerData.CurrentMoveSpeed = playerData.StandardMovementSpeed;
+        playerData.CurrentMoveSpeed -= 5.0f;
     }
 }

@@ -9,14 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6c88781113afa54facd4f87ff75b068, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d3f3c4fc419d3c43a6da5e99bb6876b, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  PlayerPrefab: {fileID: 6101170080697193124, guid: 2cb3e5258bc44a04b9d43015e4a1024e, type: 3}
-  StandardMovementSpeed: 7
+  ActorPrefab: {fileID: 6101170080697193124, guid: 2cb3e5258bc44a04b9d43015e4a1024e, type: 3}
+  JumpForce: 10
+  CameraSensitivity: 2
+  StandardMovementSpeed: 10
   AirSpeedMultiplier: 0.8
-  SlideSpeedBoost: 20
-  SprintSpeedBoost: 15
+  SlideSpeedIncrase: 15
+  SprintSpeedIncrease: 10
   WallRunLayerMask:
     serializedVersion: 2
     m_Bits: 8

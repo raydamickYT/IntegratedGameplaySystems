@@ -6,7 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private readonly FSM<GameManager> fsm = new();
-    public PlayerData playerData;
+    public ActorData playerData;
 
     #region Adjustable Variables
     public int AmountToPool = 30;
@@ -21,13 +21,13 @@ public class GameManager : MonoBehaviour
 
     public event Action OnUpdate;
     public event Action OnFixedUpdate;
+    public event Action OnDisableEvent;
 
     public ObjectPool ObjectPool;
 
     public GameObject BulletPrefab;
     public Bullets bullets;
 
-    public List<IUpdate> UpdatableObjects = new();
     public WeaponData[] Weapons = new WeaponData[1];
 
     #region Dictionaries and Lists
@@ -60,12 +60,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void AddToUpdatableList(IUpdate objectToUpdate)
-    {
-        if (UpdatableObjects.Contains(objectToUpdate)) { return; }
 
-        UpdatableObjects.Add(objectToUpdate);
-    }
 
     private void Update()
     {
@@ -77,5 +72,13 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         OnFixedUpdate?.Invoke();
+    }
+
+    private void OnDisable()
+    {
+        OnDisableEvent?.Invoke();
+        OnFixedUpdate = null;
+        OnUpdate = null;
+        OnDisableEvent = null;
     }
 }

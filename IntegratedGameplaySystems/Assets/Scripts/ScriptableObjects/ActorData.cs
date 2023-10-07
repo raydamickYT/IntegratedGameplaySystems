@@ -1,27 +1,32 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/PlayerData")]
-public class PlayerData : ScriptableObject
+public class ActorData : ScriptableObject
 {
-    [NonSerialized] public GameObject PlayerMesh;
+    [NonSerialized] public GameObject ActorMesh;
 
-    [NonSerialized] public GameObject GunHolder;
+    [NonSerialized] public Rigidbody ActorRigidBody;
+    
+ 	[NonSerialized] public GameObject GunHolder;
 
-    public GameObject PlayerPrefab;
+    public GameObject ActorPrefab;
+
+    public float JumpForce = 10.0f;
+
+    public float CameraSensitivity = 250.0f;
 
     [NonSerialized] public Rigidbody playerRigidBody;
 
     public float StandardMovementSpeed = 10.0f;
 
-    public float AirSpeedMultiplier = 0.8f;
+    public float AirSpeedMultiplier = 0.5f;
 
     [NonSerialized] public float CurrentMoveSpeed;
 
-    public float SlideSpeedBoost = 25.0f;
+    public float SlideSpeedIncrase = 25.0f;
 
-    public float SprintSpeedBoost = 20.0f;
+    public float SprintSpeedIncrease = 20.0f;
 
     public LayerMask WallRunLayerMask = 0;
 
