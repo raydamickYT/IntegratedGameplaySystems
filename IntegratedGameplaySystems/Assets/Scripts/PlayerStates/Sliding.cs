@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Sliding : State, ICommand
+public class Sliding : ICommand
 {
     private ActorData playerData;
 
@@ -13,6 +13,7 @@ public class Sliding : State, ICommand
     {
         if (context is MovementContext movementContext)
         {
+            //Downward Force.
             playerData.ActorRigidBody.AddRelativeForce(movementContext.Direction.normalized * 5.0f, ForceMode.Force);
         }
     }

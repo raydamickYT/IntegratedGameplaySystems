@@ -8,7 +8,6 @@ public class Player : ActorBase
     public readonly InputHandler InputHandler = new();
     private GameManager gameManager;
     private ActorData playerData;
-    private readonly FSM<Player> fsm = new();
 
     public Player(GameManager gameManager, ActorData playerData)
     {
@@ -59,8 +58,6 @@ public class Player : ActorBase
         InputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
         InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
         InputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
-
-        fsm.AddState(wallRun);
     }
 
     private void OnFixedUpdate()
@@ -72,6 +69,5 @@ public class Player : ActorBase
     {
         OnUpdateEvent?.Invoke();
         InputHandler.HandleInput();
-        fsm.OnUpdate();
     }
 }

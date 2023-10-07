@@ -12,6 +12,8 @@ public class ActorData : ScriptableObject
 
     public float JumpForce = 10.0f;
 
+    public float CameraSensitivity = 250.0f;
+
     public float StandardMovementSpeed = 10.0f;
 
     public float AirSpeedMultiplier = 0.8f;

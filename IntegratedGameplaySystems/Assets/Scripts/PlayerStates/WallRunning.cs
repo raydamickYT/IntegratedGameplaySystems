@@ -1,8 +1,6 @@
-using System;
-using System.Threading;
 using UnityEngine;
 
-public class WallRunning : State
+public class WallRunning
 {
     private ActorData playerData;
 
@@ -45,6 +43,7 @@ public class WallRunning : State
     private void MovementStopped()
     {
         if (speedIncreased == false) { return; }
+
         speedIncreased = false;
         playerData.CurrentMoveSpeed -= speedIncrease;
         speedIncrease = 0.0f;
@@ -61,16 +60,12 @@ public class WallRunning : State
 
     private void WallRunningMovement()
     {
-        var rb = playerData.ActorRigidBody;
-
         playerData.CurrentMoveSpeed += amountOfSpeedIncreaseWhileWallRunning * Time.deltaTime;
         speedIncrease += amountOfSpeedIncreaseWhileWallRunning * Time.deltaTime;
 
-        rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
-
         Vector3 directionToWall = wallLeft ? Vector3.left : Vector3.right;
 
-        rb.AddRelativeForce(directionToWall.normalized * 2.0f);
+        playerData.ActorRigidBody.AddRelativeForce(directionToWall.normalized * 2.0f);
     }
 
     private void WallCheck()

@@ -9,7 +9,6 @@ public class Sprinting : ICommand
 
     public void Execute(object context = null)
     {
-        //playerData.CurrentMoveSpeed = playerData.SprintSpeedBoost;
     }
 
     public void OnKeyDownExecute()
@@ -20,6 +19,5 @@ public class Sprinting : ICommand
     public void OnKeyUpExecute()
     {
         playerData.CurrentMoveSpeed -= 5.0f;
-        //playerData.CurrentMoveSpeed = playerData.StandardMovementSpeed;
     }
 }
