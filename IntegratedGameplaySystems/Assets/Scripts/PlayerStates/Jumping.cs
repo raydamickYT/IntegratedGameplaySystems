@@ -5,7 +5,7 @@ public class Jumping : ICommand
 {
     private ActorData playerData;
     private bool canJump = true;
-    private float jumpCooldownDuration = 0.5f;
+    private float jumpCooldownDuration = .7f;
     private Timer jumpCooldownTimer;
     private bool hasExtraJump = true;
     private Rigidbody rb;
@@ -66,10 +66,6 @@ public class Jumping : ICommand
 
         if (grounded)
         {
-            if (playerData.ActorRigidBody.drag == 0)
-            {
-                playerData.ActorRigidBody.drag = 1.0f;
-            }
             hasExtraJump = true;
         }
     }
@@ -91,7 +87,6 @@ public class Jumping : ICommand
 
     public void OnKeyDownExecute()
     {
-        playerData.ActorRigidBody.drag = 0.0f;
     }
 
     public void OnKeyUpExecute()

@@ -16,7 +16,7 @@ public class ActorData : ScriptableObject
 
     public float StandardMovementSpeed = 10.0f;
 
-    public float AirSpeedMultiplier = 0.8f;
+    public float AirSpeedMultiplier = 0.5f;
 
     [NonSerialized] public float CurrentMoveSpeed;
 
