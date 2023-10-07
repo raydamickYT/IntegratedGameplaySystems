@@ -2,10 +2,10 @@
 
 public class FSM<T>
 {
-    private State<T> currentState;
-    private Dictionary<System.Type, State<T>> allStates = new Dictionary<System.Type, State<T>>();
+    private State currentState;
+    private Dictionary<System.Type, State> allStates = new();
 
-    public void AddState(State<T> _state)
+    public void AddState(State _state)
     {
         if (!allStates.ContainsKey(_state.GetType()))
         {

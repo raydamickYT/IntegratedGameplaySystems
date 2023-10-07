@@ -1,51 +1,34 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public class PlayerMovement : ICommand
 {
     private PlayerData playerData;
-    public float velocity = 0.0f;
-    private bool IsMoving = false;
 
     public PlayerMovement(PlayerData _playerData, GameManager gameManager)
     {
         playerData = _playerData;
-
-        gameManager.OnUpdate += OnUpdate;
     }
 
     public void Execute(object context = null)
     {
         if (playerData.playerRigidBody == null || context is not MovementContext movementContext) { return; }
 
-        IsMoving = true;
-        var force = playerData.CurrentMoveSpeed / 20.0f;
-        var acceleration = force / playerData.PlayerMass;
+        playerData.playerRigidBody.AddRelativeForce(playerData.CurrentMoveSpeed * movementContext.Direction, ForceMode.Force);
 
-        velocity += acceleration;
-
-        velocity = Mathf.Clamp(velocity, -playerData.CurrentMoveSpeed, playerData.CurrentMoveSpeed);
-
-        playerData.PlayerMesh.transform.Translate(Time.deltaTime * velocity * movementContext.Direction.normalized);
+        SpeedControl();
     }
 
-    public void OnUpdate()
+    private void SpeedControl()
     {
-        Deceleration();
-    }
+        var rb = playerData.playerRigidBody;
+        Vector3 flatVelocity = new(rb.velocity.x, 0.0f, rb.velocity.z);
 
-    private void Deceleration()
-    {
-        if (IsMoving == true) { return; }
-
-        bool left = velocity < 0;
-
-        if (left)
+        if (flatVelocity.magnitude > playerData.CurrentMoveSpeed)
         {
-            velocity = Mathf.Min(0, velocity + (20.0f * Time.deltaTime));
-        }
-        else if (!left && velocity != 0)
-        {
-            velocity = Mathf.Max(0, velocity - (20.0f * Time.deltaTime));
+            Vector3 newVelocity = flatVelocity.normalized * playerData.CurrentMoveSpeed;
+
+            rb.velocity = new(newVelocity.x, rb.velocity.y, newVelocity.z);
         }
     }
 
@@ -55,14 +38,5 @@ public class PlayerMovement : ICommand
 
     public void OnKeyUpExecute()
     {
-        foreach (KeyCommand keyCommand in playerData.playerWASDKeys)
-        {
-            if (keyCommand.Pressed == true)
-            {
-                IsMoving = true;
-                return;
-            }
-        }
-        IsMoving = false;
     }
 }

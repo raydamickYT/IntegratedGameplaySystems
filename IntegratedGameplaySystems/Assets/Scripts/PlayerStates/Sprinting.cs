@@ -18,6 +18,6 @@ public class Sprinting : ICommand
 
     public void OnKeyUpExecute()
     {
-        playerData.CurrentMoveSpeed = playerData.MaxMovementSpeed;
+        playerData.CurrentMoveSpeed = playerData.StandardMovementSpeed;
     }
 }

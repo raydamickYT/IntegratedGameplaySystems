@@ -13,15 +13,14 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 6101170080697193124, guid: 2cb3e5258bc44a04b9d43015e4a1024e, type: 3}
-  playerPosition: {x: 0, y: 0, z: 0}
-  MaxMovementSpeed: 10
-  CurrentMoveSpeed: 10
-  SlideSpeedBoost: 15
-  SprintSpeedBoost: 20
-  PlayerMass: 50
+  StandardMovementSpeed: 7
+  AirSpeedMultiplier: 0.8
+  SlideSpeedBoost: 20
+  SprintSpeedBoost: 15
   WallRunLayerMask:
     serializedVersion: 2
     m_Bits: 8
   GroundLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  isWallRunning: 0

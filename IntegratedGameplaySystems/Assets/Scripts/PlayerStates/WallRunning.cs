@@ -1,12 +1,9 @@
 using UnityEngine;
 
-public class WallRunning : State<GameManager>
+public class WallRunning : State
 {
     private PlayerData playerData;
 
-    private float maxWallRunTime = 1.5f;
-    private bool isWallRunning = false;
-    private float wallRunTimer;
     private float maxWallDistance = .5f;
     private float minJumpHeight = .5f;
 
@@ -16,7 +13,7 @@ public class WallRunning : State<GameManager>
 
     private bool wallRunning = false;
 
-    public WallRunning(PlayerData _playerData, GameManager gameManager, FSM<GameManager> fsm)
+    public WallRunning(PlayerData _playerData, GameManager gameManager)
     {
         playerData = _playerData;
 
@@ -33,6 +30,7 @@ public class WallRunning : State<GameManager>
     {
         wallRunning = true;
         playerData.isWallRunning = true;
+        playerData.playerRigidBody.useGravity = false;
     }
 
     private void StopWallRun()
@@ -46,14 +44,22 @@ public class WallRunning : State<GameManager>
     {
         var rb = playerData.playerRigidBody;
 
-        rb.useGravity = false;
         rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
+
+        Vector3 wallNormal = wallLeft ? leftWallHit.normal : rightWallHit.normal;
+        Vector3 wallForward = Vector3.Cross(playerData.PlayerMesh.transform.up, wallNormal);
+
+        Vector3 directionToWall = wallLeft ? Vector3.left : Vector3.right;
+
+        rb.AddRelativeForce(wallForward * playerData.CurrentMoveSpeed);
+
+        rb.AddRelativeForce(directionToWall * 2.0f);
     }
 
     private void WallCheck()
     {
-        wallLeft = Physics.Raycast(playerData.PlayerMesh.transform.position, playerData.PlayerMesh.transform.right, out leftWallHit, maxWallDistance, playerData.WallRunLayerMask);
-        wallRight = Physics.Raycast(playerData.PlayerMesh.transform.position, -playerData.PlayerMesh.transform.right, out rightWallHit, maxWallDistance, playerData.WallRunLayerMask);
+        wallLeft = Physics.SphereCast(playerData.PlayerMesh.transform.position, .5f, playerData.PlayerMesh.transform.right, out leftWallHit, maxWallDistance, playerData.WallRunLayerMask);
+        wallRight = Physics.SphereCast(playerData.PlayerMesh.transform.position, .5f, -playerData.PlayerMesh.transform.right, out rightWallHit, maxWallDistance, playerData.WallRunLayerMask);
     }
 
     private void OnFixedUpdate()

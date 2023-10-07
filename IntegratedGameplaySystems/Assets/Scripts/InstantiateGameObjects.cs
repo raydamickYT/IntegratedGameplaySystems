@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InstantiateGameObjects : State<GameManager>
+public class InstantiateGameObjects : State
 {
     private readonly ObjectPool objectPool;
     protected FSM<GameManager> owner;
@@ -58,7 +58,7 @@ public class InstantiateGameObjects : State<GameManager>
     }
 }
 
-public class IdleState : State<GameManager>
+public class IdleState : State
 {
     public FSM<GameManager> owner;
 

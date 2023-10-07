@@ -19,7 +19,6 @@ public class Jumping : ICommand
 
         jumpCooldownTimer = new Timer()
         {
-            //Interval runs in milliseconds instead of seconds.
             Interval = jumpCooldownDuration * 1000.0f
         };
         jumpCooldownTimer.Elapsed += ResetJump;
@@ -37,18 +36,9 @@ public class Jumping : ICommand
         if (context is not MovementContext movementContext) { return; }
 
         bool grounded = GroundCheck();
-        if (grounded && canJump)
+        if ((grounded || (!grounded && hasExtraJump)) && canJump)
         {
-            canJump = false;
-            Jump(movementContext.Direction);
-            jumpCooldownTimer.Start();
-        }
-        else if (hasExtraJump && canJump)
-        {
-            hasExtraJump = false;
-            canJump = false;
-            Jump(movementContext.Direction);
-            jumpCooldownTimer.Start();
+            Jump(movementContext.Direction, !grounded);
         }
     }
 
@@ -65,7 +55,6 @@ public class Jumping : ICommand
             return Physics.SphereCast(ray, 0.5f, 1f, layerMask: playerData.GroundLayerMask);
         }
     }
-
     public void OnUpdate()
     {
         CheckForExtraJumpReset();
@@ -77,19 +66,31 @@ public class Jumping : ICommand
 
         if (grounded)
         {
+            if (playerData.playerRigidBody.drag == 0)
+            {
+                playerData.playerRigidBody.drag = 1.0f;
+            }
             hasExtraJump = true;
         }
     }
 
-    private void Jump(Vector3 direction)
+    private void Jump(Vector3 direction, bool extraJump = false)
     {
+        if (extraJump)
+        {
+            hasExtraJump = false;
+        }
+        canJump = false;
         rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
 
         rb.AddForce(jumpMagnitude * direction.normalized, ForceMode.Impulse);
+
+        jumpCooldownTimer.Start();
     }
 
     public void OnKeyDownExecute()
     {
+        playerData.playerRigidBody.drag = 0.0f;
     }
 
     public void OnKeyUpExecute()
