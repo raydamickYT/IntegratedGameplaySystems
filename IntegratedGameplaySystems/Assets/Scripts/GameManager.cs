@@ -6,7 +6,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private readonly FSM<GameManager> fsm = new();
-
     public PlayerData playerData;
 
     #region Adjustable Variables
@@ -23,10 +22,10 @@ public class GameManager : MonoBehaviour
     public event Action OnUpdate;
     public event Action OnFixedUpdate;
 
-    public InputHandler inputHandler;
+    public ObjectPool ObjectPool;
+
     public GameObject BulletPrefab;
     public Bullets bullets;
-    Vector3 playerFacingDirection;
 
     public List<IUpdate> UpdatableObjects = new();
 
@@ -45,52 +44,20 @@ public class GameManager : MonoBehaviour
         player = new(this, playerData);
 
         SetupGameStates();
+
+        objectPoolDelegate += ObjectPool.GetPooledObjects;
+        DeactivationDelegate += ObjectPool.DeActivate;
+
     }
 
     private void SetupGameStates()
     {
-        playerData.PlayerMesh = Instantiate(playerData.PlayerPrefab, transform.position, Quaternion.identity);
-        playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
-        playerData.playerCamera = FindObjectOfType<Camera>();
-        playerData.playerCameraTransform = playerData.playerCamera.gameObject.transform;
-        playerData.playerCameraHolderTransform = playerData.PlayerMesh.GetComponentInChildren<Grid>().gameObject.transform;
-        //niet heel netjes, maar moet even voor nu.
-        playerData.GunHolder = GameObject.Find("GunHolder");
-        if (playerData.GunHolder == null)
-        {
-            Debug.LogWarning("GunHolder is niet gevonden in de scene");
-        }
-    }
-
-    private void SetupInputsAndStates()
-    {
-        inputHandler = new InputHandler();
         ObjectPool = new(this);
-
-        var playerMovement = new PlayerMovement(playerData, this);
-        var cameraControl = new CameraControl(playerData);
-        var shooting = new Shooting(this, playerData);
-        var jumping = new Jumping(playerData, this);
-        var sliding = new Sliding(playerData);
-        var sprinting = new Sprinting(playerData);
-        //WallRunning wallRun = new(playerData);
-
-        playerData.playerWASDKeys.Clear();
-        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward }));
-        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.A, new MovementContext { Direction = Vector3.left }));
-        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.S, new MovementContext { Direction = Vector3.back }));
-        playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.D, new MovementContext { Direction = Vector3.right }));
-
-        inputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
-
-        inputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
-        inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
-        inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
-        inputHandler.BindInputToCommand(shooting, KeyCode.Mouse0, new MovementContext { Direction = playerFacingDirection});
 
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.SwitchState(typeof(InstantiateGameObjects));
     }
+
 
     public void AddToUpdatableList(IUpdate objectToUpdate)
     {

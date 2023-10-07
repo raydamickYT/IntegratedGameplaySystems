@@ -13,8 +13,6 @@ public class PlayerData : ScriptableObject
 
     [NonSerialized] public Rigidbody playerRigidBody;
 
-    public GameObject PlayerPrefab;
-
     public float StandardMovementSpeed = 10.0f;
 
     public float AirSpeedMultiplier = 0.8f;

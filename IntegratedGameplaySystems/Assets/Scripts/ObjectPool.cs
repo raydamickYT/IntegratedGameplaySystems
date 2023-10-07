@@ -47,7 +47,7 @@ public class ObjectPool
     //de functie die alle bullets van de active pool naar de inactive pool verplaatst.
     public void DeActivate(ActorBase _object)
     {
-        if (ActivePooledObjects.Contains(_object))
+        if (ActivePooledObjects.Contains(_object) && _object.ActiveObjectInScene.activeInHierarchy)
         {
             Debug.Log(InactivePooledObjects.Count);
             ActivePooledObjects.Remove(_object);
