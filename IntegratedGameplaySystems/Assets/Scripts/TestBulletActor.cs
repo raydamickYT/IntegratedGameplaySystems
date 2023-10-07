@@ -24,8 +24,8 @@ public class TestBulletActor : ActorBase, IPoolable
         //wat te doen als dit object deactiveerd.
         Debug.Log(EquipmentManager.currentlyEquippedWeapon.BulletPoint.position);
         ActiveObjectInScene.transform.position = EquipmentManager.currentlyEquippedWeapon.BulletPoint.position;
-        ActiveObjectInScene.transform.rotation = EquipmentManager.currentlyEquippedWeapon.BulletPoint.rotation;
-        ActiveObjectInScene.transform.forward = direction.normalized;
+        ActiveObjectInScene.transform.rotation = EquipmentManager.currentlyEquippedWeapon.BulletPoint.rotation * Quaternion.Euler(0, 0, -90);
+        //ActiveObjectInScene.transform.forward = direction.normalized;
         Rigidbody rb = ActiveObjectInScene.GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
