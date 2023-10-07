@@ -40,7 +40,6 @@ public class InstantiateGameObjects : State
                 }
                 if (manager.Weapons[i].itemName == WeaponType.AssaultRifle)
                 {
-                    Debug.Log("test");
                     var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                 }
                 if (manager.Weapons[i].itemName == WeaponType.Knife)

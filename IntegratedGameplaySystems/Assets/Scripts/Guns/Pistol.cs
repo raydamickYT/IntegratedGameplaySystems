@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Scripting;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -18,11 +19,14 @@ public class Pistol : IWeapon
     public void Initialization()
     {
         Registry.AddToRegistry(WeaponInScene.name, this);
+        
         WeaponInScene = InstantiateGameObjects.Instantiate(WeaponScriptableObject.ItemPrefab.name);
+        WeaponInScene.transform.position = gameManager.playerData.GunHolder.transform.position;
+
         WeaponInScene.transform.SetParent(gameManager.playerData.GunHolder.transform);
         WeaponInScene.transform.localRotation = Quaternion.Euler(0, 90, 0);
-        EquipmentManager.WeaponsInScene[(int)WeaponScriptableObject.weaponsStyle] = WeaponInScene;
 
+        EquipmentManager.WeaponsInScene[(int)WeaponScriptableObject.weaponsStyle] = WeaponInScene;
         if (WeaponScriptableObject.itemName == WeaponType.Pistol)
         {
             EquipmentManager.currentlyEquippedWeapon = WeaponInScene;

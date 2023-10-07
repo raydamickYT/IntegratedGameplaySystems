@@ -72,6 +72,7 @@ public class Player : ActorBase, IUpdate
         //equipment
         inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext {WeaponIndex = 0});
         inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext {WeaponIndex = 1});
+        //inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha3, new WeaponSelectContext {WeaponIndex = 2});
 
         fsm.AddState(wallRun);
     }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class EquipmentManager : ICommand
             Debug.LogWarning("Invalid weapon index");
             return;
         }
-        
+
         if (EquipmentManager.currentlyEquippedWeapon != null)
         {
             Debug.Log("we have an active item");
@@ -39,6 +40,12 @@ public class EquipmentManager : ICommand
 
     public void Execute(object context = null)
     {
+        Debug.Log(context);
+
+    }
+
+    public void OnKeyDownExecute(object context = null)
+    {
         if (context is WeaponSelectContext weaponSelectContext)
         {
             SelectWeapon(weaponSelectContext.WeaponIndex);
@@ -47,10 +54,6 @@ public class EquipmentManager : ICommand
         {
             gameManager.Weapons[0].ItemPrefab.SetActive(true);
         }
-    }
-
-    public void OnKeyDownExecute()
-    {
     }
 
     public void OnKeyUpExecute()

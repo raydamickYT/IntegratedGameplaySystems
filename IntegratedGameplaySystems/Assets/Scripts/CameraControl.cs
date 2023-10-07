@@ -26,7 +26,7 @@ public class CameraControl : ICommand
         playerData.playerCameraTransform.SetPositionAndRotation(playerData.playerCameraHolderTransform.position, playerData.playerCameraHolderTransform.rotation);
     }
 
-    public void OnKeyDownExecute()
+    public void OnKeyDownExecute(object context = null)
     {
     }
 

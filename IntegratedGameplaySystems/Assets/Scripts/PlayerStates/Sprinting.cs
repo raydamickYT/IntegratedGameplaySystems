@@ -12,7 +12,7 @@ public class Sprinting : ICommand
         playerData.CurrentMoveSpeed = playerData.SprintSpeedBoost;
     }
 
-    public void OnKeyDownExecute()
+    public void OnKeyDownExecute(object context = null)
     {
     }
 

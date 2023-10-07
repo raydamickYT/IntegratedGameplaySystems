@@ -14,6 +14,7 @@ public class Shooting : ICommand
     {
         playerData = _playerData;
         this.manager = _manager;
+        Debug.Log(manager.playerData.GunHolder.transform.position);
     }
 
     public async void FireGun(object context = null)
@@ -80,11 +81,10 @@ public class Shooting : ICommand
 
     public void Execute(object context = null)
     {
-        Debug.Log(_canFire);
         FireGun(context);
     }
 
-    public void OnKeyDownExecute()
+    public void OnKeyDownExecute(object context = null)
     {
 
     }
