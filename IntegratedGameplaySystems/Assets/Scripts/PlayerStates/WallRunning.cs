@@ -17,7 +17,7 @@ public class WallRunning : State
     {
         playerData = _playerData;
 
-        gameManager.OnUpdate += OnUpdate;
+        gameManager.OnUpdate += WallRunningOnUpdate;
         gameManager.OnFixedUpdate += OnFixedUpdate;
     }
 
@@ -70,7 +70,7 @@ public class WallRunning : State
         }
     }
 
-    private void OnUpdate()
+    private void WallRunningOnUpdate()
     {
         WallCheck();
 

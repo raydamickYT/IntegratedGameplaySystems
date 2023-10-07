@@ -15,7 +15,7 @@ public class TestBulletActor : ActorBase, IPoolable
         this.manager = _manager;
         //dit voegt dit script toe niet de gameobject. die zit vast aan dit script.
         Registry.AddToRegistry(Prefab.name + NameInt, this);
-        ActiveObjectInScene = InstantiateGameObjects.TestInstantiate(Prefab.name + NameInt, this);
+        ActiveObjectInScene = InstantiateGameObjects.Instantiate(Prefab.name + NameInt);
 
         // objectPool.DeActivate(this);
     }

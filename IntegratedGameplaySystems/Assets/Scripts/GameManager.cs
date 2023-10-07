@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public Bullets bullets;
 
     public List<IUpdate> UpdatableObjects = new();
+    public WeaponData[] Weapons = new WeaponData[1];
 
     #region Dictionaries and Lists
 
@@ -42,6 +43,7 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
 
         player = new(this, playerData);
+        ObjectPool = new(this);
 
         SetupGameStates();
 
@@ -52,7 +54,6 @@ public class GameManager : MonoBehaviour
 
     private void SetupGameStates()
     {
-        ObjectPool = new(this);
 
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.SwitchState(typeof(InstantiateGameObjects));

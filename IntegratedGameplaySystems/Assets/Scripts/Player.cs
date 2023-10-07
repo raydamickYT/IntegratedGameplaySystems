@@ -1,3 +1,4 @@
+using UnityEditor.Scripting;
 using UnityEngine;
 
 public class Player : ActorBase, IUpdate
@@ -5,6 +6,7 @@ public class Player : ActorBase, IUpdate
     private InputHandler inputHandler;
     private GameManager gameManager;
     private PlayerData playerData;
+    private Inventory inventory;
     private FSM<Player> fsm;
 
     public Player(GameManager gameManager, PlayerData playerData) : base(playerData.PlayerMesh)
@@ -42,6 +44,8 @@ public class Player : ActorBase, IUpdate
 
     private void SetupInputsAndStates()
     {
+        inventory = new Inventory(gameManager, null);
+        var EquipmentManager = new EquipmentManager(gameManager, inventory);
         inputHandler = new InputHandler();
         
         var shooting = new Shooting(gameManager, playerData);
@@ -64,6 +68,10 @@ public class Player : ActorBase, IUpdate
         inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
         inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
         inputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
+
+        //equipment
+        inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext {WeaponIndex = 0});
+        inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext {WeaponIndex = 1});
 
         fsm.AddState(wallRun);
     }

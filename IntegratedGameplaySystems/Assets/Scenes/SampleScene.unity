@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -136,7 +136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -218,8 +218,8 @@ MonoBehaviour:
   AmountToPool: 30
   BulletPrefab: {fileID: 6333040669696545810, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
   bullets: {fileID: 11400000, guid: 14c6882b872803b40859feb46f195847, type: 2}
-  InactivePooledObjects: []
-  ActivePooledObjects: []
+  Weapons:
+  - {fileID: 11400000, guid: 49965a56be8352840893879badbd7a99, type: 2}
 --- !u!4 &286848344
 Transform:
   m_ObjectHideFlags: 0
@@ -310,7 +310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -687,7 +687,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5922380053144986924, guid: 452e6842943388e43a539c26555223cf, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5922380053144986924, guid: 452e6842943388e43a539c26555223cf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -811,7 +811,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5922380053144986924, guid: 452e6842943388e43a539c26555223cf, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5922380053144986924, guid: 452e6842943388e43a539c26555223cf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -877,7 +877,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -944,7 +944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1006,7 +1006,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6333040669696545811, guid: bdc5cdb4d6647c94b8b2889674847fe0, type: 3}
       propertyPath: m_LocalPosition.x

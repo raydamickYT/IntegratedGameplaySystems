@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class InstantiateGameObjects : State
 {
     private static ObjectPool objectPool;
-    
+
     protected FSM<GameManager> owner;
     private GameManager manager;
     public int AmountToPool = 30;
@@ -15,7 +15,6 @@ public class InstantiateGameObjects : State
     {
         owner = _owner;
         objectPool = _objectPool;
-        Debug.Log(objectPool);
         manager = _manager;
     }
 
@@ -26,60 +25,51 @@ public class InstantiateGameObjects : State
             // int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
             new TestBulletActor(manager.bullets.BulletObject, manager, i, objectPool);
         }
-        // //manager.PrefabLibrary.Add("player", manager.Prefab);
-
-        // for (int i = 0; i < manager.AmountToPool; i++)
-        // {
-        //     GameObject instantiatedObject = GameObject.Instantiate(manager.BulletPrefab);
-        //     instantiatedObject.SetActive(false);
-        //     Debug.Log("making");
-        //     objectPool.AddObjectToPool(instantiatedObject);
-        //     manager.PrefabLibrary.Add("Bullet" + i.ToString(), manager.bullets.BulletObject);
-        // }
-
-        // foreach (var kvp in manager.PrefabLibrary)
-        // {
-        //     Vector3 startPos = Vector3.zero;
-
-        //     if (kvp.Key == "player")
-        //     {
-        //         startPos = new Vector3(0, -4.4f, 0);
-        //     }
-
-        //     if (kvp.Key.StartsWith("Bullet"))
-        //     {
-        //         GameObject test = manager.InstantiatedObjects["player"];
-        //         startPos = test.transform.position;
-        //     }
-
-        //     GameObject instantiatedObject = GameObject.Instantiate(kvp.Value, startPos, Quaternion.identity);
-        //     instantiatedObject.name = kvp.Key;
-
-        //     if (kvp.Key.StartsWith("Bullet"))
-        //     {
-        //         instantiatedObject.SetActive(false);
-        //         objectPool.AddObjectToPool(instantiatedObject);
-        //     }
-
-        //     //hier de instantiated object toevoegden aan de library
-        //     manager.InstantiatedObjects.Add(kvp.Key, instantiatedObject);
-        // }
-
-        // owner.SwitchState(typeof(IdleState));
-    }
-    public static GameObject TestInstantiate(string e, IPoolable actor)
-    {
-        var EenObject = GameObject.Instantiate(Registry.ObjectRegistry[e].ActorObject);
-        //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
-        if (e.StartsWith("Bullet"))
+        for (int i = 0; i < manager.Weapons.Length; i++)
         {
-            objectPool.DeActivate(Registry.ObjectRegistry[e]);
+            if (manager.Weapons[i].ItemPrefab.activeInHierarchy)
+            {
+                break;
+            }
+            else
+            {
+                //niet netjes, maar kan nu omdat we weinig wapens hebben.
+                if (manager.Weapons[i].itemName == WeaponType.Pistol)
+                {
+                    var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                }
+                if (manager.Weapons[i].itemName == WeaponType.AssaultRifle)
+                {
+                    Debug.Log("test");
+                    var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                }
+                if (manager.Weapons[i].itemName == WeaponType.Knife)
+                {
+                    //var t = new Pistol(manager.Weapons[i], this, manager.Weapons[i].ItemPrefab);
+                }
+            }
         }
-        return EenObject;
     }
-    private void testDeactivate(ActorBase actor)
-    {
 
+    public static GameObject Instantiate(string e)
+    {
+        if (Registry.ObjectRegistry[e] is ActorBase actorBase)
+        {
+            var EenObject = GameObject.Instantiate(actorBase.ActorObject);
+            //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
+            if (e.StartsWith("Bullet"))
+            {
+                objectPool.DeActivate(actorBase);
+            }
+            return EenObject;
+        }
+        if (Registry.ObjectRegistry[e] is IWeapon weapon)
+        {
+            var EenObject = GameObject.Instantiate(weapon.WeaponInScene);
+            //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
+            return EenObject;
+        }
+        return null;
     }
 }
 

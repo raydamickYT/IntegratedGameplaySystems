@@ -53,7 +53,7 @@ public class InputHandler
             Key = keyCode,
             Command = command,
             Context = context,
-            IsMouseControll = isMouseControl
+            IsMouseControll = isMouseControl,
         };
 
         keyCommands.Add(keyCommand);
@@ -80,4 +80,10 @@ public class KeyCommand
 public class MovementContext
 {
     public Vector3 Direction { get; set; }
+}
+
+public class WeaponSelectContext
+{
+    public int WeaponIndex { get; set; }
+
 }

@@ -7,7 +7,7 @@ public class PlayerData : ScriptableObject
 {
     [NonSerialized] public GameObject PlayerMesh;
 
-    public GameObject GunHolder;
+    [NonSerialized] public GameObject GunHolder;
 
     public GameObject PlayerPrefab;
 

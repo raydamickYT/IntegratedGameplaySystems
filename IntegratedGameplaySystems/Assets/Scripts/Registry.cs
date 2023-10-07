@@ -10,14 +10,21 @@ public interface IPoolable
 
 public class Registry
 {
-    public readonly static Dictionary<string, ActorBase> ObjectRegistry = new Dictionary<string, ActorBase>();
+    public readonly static Dictionary<string, object> ObjectRegistry = new Dictionary<string, object>();
 
     public Registry()
     {
 
     }
 
-    public static void AddToRegistry(string e, ActorBase a)
+    public static void AddToRegistry(string e, ActorBase a) 
+    {
+        if (!ObjectRegistry.ContainsKey(e))
+        {
+            ObjectRegistry.Add(e, a);
+        }
+    }
+        public static void AddToRegistry(string e, IWeapon a) 
     {
         if (!ObjectRegistry.ContainsKey(e))
         {
