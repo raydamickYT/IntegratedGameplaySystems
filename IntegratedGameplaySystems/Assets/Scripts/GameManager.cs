@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +18,9 @@ public class GameManager : MonoBehaviour
     public delegate GameObject ObjectPoolDelegate();
     public ObjectPoolDelegate objectPoolDelegate;
     #endregion
+
+    public event Action OnUpdate;
+    public event Action OnFixedUpdate;
 
     public InputHandler inputHandler;
     public ObjectPool ObjectPool = new();
@@ -56,7 +60,7 @@ public class GameManager : MonoBehaviour
         var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);
         var sprinting = new Sprinting(playerData);
-        //WallRunning wallRun = new(playerData);
+        var wallRun = new WallRunning(playerData, this, fsm);
 
         playerData.playerWASDKeys.Clear();
         playerData.playerWASDKeys.Add(inputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward }));
@@ -70,6 +74,7 @@ public class GameManager : MonoBehaviour
         inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
         inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
 
+        fsm.AddState(wallRun);
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.SwitchState(typeof(InstantiateGameObjects));
     }
@@ -86,9 +91,11 @@ public class GameManager : MonoBehaviour
         inputHandler.HandleInput();
         fsm.OnUpdate();
 
-        foreach (IUpdate objectToUpdate in UpdatableObjects)
-        {
-            objectToUpdate.OnUpdate();
-        }
+        OnUpdate?.Invoke();
+    }
+
+    private void FixedUpdate()
+    {
+        OnFixedUpdate?.Invoke();
     }
 }

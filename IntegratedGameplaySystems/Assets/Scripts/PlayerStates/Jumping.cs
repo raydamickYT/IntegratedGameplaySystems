@@ -1,7 +1,7 @@
 using System.Timers;
 using UnityEngine;
 
-public class Jumping : ICommand, IUpdate
+public class Jumping : ICommand
 {
     private PlayerData playerData;
     private bool canJump = true;
@@ -10,8 +10,6 @@ public class Jumping : ICommand, IUpdate
     private Timer jumpCooldownTimer;
     private bool hasExtraJump = true;
     private Rigidbody rb;
-
-    private bool grounded = true;
 
     public Jumping(PlayerData playerData, GameManager gameManager)
     {
@@ -26,7 +24,7 @@ public class Jumping : ICommand, IUpdate
         };
         jumpCooldownTimer.Elapsed += ResetJump;
 
-        gameManager.AddToUpdatableList(this);
+        gameManager.OnUpdate += OnUpdate;
     }
 
     private void ResetJump(object sender, ElapsedEventArgs e)
@@ -38,6 +36,7 @@ public class Jumping : ICommand, IUpdate
     {
         if (context is not MovementContext movementContext) { return; }
 
+        bool grounded = GroundCheck();
         if (grounded && canJump)
         {
             canJump = false;
@@ -53,6 +52,20 @@ public class Jumping : ICommand, IUpdate
         }
     }
 
+    private bool GroundCheck()
+    {
+        if (playerData.isWallRunning)
+        {
+            return true;
+        }
+        else
+        {
+            var playerMeshTransform = playerData.PlayerMesh.transform;
+            var ray = new Ray(playerMeshTransform.position, -playerMeshTransform.up);
+            return Physics.SphereCast(ray, 0.5f, 1f, layerMask: playerData.GroundLayerMask);
+        }
+    }
+
     public void OnUpdate()
     {
         CheckForExtraJumpReset();
@@ -60,9 +73,7 @@ public class Jumping : ICommand, IUpdate
 
     private void CheckForExtraJumpReset()
     {
-        var playerMeshTransform = playerData.PlayerMesh.transform;
-        var ray = new Ray(playerMeshTransform.position, -playerMeshTransform.up);
-        bool grounded = Physics.SphereCast(ray, 0.5f, 1f, layerMask: playerData.GroundLayerMask);
+        bool grounded = GroundCheck();
 
         if (grounded)
         {

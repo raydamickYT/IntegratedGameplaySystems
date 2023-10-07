@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerMovement : ICommand, IUpdate
+public class PlayerMovement : ICommand
 {
     private PlayerData playerData;
     public float velocity = 0.0f;
@@ -10,7 +10,7 @@ public class PlayerMovement : ICommand, IUpdate
     {
         playerData = _playerData;
 
-        gameManager.AddToUpdatableList(this);
+        gameManager.OnUpdate += OnUpdate;
     }
 
     public void Execute(object context = null)

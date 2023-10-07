@@ -27,6 +27,8 @@ public class PlayerData : ScriptableObject
 
     public LayerMask GroundLayerMask = 0;
 
+    public bool isWallRunning = false;
+
     [NonSerialized] public Transform playerCameraTransform;
     [NonSerialized] public Transform playerCameraHolderTransform;
 
