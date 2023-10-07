@@ -12,8 +12,8 @@ public class CameraControl : ICommand
 
     public void Execute(object context = null)
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * playerData.CameraSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * playerData.CameraSensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * playerData.CameraSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * playerData.CameraSensitivity;
 
         xRotation -= mouseY;
         yRotation += mouseX;

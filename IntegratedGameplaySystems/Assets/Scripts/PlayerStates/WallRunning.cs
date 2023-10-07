@@ -10,7 +10,7 @@ public class WallRunning
     private bool wallLeft, wallRight;
 
     private float speedIncrease;
-    private float amountOfSpeedIncreaseWhileWallRunning = 2.0f;
+    private float amountOfSpeedIncreaseWhileWallRunning = 1.0f;
     private bool speedIncreased = false;
 
     private bool isWallRunning = false;
@@ -65,7 +65,7 @@ public class WallRunning
 
         Vector3 directionToWall = wallLeft ? Vector3.left : Vector3.right;
 
-        playerData.ActorRigidBody.AddRelativeForce(directionToWall.normalized * 2.0f);
+        playerData.ActorRigidBody.AddRelativeForce(20.0f * Time.deltaTime * directionToWall.normalized);
     }
 
     private void WallCheck()

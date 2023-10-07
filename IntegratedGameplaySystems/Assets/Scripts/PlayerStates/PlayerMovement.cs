@@ -1,5 +1,4 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMovement : ICommand
 {
@@ -16,7 +15,7 @@ public class PlayerMovement : ICommand
     {
         if (playerData.ActorRigidBody == null || context is not MovementContext movementContext) { return; }
 
-        playerData.ActorRigidBody.AddRelativeForce(playerData.CurrentMoveSpeed * movementContext.Direction.normalized, ForceMode.Force);
+        playerData.ActorRigidBody.AddRelativeForce(100.0f * Time.deltaTime * playerData.CurrentMoveSpeed * movementContext.Direction.normalized, ForceMode.Force);
 
         SpeedControl();
     }
