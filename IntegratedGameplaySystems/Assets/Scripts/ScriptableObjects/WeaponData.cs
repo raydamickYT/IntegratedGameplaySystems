@@ -11,12 +11,13 @@ public class WeaponData : ItemData
     {
         switch (rate)
         {
+            //omdat dit met tijd gaat is hoger langzamer (wordt gecheckt in seconden)
             case FireRate.Slow:
-                return 0.1f;
+                return .6f;
             case FireRate.Medium:
                 return .3f;
             case FireRate.Fast:
-                return .6f;
+                return .1f;
             default:
                 throw new System.Exception("No value for rate: " + rate.ToString());
         }
@@ -30,7 +31,7 @@ public class WeaponData : ItemData
             case BulletLife.Medium:
                 return .5f;
             case BulletLife.Long:
-                return .1f;
+                return 1f;
             case BulletLife.Extended:
                 return 2.0f;
             default:

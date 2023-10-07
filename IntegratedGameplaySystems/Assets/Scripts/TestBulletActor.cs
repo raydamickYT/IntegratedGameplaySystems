@@ -22,8 +22,9 @@ public class TestBulletActor : ActorBase, IPoolable
     public void Recycle(Vector3 direction)
     {
         //wat te doen als dit object deactiveerd.
-        ActiveObjectInScene.transform.position = manager.playerData.GunHolder.transform.position;
-        ActiveObjectInScene.transform.rotation = manager.playerData.GunHolder.transform.rotation;
+        Debug.Log(EquipmentManager.currentlyEquippedWeapon.BulletPoint.position);
+        ActiveObjectInScene.transform.position = EquipmentManager.currentlyEquippedWeapon.BulletPoint.position;
+        ActiveObjectInScene.transform.rotation = EquipmentManager.currentlyEquippedWeapon.BulletPoint.rotation;
         ActiveObjectInScene.transform.forward = direction.normalized;
         Rigidbody rb = ActiveObjectInScene.GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero;

@@ -9,6 +9,7 @@ public class IWeapon
     public WeaponData WeaponScriptableObject { get; set; }
     public GameObject WeaponInScene { get; set; }
     public float FireRate = 0, BulletLife = 0, BulletForce = 0;
+    public Transform BulletPoint = null;
 
     
     public IWeapon(WeaponData script, GameObject Prefab, GameManager _gameManager)
@@ -23,6 +24,11 @@ public class IWeapon
 
         WeaponInScene = InstantiateGameObjects.Instantiate(WeaponScriptableObject.ItemPrefab.name);
         WeaponInScene.transform.position = gameManager.playerData.GunHolder.transform.position;
+
+        //weer niet heel netjes omdat er van alles fout kan gaan als de naam niet klopt. 
+        //als hier een nullreference uit komt check dan eerst de naam.
+        BulletPoint = WeaponInScene.transform.Find("BulletPoint").transform;
+        Debug.Log(BulletPoint);
 
         WeaponInScene.transform.SetParent(gameManager.playerData.GunHolder.transform);
         WeaponInScene.transform.localRotation = Quaternion.Euler(0, 90, 0);
@@ -40,7 +46,7 @@ public class IWeapon
         }
 
         FireRate = WeaponScriptableObject.FireRateToFloat(WeaponScriptableObject.fireRate);
-        BulletForce = WeaponScriptableObject.BulletLifeToFloat(WeaponScriptableObject.bulletLife);
+        BulletLife = WeaponScriptableObject.BulletLifeToFloat(WeaponScriptableObject.bulletLife);
         BulletForce = WeaponScriptableObject.BulletForceToFloat(WeaponScriptableObject.itemName);
         Debug.Log(FireRate);
     }
