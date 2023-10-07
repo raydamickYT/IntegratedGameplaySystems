@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Delegates
-    public delegate void Deactivationhandler(GameObject bullet);
+    public delegate void Deactivationhandler(ActorBase bullet);
     public Deactivationhandler DeactivationDelegate;
     public delegate ActorBase ObjectPoolDelegate();
     public ObjectPoolDelegate objectPoolDelegate;
@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
         SetUpPlayerData();
         SetupInputsAndStates();
         objectPoolDelegate += ObjectPool.GetPooledObjects;
+        DeactivationDelegate += ObjectPool.DeActivate;
     }
 
     private void SetUpPlayerData()

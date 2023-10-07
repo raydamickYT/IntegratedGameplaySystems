@@ -7,6 +7,7 @@ public class TestBulletActor : ActorBase, IPoolable
 {
    private GameManager manager;
     private ObjectPool objectPool;
+
     //deze base assigned gelijk de prefab aan de actorbase
     public TestBulletActor(GameObject Prefab, GameManager _manager, int NameInt, ObjectPool _objectPool) : base(Prefab)
     {

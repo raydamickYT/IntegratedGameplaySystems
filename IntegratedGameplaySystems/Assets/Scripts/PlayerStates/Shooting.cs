@@ -9,7 +9,6 @@ public class Shooting : ICommand
 {
     public static bool _canFire = true;
     GameManager manager;
-    private float nextFireTime = 0f;
     public Shooting(GameManager _manager)
     {
         this.manager = _manager;
@@ -19,14 +18,13 @@ public class Shooting : ICommand
     {
         ActorBase bullet = manager.objectPoolDelegate?.Invoke();
 
-        if (Time.time > nextFireTime)
-        {
-            nextFireTime = Time.time + manager.bullets.FireRate;
             if (bullet != null && _canFire)
             {
                 //set position
                 bullet.ActiveObjectInScene.transform.position = manager.playerData.playerPosition;
                 bullet.ActiveObjectInScene.transform.rotation = manager.playerData.PlayerMesh.transform.rotation;
+
+                bullet.ActiveObjectInScene.SetActive(true);
 
                 Rigidbody rb = bullet.ActiveObjectInScene.GetComponent<Rigidbody>();
                 if (rb != null && context is MovementContext movementContext)
@@ -42,7 +40,6 @@ public class Shooting : ICommand
                 }
 
             }
-        }
     }
 
     public async Task Wait()
@@ -59,12 +56,15 @@ public class Shooting : ICommand
         //yield return new WaitForSeconds(manager.bullets.BulletLife); //bulletlife kan je in de "GameManager" aanpassen.
         await Task.Delay(TimeSpan.FromSeconds(manager.bullets.BulletLife));
         bullet.Recycle();
-        Debug.Log("dedbullet");
-        //manager.DeactivationDelegate?.Invoke(bullet);
+        if (bullet is ActorBase actorBaseBullet)
+        {
+            manager.DeactivationDelegate?.Invoke(actorBaseBullet);
+        }
     }
 
     public void Execute(object context = null)
     {
+        Debug.Log(_canFire);
         FireGun(context);
     }
 
