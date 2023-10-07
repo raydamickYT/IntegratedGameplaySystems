@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2203692278762990495}
   - component: {fileID: 2300899532681635191}
   - component: {fileID: 2002210818955633748}
-  - component: {fileID: 6464622618441334809}
   - component: {fileID: 7673868903079526339}
   m_Layer: 0
   m_Name: Bullet
@@ -85,19 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &6464622618441334809
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 830673832135509097}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &7673868903079526339
 Rigidbody:
   m_ObjectHideFlags: 0

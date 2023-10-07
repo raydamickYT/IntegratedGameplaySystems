@@ -5,7 +5,7 @@ using UnityEngine;
 public interface IPoolable
 {
     //zet hier iets neer
-    public void Recycle();
+    public void Recycle(Vector3 Direction);
 }
 
 public class Registry

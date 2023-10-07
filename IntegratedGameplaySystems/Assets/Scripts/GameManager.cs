@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public InputHandler inputHandler;
     public GameObject BulletPrefab;
     public Bullets bullets;
+    Vector3 playerFacingDirection;
 
     public List<IUpdate> UpdatableObjects = new();
 
@@ -46,8 +47,15 @@ public class GameManager : MonoBehaviour
     {
         playerData.PlayerMesh = Instantiate(playerData.PlayerPrefab, transform.position, Quaternion.identity);
         playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
-        playerData.playerCameraTransform = FindObjectOfType<Camera>().gameObject.transform;
+        playerData.playerCamera = FindObjectOfType<Camera>();
+        playerData.playerCameraTransform = playerData.playerCamera.gameObject.transform;
         playerData.playerCameraHolderTransform = playerData.PlayerMesh.GetComponentInChildren<Grid>().gameObject.transform;
+        //niet heel netjes, maar moet even voor nu.
+        playerData.GunHolder = GameObject.Find("GunHolder");
+        if (playerData.GunHolder == null)
+        {
+            Debug.LogWarning("GunHolder is niet gevonden in de scene");
+        }
     }
 
     private void SetupInputsAndStates()
@@ -57,7 +65,7 @@ public class GameManager : MonoBehaviour
 
         var playerMovement = new PlayerMovement(playerData, this);
         var cameraControl = new CameraControl(playerData);
-        var shooting = new Shooting(this);
+        var shooting = new Shooting(this, playerData);
         var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);
         var sprinting = new Sprinting(playerData);
@@ -74,7 +82,7 @@ public class GameManager : MonoBehaviour
         inputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
         inputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
         inputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
-        inputHandler.BindInputToCommand(shooting, KeyCode.Mouse0, new MovementContext { Direction = Vector3.forward});
+        inputHandler.BindInputToCommand(shooting, KeyCode.Mouse0, new MovementContext { Direction = playerFacingDirection});
 
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.SwitchState(typeof(InstantiateGameObjects));
@@ -91,6 +99,8 @@ public class GameManager : MonoBehaviour
     {
         inputHandler.HandleInput();
         fsm.OnUpdate();
+
+        playerFacingDirection = playerData.PlayerMesh.transform.forward + Vector3.forward;
 
         foreach (IUpdate objectToUpdate in UpdatableObjects)
         {

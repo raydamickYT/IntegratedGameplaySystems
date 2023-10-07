@@ -7,6 +7,8 @@ public class PlayerData : ScriptableObject
 {
     [NonSerialized] public GameObject PlayerMesh;
 
+    public GameObject GunHolder;
+
     public GameObject PlayerPrefab;
 
     [NonSerialized] public Rigidbody playerRigidBody;
@@ -28,6 +30,7 @@ public class PlayerData : ScriptableObject
     public LayerMask GroundLayerMask = 0;
 
     [NonSerialized] public Transform playerCameraTransform;
+    [NonSerialized] public Camera playerCamera;
     [NonSerialized] public Transform playerCameraHolderTransform;
 
     [NonSerialized] public List<KeyCommand> playerWASDKeys = new List<KeyCommand>();
