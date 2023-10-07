@@ -1,7 +1,7 @@
 using System.Timers;
 using UnityEngine;
 
-public class Jumping : ICommand, IUpdate
+public class Jumping : ICommand
 {
     private PlayerData playerData;
     private bool canJump = true;
@@ -11,8 +11,6 @@ public class Jumping : ICommand, IUpdate
     private bool hasExtraJump = true;
     private Rigidbody rb;
 
-    private bool grounded = true;
-
     public Jumping(PlayerData playerData, GameManager gameManager)
     {
         this.playerData = playerData;
@@ -21,12 +19,11 @@ public class Jumping : ICommand, IUpdate
 
         jumpCooldownTimer = new Timer()
         {
-            //Interval runs in milliseconds instead of seconds.
             Interval = jumpCooldownDuration * 1000.0f
         };
         jumpCooldownTimer.Elapsed += ResetJump;
 
-        gameManager.AddToUpdatableList(this);
+        gameManager.OnUpdate += OnUpdate;
     }
 
     private void ResetJump(object sender, ElapsedEventArgs e)
@@ -38,21 +35,26 @@ public class Jumping : ICommand, IUpdate
     {
         if (context is not MovementContext movementContext) { return; }
 
-        if (grounded && canJump)
+        bool grounded = GroundCheck();
+        if ((grounded || (!grounded && hasExtraJump)) && canJump)
         {
-            canJump = false;
-            Jump(movementContext.Direction);
-            jumpCooldownTimer.Start();
-        }
-        else if (hasExtraJump && canJump)
-        {
-            hasExtraJump = false;
-            canJump = false;
-            Jump(movementContext.Direction);
-            jumpCooldownTimer.Start();
+            Jump(movementContext.Direction, !grounded);
         }
     }
 
+    private bool GroundCheck()
+    {
+        if (playerData.isWallRunning)
+        {
+            return true;
+        }
+        else
+        {
+            var playerMeshTransform = playerData.PlayerMesh.transform;
+            var ray = new Ray(playerMeshTransform.position, -playerMeshTransform.up);
+            return Physics.SphereCast(ray, 0.5f, 1f, layerMask: playerData.GroundLayerMask);
+        }
+    }
     public void OnUpdate()
     {
         CheckForExtraJumpReset();
@@ -60,25 +62,35 @@ public class Jumping : ICommand, IUpdate
 
     private void CheckForExtraJumpReset()
     {
-        var playerMeshTransform = playerData.PlayerMesh.transform;
-        var ray = new Ray(playerMeshTransform.position, -playerMeshTransform.up);
-        bool grounded = Physics.SphereCast(ray, 0.5f, 1f, layerMask: playerData.GroundLayerMask);
+        bool grounded = GroundCheck();
 
         if (grounded)
         {
+            if (playerData.playerRigidBody.drag == 0)
+            {
+                playerData.playerRigidBody.drag = 1.0f;
+            }
             hasExtraJump = true;
         }
     }
 
-    private void Jump(Vector3 direction)
+    private void Jump(Vector3 direction, bool extraJump = false)
     {
+        if (extraJump)
+        {
+            hasExtraJump = false;
+        }
+        canJump = false;
         rb.velocity = new Vector3(rb.velocity.x, 0.0f, rb.velocity.z);
 
         rb.AddForce(jumpMagnitude * direction.normalized, ForceMode.Impulse);
+
+        jumpCooldownTimer.Start();
     }
 
     public void OnKeyDownExecute()
     {
+        playerData.playerRigidBody.drag = 0.0f;
     }
 
     public void OnKeyUpExecute()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -19,7 +20,9 @@ public class GameManager : MonoBehaviour
     public ObjectPoolDelegate objectPoolDelegate;
     #endregion
 
-    public ObjectPool ObjectPool;
+    public event Action OnUpdate;
+    public event Action OnFixedUpdate;
+
     public InputHandler inputHandler;
     public GameObject BulletPrefab;
     public Bullets bullets;
@@ -32,18 +35,19 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    private Player player;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        SetUpPlayerData();
-        SetupInputsAndStates();
-        objectPoolDelegate += ObjectPool.GetPooledObjects;
-        DeactivationDelegate += ObjectPool.DeActivate;
+        player = new(this, playerData);
+
+        SetupGameStates();
     }
 
-    private void SetUpPlayerData()
+    private void SetupGameStates()
     {
         playerData.PlayerMesh = Instantiate(playerData.PlayerPrefab, transform.position, Quaternion.identity);
         playerData.playerRigidBody = playerData.PlayerMesh.GetComponent<Rigidbody>();
@@ -97,14 +101,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        inputHandler.HandleInput();
         fsm.OnUpdate();
 
-        playerFacingDirection = playerData.PlayerMesh.transform.forward + Vector3.forward;
+        OnUpdate?.Invoke();
+    }
 
-        foreach (IUpdate objectToUpdate in UpdatableObjects)
-        {
-            objectToUpdate.OnUpdate();
-        }
+    private void FixedUpdate()
+    {
+        OnFixedUpdate?.Invoke();
     }
 }

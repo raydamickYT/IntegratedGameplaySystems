@@ -1,4 +1,4 @@
-public class FireGunCommand : State<GameManager>, ICommand
+public class FireGunCommand : State, ICommand
 {
     protected FSM<GameManager> owner;
 

@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
-public class InstantiateGameObjects : State<GameManager>
+public class InstantiateGameObjects : State
 {
     private static ObjectPool objectPool;
     
@@ -83,7 +83,7 @@ public class InstantiateGameObjects : State<GameManager>
     }
 }
 
-public class IdleState : State<GameManager>
+public class IdleState : State
 {
     public FSM<GameManager> owner;
 
