@@ -40,8 +40,7 @@ public class TimerScript
         if (owner.UiElementsData.TimerUIText == null) { return; }
         UnityEngine.Debug.Log(BonusTime);
 
-        var TimerValue = Mathf.RoundToInt((float)timer.Elapsed.TotalSeconds - (float)BonusTime);
-        var UiTimer = $@"Timer = {TimerValue}";
+        var UiTimer = $@"Timer = {Mathf.RoundToInt((float)timer.Elapsed.TotalSeconds - (float)BonusTime)}";
         owner.UiElementsData.TimerUIText.text = UiTimer;
 
        // UnityEngine.Debug.Log((float)TimeValue);
@@ -50,7 +49,7 @@ public class TimerScript
         {
             BonusTime = 0;
         }
-        if (TimerValue > timerData.TimeUntilGameOver)
+        if (Mathf.RoundToInt((float)timer.Elapsed.TotalSeconds - (float)BonusTime) > timerData.TimeUntilGameOver)
         {
             owner.GameOverEvent?.Invoke();
         }
