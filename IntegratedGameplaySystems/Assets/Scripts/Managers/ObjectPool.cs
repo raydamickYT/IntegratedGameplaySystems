@@ -5,8 +5,16 @@ public class ObjectPool
 {
     public List<ActorBase> InactivePooledObjects = new();
     public List<ActorBase> ActivePooledObjects = new();
-    public ObjectPool()
+
+    public ObjectPool(GameManager gameManager)
     {
+        gameManager.OnDisableEvent += OnDisable;
+    }
+
+    private void OnDisable()
+    {
+        InactivePooledObjects.Clear();
+        ActivePooledObjects.Clear();
     }
 
     public ActorBase GetPooledObjects()

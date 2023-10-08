@@ -36,8 +36,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private TimerData timerData;
 
-    public ObjectPool ObjectPool = new();
+    public ObjectPool ObjectPool;
 
+    private bool gameWon = false;
     public Bullets bullets;
     public EnemyData enemyData;
 
@@ -56,7 +57,9 @@ public class GameManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        gameWon = false;
 
+        ObjectPool = new(this);
         timer = new(this, canvas.transform, timerData);
         new Player(this, playerData, canvas.transform);
         damageable = new(enemyData);
@@ -66,7 +69,8 @@ public class GameManager : MonoBehaviour
 
         SetupGameStates();
 
-        SaveToJson<int> saveToJson = new SaveToJson<int>();
+        //"Highscore" Is the file name it will make/read. So you can use it to store other things if needed.
+        SaveToJson<int> saveToJson = new("Highscore");
         highScore = saveToJson.ReturnSavedInt();
         highScoreText.text = $"Highscore = {Mathf.RoundToInt(highScore)}";
 
@@ -83,6 +87,7 @@ public class GameManager : MonoBehaviour
 
     private void GameWon()
     {
+        OnDisableEvent?.Invoke();
         gameWonObject.SetActive(true);
         GameOverEvent = null;
         OnUpdate = null;
@@ -94,7 +99,7 @@ public class GameManager : MonoBehaviour
 
         if (timer.ReturnTimeInSeconds() < highScore || highScore == 0)
         {
-            SaveToJson<int> saveToJson = new SaveToJson<int>();
+            SaveToJson<int> saveToJson = new("Highscore");
             saveToJson.SaveObjectToJson(Mathf.RoundToInt((float)timer.ReturnTimeInSeconds()));
         }
 
@@ -103,6 +108,7 @@ public class GameManager : MonoBehaviour
 
     private void GameOver()
     {
+        OnDisableEvent?.Invoke();
         gameOverObject.SetActive(true);
         GameOverEvent = null;
         OnUpdate = null;
@@ -132,8 +138,9 @@ public class GameManager : MonoBehaviour
     {
         OnFixedUpdate?.Invoke();
 
-        if (Vector3.Distance(playerData.ActorMesh.transform.position, finishLineObject.transform.position) < 5.0f)
+        if (Vector3.Distance(playerData.ActorMesh.transform.position, finishLineObject.transform.position) < 5.0f && !gameWon)
         {
+            gameWon = true;
             GameWonEvent?.Invoke();
         }
     }
