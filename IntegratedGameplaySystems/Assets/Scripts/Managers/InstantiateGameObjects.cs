@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 public class InstantiateGameObjects : State
@@ -37,17 +38,17 @@ public class InstantiateGameObjects : State
                 {
                     case WeaponType.Pistol:
                         {
-                            //new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                     case WeaponType.AssaultRifle:
                         {
-                            //new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                     case WeaponType.Knife:
                         {
-                            //new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                 }

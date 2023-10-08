@@ -7,6 +7,6 @@ public class Pistol : IWeapon
     {
         gameManager = _gameManager;
         WeaponScriptableObject = assign;
-        WeaponInitialization();
+        //WeaponInitialization();
     }
 }

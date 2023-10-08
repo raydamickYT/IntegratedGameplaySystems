@@ -13,13 +13,15 @@ public class IWeapon
         this.WeaponScriptableObject = script;
         this.WeaponInScene = Prefab;
         this.gameManager = _gameManager;
+        WeaponInitialization();
     }
 
     public void WeaponInitialization()
     {
         Registry.AddToRegistry(WeaponInScene.name, this);
 
-        WeaponInScene = InstantiateGameObjects.Instantiate(WeaponScriptableObject.ItemPrefab.name);
+         WeaponInScene = GameObject.Instantiate(WeaponScriptableObject.ItemPrefab);
+        
         WeaponInScene.transform.position = gameManager.playerData.GunHolder.transform.position;
 
         //weer niet heel netjes omdat er van alles fout kan gaan als de naam niet klopt. 
