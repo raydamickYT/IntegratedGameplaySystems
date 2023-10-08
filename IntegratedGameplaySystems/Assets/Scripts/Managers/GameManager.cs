@@ -7,10 +7,6 @@ public class GameManager : MonoBehaviour
 
     public ActorData playerData;
 
-    #region Adjustable Variables
-    public int AmountToPool = 30;
-    #endregion
-
     #region Delegates
     public delegate void Deactivationhandler(ActorBase bullet);
     public Deactivationhandler DeactivationDelegate;
@@ -25,6 +21,7 @@ public class GameManager : MonoBehaviour
     public ObjectPool ObjectPool;
 
     public Bullets bullets;
+    public EnemyData enemyData;
 
     public WeaponData[] Weapons = new WeaponData[1];
 
@@ -34,6 +31,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     private Player player;
+    public IDamageableActor damageable;
 
     private void Start()
     {
@@ -41,6 +39,7 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
 
         player = new(this, playerData);
+        damageable = new(enemyData);
         ObjectPool = new(this);
 
         SetupGameStates();

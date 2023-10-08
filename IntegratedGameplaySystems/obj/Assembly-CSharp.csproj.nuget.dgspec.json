@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\Assembly-CSharp.csproj": {}
+    "D:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\Assembly-CSharp.csproj": {}
   },
   "projects": {
-    "d:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\Assembly-CSharp.csproj": {
+    "D:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\Assembly-CSharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "d:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\Assembly-CSharp.csproj",
+        "projectUniqueName": "D:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\Assembly-CSharp.csproj",
         "projectName": "Assembly-CSharp",
-        "projectPath": "d:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\Assembly-CSharp.csproj",
+        "projectPath": "D:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\Assembly-CSharp.csproj",
         "packagesPath": "C:\\Users\\Adam\\.nuget\\packages\\",
-        "outputPath": "d:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\obj\\",
+        "outputPath": "D:\\Gihub\\IntegratedGameplaySystems\\IntegratedGameplaySystems\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
