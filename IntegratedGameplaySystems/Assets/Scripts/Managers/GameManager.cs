@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         ObjectPool = new(this);
         timer = new(this, canvas.transform, timerData);
         new Player(this, playerData, canvas.transform);
-        damageable = new(enemyData);
+        damageable = new(enemyData, this);
 
         gameOverObject.SetActive(false);
         gameWonObject.SetActive(false);

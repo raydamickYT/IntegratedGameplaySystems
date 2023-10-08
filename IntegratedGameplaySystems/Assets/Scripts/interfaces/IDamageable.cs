@@ -11,14 +11,22 @@ public interface IDamageable
 public class IDamageableActor : IDamageable
 {
     public LayerMask targetLayer;
+    public GameObject DamageAbleObject;
+    GameManager manager;
     public EnemyData DamageAbleScriptableObject = null;
-    public IDamageableActor(EnemyData gameObject)
+    public IDamageableActor(EnemyData gameObject, GameManager _manager)
     {
+        manager = _manager;
         DamageAbleScriptableObject = gameObject;
+        manager.OnUpdate += DamageAbleUpdate;
         //Initialize();
+        Debug.Log(targetLayer.value);
     }
     public void Initialize()
     {
 
+    }
+    public void DamageAbleUpdate()
+    {
     }
 }

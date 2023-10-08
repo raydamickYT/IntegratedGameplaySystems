@@ -7,7 +7,8 @@ public class ActorBase
     public Action OnFixedUpdateEvent;
     public Action OnDisableEvent;
 
-    public Action NoLongerMoving;
+   public GameObject BulletHit;
+ public Action NoLongerMoving;
     public Action StartedMoving;
 
     public GameObject ActorObject { get; private set; }
