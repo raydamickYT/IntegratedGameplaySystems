@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class SaveToJson<T>
 {
     [SerializeField] private SaveData<T> scoreSaveData = new();
-
     private string fileName;
+
     public SaveToJson(string fileName)
     {
         this.fileName = fileName;

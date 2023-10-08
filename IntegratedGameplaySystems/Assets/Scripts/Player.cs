@@ -1,9 +1,8 @@
-using System;
 using UnityEngine;
 
 public class Player : ActorBase
 {
-    public readonly InputHandler InputHandler = new();
+    public InputHandler InputHandler = new();
     private GameManager gameManager;
     private ActorData playerData;
     private SpeedUIManager speedUIManager;
@@ -75,7 +74,7 @@ public class Player : ActorBase
 
 
         InputHandler.BindInputToCommand(jumping, KeyCode.Space, Vector3.up);
-        InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, Vector3.down);
+        InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
         InputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
         InputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
 

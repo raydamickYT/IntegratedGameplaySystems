@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class WallRunning
 {
@@ -11,8 +10,8 @@ public class WallRunning
     private bool wallLeft, wallRight;
 
     private float speedIncrease;
-    private float amountOfSpeedIncreaseWhileWallRunning = 1.0f;
     private bool speedIncreased = false;
+    private float amountOfSpeedIncreaseWhileWallRunning = 2.0f;
 
     private bool isWallRunning = false;
 
