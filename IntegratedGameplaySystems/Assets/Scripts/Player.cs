@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Player : ActorBase
 {
+    public UIElementsData UIElementsData { get; private set; }
     public InputHandler InputHandler = new();
     private GameManager gameManager;
     private ActorData playerData;
     private SpeedUIManager speedUIManager;
-    public UIElementsData UIElementsData { get; private set; }
 
     public Player(GameManager gameManager, ActorData playerData, Transform canvasTransform) : base(playerData.ActorMesh)
     {

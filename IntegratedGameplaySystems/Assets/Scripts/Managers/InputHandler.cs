@@ -39,24 +39,6 @@ public class InputHandler
         return false;
     }
 
-    private void CheckForKeyInput(KeyCommand keyCommand)
-    {
-        if (Input.GetKeyDown(keyCommand.Key))
-        {
-            keyCommand.Pressed = true;
-            keyCommand.Command.OnKeyDownExecute(keyCommand.Context);
-        }
-        if (Input.GetKeyUp(keyCommand.Key))
-        {
-            keyCommand.Pressed = false;
-            keyCommand.Command.OnKeyUpExecute();
-        }
-        if (Input.GetKey(keyCommand.Key))
-        {
-            keyCommand.Command.Execute(keyCommand.Context);
-        }
-    }
-
     public KeyCommand BindInputToCommand(ICommand command, KeyCode keyCode = KeyCode.None, object context = null, bool isMouseControl = false, bool isMovementKey = false)
     {
         KeyCommand keyCommand = new()
@@ -77,6 +59,24 @@ public class InputHandler
     {
         var items = keyCommands.FindAll(x => x.Key == keyCode);
         items.ForEach(x => keyCommands.Remove(x));
+    }
+
+    private void CheckForKeyInput(KeyCommand keyCommand)
+    {
+        if (Input.GetKeyDown(keyCommand.Key))
+        {
+            keyCommand.Pressed = true;
+            keyCommand.Command.OnKeyDownExecute(keyCommand.Context);
+        }
+        if (Input.GetKeyUp(keyCommand.Key))
+        {
+            keyCommand.Pressed = false;
+            keyCommand.Command.OnKeyUpExecute();
+        }
+        if (Input.GetKey(keyCommand.Key))
+        {
+            keyCommand.Command.Execute(keyCommand.Context);
+        }
     }
 }
 

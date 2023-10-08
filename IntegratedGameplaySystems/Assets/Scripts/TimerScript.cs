@@ -1,14 +1,14 @@
-using System.Diagnostics;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class TimerScript
 {
-    private readonly Stopwatch timer = new();
-    public double BonusTime = 0;
+    private double timer = 0;
+
     private GameManager owner;
     private TimerData timerData;
+
+    private bool timerIsRunning = false;
 
     public TimerScript(GameManager owner, Transform parentTransform, TimerData timerData)
     {
@@ -22,34 +22,44 @@ public class TimerScript
         }
 
         owner.GameOverEvent += StopTimer;
-        timer.Start();
+        owner.GameWonEvent += StopTimer;
+        StartTimer();
     }
 
     public void StartTimer()
     {
-        timer.Start();
+        if (!timerIsRunning)
+        {
+            timer = 0;
+            timerIsRunning = true;
+        }
     }
 
     public double ReturnTimeInSeconds()
     {
-        return timer.Elapsed.TotalSeconds;
+        return timer;
+    }
+
+    public void ReduceTime(float amount)
+    {
+        if (timer - amount >= 0)
+        {
+            timer -= amount;
+        }
     }
 
     public void UpdateTimerElement()
     {
         if (owner.UiElementsData.TimerUIText == null) { return; }
-        UnityEngine.Debug.Log(BonusTime);
 
-        var UiTimer = $@"Timer = {Mathf.RoundToInt((float)timer.Elapsed.TotalSeconds - (float)BonusTime)}";
-        owner.UiElementsData.TimerUIText.text = UiTimer;
-
-       // UnityEngine.Debug.Log((float)TimeValue);
-
-        if (BonusTime != 0)
+        if (timerIsRunning)
         {
-            BonusTime = 0;
+            timer += Time.deltaTime;
         }
-        if (Mathf.RoundToInt((float)timer.Elapsed.TotalSeconds - (float)BonusTime) > timerData.TimeUntilGameOver)
+
+        owner.UiElementsData.TimerUIText.text = $@"Timer = {Mathf.RoundToInt((float)timer)}";
+
+        if (timer > timerData.TimeUntilGameOver)
         {
             owner.GameOverEvent?.Invoke();
         }
@@ -57,6 +67,10 @@ public class TimerScript
 
     public void StopTimer()
     {
-        timer.Stop();
+        if (timerIsRunning)
+        {
+            timerIsRunning = false;
+            timer = 0;
+        }
     }
 }
