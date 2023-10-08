@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Scripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class Pistol : IWeapon
 {
@@ -19,7 +14,7 @@ public class Pistol : IWeapon
     public void Initialization()
     {
         Registry.AddToRegistry(WeaponInScene.name, this);
-        
+
         WeaponInScene = InstantiateGameObjects.Instantiate(WeaponScriptableObject.ItemPrefab.name);
         WeaponInScene.transform.position = gameManager.playerData.GunHolder.transform.position;
 
@@ -35,7 +30,6 @@ public class Pistol : IWeapon
         else
         {
             WeaponInScene.SetActive(false);
-
         }
     }
 }

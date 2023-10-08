@@ -8,9 +8,9 @@ public class Shooting : ICommand
 {
     public static bool _canFire = true;
     GameManager manager;
-    PlayerData playerData;
+    ActorData playerData;
 
-    public Shooting(GameManager _manager, PlayerData _playerData)
+    public Shooting(GameManager _manager, ActorData _playerData)
     {
         playerData = _playerData;
         this.manager = _manager;

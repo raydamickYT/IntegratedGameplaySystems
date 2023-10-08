@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ActorPrefab: {fileID: 6101170080697193124, guid: 2cb3e5258bc44a04b9d43015e4a1024e, type: 3}
   JumpForce: 10
-  CameraSensitivity: 2
-  StandardMovementSpeed: 10
-  AirSpeedMultiplier: 0.8
-  SlideSpeedIncrase: 15
-  SprintSpeedIncrease: 10
+  CameraSensitivity: 1.5
+  StandardMovementSpeed: 7
+  AirSpeedMultiplier: 0.4
+  SlideSpeedIncrease: 10
+  SprintSpeedIncrease: 7
   WallRunLayerMask:
     serializedVersion: 2
     m_Bits: 8

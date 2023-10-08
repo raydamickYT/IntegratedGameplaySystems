@@ -15,8 +15,9 @@ public class PlayerMovement : ICommand
     {
         if (playerData.ActorRigidBody == null || context is not MovementContext movementContext) { return; }
 
-        playerData.ActorRigidBody.AddRelativeForce(100.0f * Time.deltaTime *
-            playerData.CurrentMoveSpeed * movementContext.Direction.normalized, ForceMode.Force);
+        Debug.Log(playerData.CurrentMoveSpeed);
+
+        playerData.ActorRigidBody.AddRelativeForce(playerData.CurrentMoveSpeed * movementContext.Direction.normalized, ForceMode.Force);
 
         SpeedControl();
     }
@@ -34,15 +35,15 @@ public class PlayerMovement : ICommand
         }
     }
 
-    public void OnKeyDownExecute(object context = null)
-    {
-    }
-
     public void OnKeyUpExecute()
     {
         if (!owner.InputHandler.IsAKeyPressed())
         {
             owner.NoLongerMoving?.Invoke();
         }
+    }
+
+    public void OnKeyDownExecute(object context = null)
+    {
     }
 }

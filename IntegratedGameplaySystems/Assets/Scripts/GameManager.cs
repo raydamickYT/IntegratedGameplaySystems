@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -29,7 +27,6 @@ public class GameManager : MonoBehaviour
     public GameObject BulletPrefab;
     public Bullets bullets;
 
-    public List<IUpdate> UpdatableObjects = new();
     public WeaponData[] Weapons = new WeaponData[1];
 
     #region Dictionaries and Lists

@@ -10,7 +10,6 @@ public class InstantiateGameObjects : State
     private GameManager manager;
     public int AmountToPool = 30;
 
-
     public InstantiateGameObjects(FSM<GameManager> _owner, ObjectPool _objectPool, GameManager _manager)
     {
         owner = _owner;
@@ -18,37 +17,38 @@ public class InstantiateGameObjects : State
         manager = _manager;
     }
 
-    public override void OnEnter()
-    {
-        for (int i = 0; i < AmountToPool; i++)
-        {
-            // int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
-            new TestBulletActor(manager.bullets.BulletObject, manager, i, objectPool);
-        }
-        for (int i = 0; i < manager.Weapons.Length; i++)
-        {
-            if (manager.Weapons[i].ItemPrefab.activeInHierarchy)
-            {
-                break;
-            }
-            else
-            {
-                //niet netjes, maar kan nu omdat we weinig wapens hebben.
-                if (manager.Weapons[i].itemName == WeaponType.Pistol)
-                {
-                    var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
-                }
-                if (manager.Weapons[i].itemName == WeaponType.AssaultRifle)
-                {
-                    var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
-                }
-                if (manager.Weapons[i].itemName == WeaponType.Knife)
-                {
-                    //var t = new Pistol(manager.Weapons[i], this, manager.Weapons[i].ItemPrefab);
-                }
-            }
-        }
-    }
+    //Gives Errors
+    //public override void OnEnter()
+    //{
+    //    for (int i = 0; i < AmountToPool; i++)
+    //    {
+    ////        int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
+    //        new BulletActor(manager.bullets.BulletObject, manager, i, objectPool);
+    //    }
+    //    for (int i = 0; i < manager.Weapons.Length; i++)
+    //    {
+    //        if (manager.Weapons[i].ItemPrefab.activeInHierarchy)
+    //        {
+    //            break;
+    //        }
+    //        else
+    //        {
+    ////            niet netjes, maar kan nu omdat we weinig wapens hebben.
+    //            if (manager.Weapons[i].itemName == WeaponType.Pistol)
+    //            {
+    //                var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+    //            }
+    //            if (manager.Weapons[i].itemName == WeaponType.AssaultRifle)
+    //            {
+    //                var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+    //            }
+    //            if (manager.Weapons[i].itemName == WeaponType.Knife)
+    //            {
+    //                var t = new Pistol(manager.Weapons[i], this, manager.Weapons[i].ItemPrefab);
+    //            }
+    //        }
+    //    }
+    //}
 
     public static GameObject Instantiate(string e)
     {
@@ -56,6 +56,7 @@ public class InstantiateGameObjects : State
         {
             var EenObject = GameObject.Instantiate(actorBase.ActorObject);
             //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
+            //You're still using the StartsWith "Bullet" though.
             if (e.StartsWith("Bullet"))
             {
                 objectPool.DeActivate(actorBase);

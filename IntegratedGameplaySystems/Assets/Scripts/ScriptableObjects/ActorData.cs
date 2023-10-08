@@ -12,17 +12,17 @@ public class ActorData : ScriptableObject
 
     public float JumpForce = 10.0f;
 
-    public float CameraSensitivity = 250.0f;
+    public float CameraSensitivity;
 
     [NonSerialized] public Rigidbody playerRigidBody;
 
-    public float StandardMovementSpeed = 10.0f;
+    public float StandardMovementSpeed;
 
     public float AirSpeedMultiplier = 0.5f;
 
     [NonSerialized] public float CurrentMoveSpeed;
 
-    public float SlideSpeedIncrase = 25.0f;
+    public float SlideSpeedIncrease = 25.0f;
 
     public float SprintSpeedIncrease = 20.0f;
 
@@ -35,4 +35,6 @@ public class ActorData : ScriptableObject
     [NonSerialized] public Transform playerCameraTransform;
     [NonSerialized] public Camera playerCamera;
     [NonSerialized] public Transform playerCameraHolderTransform;
+
+    public GameObject GunHolder { get; internal set; }
 }

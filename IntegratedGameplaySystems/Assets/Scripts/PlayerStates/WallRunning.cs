@@ -19,7 +19,7 @@ public class WallRunning
     {
         playerData = _playerData;
 
-        owner.OnUpdateEvent += OnUpdate;
+        owner.OnUpdateEvent += WallRunningOnUpdate;
         owner.OnFixedUpdateEvent += OnFixedUpdate;
 
         owner.NoLongerMoving += MovementStopped;
@@ -65,7 +65,7 @@ public class WallRunning
 
         Vector3 directionToWall = wallLeft ? Vector3.left : Vector3.right;
 
-        playerData.ActorRigidBody.AddRelativeForce(20.0f * Time.deltaTime * directionToWall.normalized);
+        playerData.ActorRigidBody.AddRelativeForce(20.0f * directionToWall.normalized);
     }
 
     private void WallCheck()
