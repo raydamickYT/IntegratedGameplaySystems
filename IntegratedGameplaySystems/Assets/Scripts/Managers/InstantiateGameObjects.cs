@@ -80,21 +80,21 @@ public class InstantiateGameObjects : State
     {
         if (Registry.ObjectRegistry[e] is ActorBase actorBase)
         {
-            var EenObject = GameObject.Instantiate(actorBase.ActorObject);
+            var AnObject = GameObject.Instantiate(actorBase.ActorObject);
             //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
             //You're still using the StartsWith "Bullet" though.
             if (e.StartsWith("Bullet"))
             {
-                EenObject.transform.SetParent(GameObject.Find("BulletHolder").transform);
+                AnObject.transform.SetParent(GameObject.Find("BulletHolder").transform);
                 objectPool.DeActivate(actorBase);
             }
-            return EenObject;
+            return AnObject;
         }
         if (Registry.ObjectRegistry[e] is IWeapon weapon)
         {
-            var EenObject = GameObject.Instantiate(weapon.WeaponInScene);
+            var AnObject = GameObject.Instantiate(weapon.WeaponInScene);
             //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
-            return EenObject;
+            return AnObject;
         }
         return null;
     }
