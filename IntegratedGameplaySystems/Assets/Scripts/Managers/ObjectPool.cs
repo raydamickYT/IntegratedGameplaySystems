@@ -11,26 +11,6 @@ public class ObjectPool
         gameManager.OnDisableEvent += OnDisable;
     }
 
-    private void OnDisable()
-    {
-        foreach (var bullet in InactivePooledObjects)
-        {
-            if (bullet.ActiveObjectInScene != null)
-            {
-                GameObject.Destroy(bullet.ActiveObjectInScene);
-            }
-        }
-        foreach (var bullet in ActivePooledObjects)
-        {
-            if (bullet.ActiveObjectInScene != null)
-            {
-                GameObject.Destroy(bullet.ActiveObjectInScene);
-            }
-        }
-        InactivePooledObjects.Clear();
-        ActivePooledObjects.Clear();
-    }
-
     public ActorBase GetPooledObjects()
     {
         if (InactivePooledObjects.Count > 0)
@@ -75,4 +55,23 @@ public class ObjectPool
         }
     }
 
+    private void OnDisable()
+    {
+        foreach (var bullet in InactivePooledObjects)
+        {
+            if (bullet.ActiveObjectInScene != null)
+            {
+                GameObject.Destroy(bullet.ActiveObjectInScene);
+            }
+        }
+        foreach (var bullet in ActivePooledObjects)
+        {
+            if (bullet.ActiveObjectInScene != null)
+            {
+                GameObject.Destroy(bullet.ActiveObjectInScene);
+            }
+        }
+        InactivePooledObjects.Clear();
+        ActivePooledObjects.Clear();
+    }
 }
