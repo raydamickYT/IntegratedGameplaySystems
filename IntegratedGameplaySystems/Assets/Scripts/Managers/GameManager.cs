@@ -1,24 +1,31 @@
 using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private readonly FSM<GameManager> fsm = new();
-
     public ActorData playerData;
 
-    #region Delegates
     public delegate void Deactivationhandler(ActorBase bullet);
     public Deactivationhandler DeactivationDelegate;
     public delegate ActorBase ObjectPoolDelegate();
     public ObjectPoolDelegate objectPoolDelegate;
-    #endregion
 
-    public event Action OnUpdate;
-    public event Action OnFixedUpdate;
-    public event Action OnDisableEvent;
+    public ObjectPool ObjectPool;
+    public Bullets bullets;
+    public EnemyData enemyData;
+
+    public UIElementsData UiElementsData;
+
+    public TimerScript timer;
+
+    public WeaponData[] Weapons = new WeaponData[1];
+
+    public IDamageableActor damageable;
+
+    public Action OnUpdate;
+    public Action OnFixedUpdate;
+    public Action OnDisableEvent;
     public Action GameOverEvent;
     public Action GameWonEvent;
 
@@ -29,29 +36,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject gameWonObject;
     [SerializeField] private GameObject finishLineObject;
 
+    [SerializeField] private TimerData timerData;
     [SerializeField] private TMP_Text highScoreText;
+
     private float highScore = int.MaxValue;
 
-    public UIElementsData UiElementsData;
-
-    [SerializeField] private TimerData timerData;
-
-    public ObjectPool ObjectPool;
+    private readonly FSM<GameManager> fsm = new();
 
     private bool gameWon = false;
-    public Bullets bullets;
-    public EnemyData enemyData;
-
-    public TimerScript timer;
-
-    public WeaponData[] Weapons = new WeaponData[1];
-
-    #region Dictionaries and Lists
-
-
-    #endregion
-
-    public IDamageableActor damageable;
 
     private void Start()
     {
@@ -89,9 +81,12 @@ public class GameManager : MonoBehaviour
     {
         OnDisableEvent?.Invoke();
         gameWonObject.SetActive(true);
-        GameOverEvent = null;
         OnUpdate = null;
         OnFixedUpdate = null;
+        GameOverEvent = null;
+        GameWonEvent = null;
+        objectPoolDelegate = null;
+        DeactivationDelegate = null;
         OnDisableEvent = null;
 
         Cursor.lockState = CursorLockMode.None;
@@ -110,9 +105,12 @@ public class GameManager : MonoBehaviour
     {
         OnDisableEvent?.Invoke();
         gameOverObject.SetActive(true);
-        GameOverEvent = null;
         OnUpdate = null;
         OnFixedUpdate = null;
+        GameOverEvent = null;
+        GameWonEvent = null;
+        objectPoolDelegate = null;
+        DeactivationDelegate = null;
         OnDisableEvent = null;
 
         Cursor.lockState = CursorLockMode.None;
@@ -148,8 +146,13 @@ public class GameManager : MonoBehaviour
     private void OnDisable()
     {
         OnDisableEvent?.Invoke();
-        OnFixedUpdate = null;
+
+        DeactivationDelegate = null;
+        objectPoolDelegate = null;
         OnUpdate = null;
+        OnFixedUpdate = null;
+        GameOverEvent = null;
+        GameWonEvent = null;
         OnDisableEvent = null;
     }
 }
