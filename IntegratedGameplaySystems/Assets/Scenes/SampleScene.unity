@@ -739,12 +739,12 @@ MonoBehaviour:
   playerData: {fileID: 11400000, guid: 6fdd37f6bb8358e4f8bfa96c6e2dfcc0, type: 2}
   bullets: {fileID: 11400000, guid: 14c6882b872803b40859feb46f195847, type: 2}
   enemyData: {fileID: 11400000, guid: 8e3448f847f57a248941dc2019a99caa, type: 2}
-  UiElementsData: {fileID: 0}
+  UiElementsData: {fileID: 11400000, guid: 039c0ed8c7cd1b848a033ac29f8407dc, type: 2}
   Weapons:
   - {fileID: 11400000, guid: 49965a56be8352840893879badbd7a99, type: 2}
   - {fileID: 11400000, guid: de79f42bdd387684d95db1ac81ab4bcf, type: 2}
-  mainMenuFunctions: {fileID: 0}
-  canvas: {fileID: 0}
+  mainMenuFunctions: {fileID: 11400000, guid: 7701067a077e6e24091b72aab10d5717, type: 2}
+  canvas: {fileID: 1552727347}
   gameOverObject: {fileID: 0}
   gameWonObject: {fileID: 0}
   finishLineObject: {fileID: 0}

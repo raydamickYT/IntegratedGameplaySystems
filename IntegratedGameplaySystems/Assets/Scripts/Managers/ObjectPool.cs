@@ -15,8 +15,8 @@ public class ObjectPool
     {
         InactivePooledObjects.Clear();
         ActivePooledObjects.Clear();
-        Debug.Log(InactivePooledObjects.Count);
-        Debug.Log(ActivePooledObjects.Count);
+//        Debug.Log(InactivePooledObjects.Count);
+//        Debug.Log(ActivePooledObjects.Count);
     }
 
     public ActorBase GetPooledObjects()
