@@ -47,11 +47,12 @@ public class Player : ActorBase
 
     private void SetupInputsAndStates()
     {
-        inventory = new Inventory(gameManager, null);
-        var EquipmentManager = new EquipmentManager(gameManager, inventory);
-
-        var shooting = new Shooting(gameManager, playerData);
         var playerMovement = new PlayerMovement(playerData, this);
+        var EquipmentManager = new EquipmentManager(gameManager);
+        
+        var shooting = new Shooting(gameManager, playerData);
+        
+        
         var cameraControl = new CameraControl(playerData);
         var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);
@@ -65,14 +66,16 @@ public class Player : ActorBase
 
         InputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
 
+
         InputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
+        InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
         InputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
-        InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
         InputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
 
         //equipment
-        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext { WeaponIndex = 0 });
-        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext { WeaponIndex = 1 });
+        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext {WeaponIndex = 0});
+        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext {WeaponIndex = 1});
+        //inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha3, new WeaponSelectContext {WeaponIndex = 2});
     }
 
     private void OnFixedUpdate()

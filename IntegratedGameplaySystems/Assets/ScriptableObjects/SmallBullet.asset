@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2156166abf7db284b96c98cb50a1ed44, type: 3}
   m_Name: SmallBullet
   m_EditorClassIdentifier: 
-  BulletObject: {fileID: 830673832135509097, guid: 31e7b52c8ccc3fb4e8c692579cbd9d08, type: 3}
+  BulletObject: {fileID: 268189926461374485, guid: b74fca1cc255e224fa56f998ee354316, type: 3}
   BulletSpeed: 100
   FireRate: 0.5
   BulletLife: 1

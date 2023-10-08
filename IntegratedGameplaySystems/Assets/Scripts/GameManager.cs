@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
 
     public ObjectPool ObjectPool;
 
-    public GameObject BulletPrefab;
     public Bullets bullets;
 
     public WeaponData[] Weapons = new WeaponData[1];
@@ -60,7 +59,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(playerData.GunHolder.transform.position);
         fsm.OnUpdate();
 
         OnUpdate?.Invoke();

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a1cb22829464f94d8eae1a5fc2ddd56, type: 3}
   m_Name: AssaultRifle
   m_EditorClassIdentifier: 
-  ItemPrefab: {fileID: 0}
-  itemName: 0
-  weaponsStyle: 0
+  ItemPrefab: {fileID: 2421267962458782332, guid: 22c14147c1281cb4c81c26224f70414a, type: 3}
+  itemName: 2
+  weaponsStyle: 1
+  fireRate: 2
+  bulletLife: 3

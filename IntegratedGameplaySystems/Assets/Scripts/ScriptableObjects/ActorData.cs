@@ -7,6 +7,8 @@ public class ActorData : ScriptableObject
     [NonSerialized] public GameObject ActorMesh;
 
     [NonSerialized] public Rigidbody ActorRigidBody;
+    
+ 	[NonSerialized] public GameObject GunHolder;
 
     public GameObject ActorPrefab;
 

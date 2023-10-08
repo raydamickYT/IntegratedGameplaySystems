@@ -23,7 +23,6 @@ public class ObjectPool
                 ActivePooledObjects.Add(_object);
                 InactivePooledObjects.Remove(_object);
 
-                Debug.Log(_object.ActiveObjectInScene.activeSelf);
                 return _object;
             }
         }

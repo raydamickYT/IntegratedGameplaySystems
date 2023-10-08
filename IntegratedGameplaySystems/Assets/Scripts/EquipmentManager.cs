@@ -8,15 +8,13 @@ using UnityEngine;
 public class EquipmentManager : ICommand
 {
     public GameManager gameManager;
-    public Inventory inventory;
-    public static GameObject currentlyEquippedWeapon = null;
-    public static GameObject[] WeaponsInScene;
-    public EquipmentManager(GameManager manager, Inventory _inventory)
+    public static IWeapon currentlyEquippedWeapon = null;
+    public static IWeapon[] WeaponsInScene;
+    public EquipmentManager(GameManager manager)
     {
         gameManager = manager;
-        inventory = _inventory;
 
-        WeaponsInScene = new GameObject[manager.Weapons.Length];
+        WeaponsInScene = new IWeapon[manager.Weapons.Length];
     }
 
     public void SelectWeapon(int weaponIndex)
@@ -29,13 +27,12 @@ public class EquipmentManager : ICommand
 
         if (EquipmentManager.currentlyEquippedWeapon != null)
         {
-            Debug.Log("we have an active item");
-            EquipmentManager.currentlyEquippedWeapon.SetActive(false);  // Deactivate the current weapon
+            EquipmentManager.currentlyEquippedWeapon.WeaponInScene.SetActive(false);  // Deactivate the current weapon
         }
 
         // Activate the selected weapon
         EquipmentManager.currentlyEquippedWeapon = WeaponsInScene[weaponIndex];
-        EquipmentManager.currentlyEquippedWeapon.SetActive(true);
+        EquipmentManager.currentlyEquippedWeapon.WeaponInScene.SetActive(true);
     }
 
     public void Execute(object context = null)
