@@ -11,11 +11,6 @@ public class Sliding : ICommand
 
     public void Execute(object context = null)
     {
-        if (context is MovementContext movementContext)
-        {
-            //Downward Force.
-            playerData.ActorRigidBody.AddRelativeForce(movementContext.Direction.normalized * 5.0f, ForceMode.Force);
-        }
     }
 
     public void OnKeyDownExecute(object context = null)

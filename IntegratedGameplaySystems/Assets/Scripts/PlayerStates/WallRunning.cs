@@ -10,8 +10,8 @@ public class WallRunning
     private bool wallLeft, wallRight;
 
     private float speedIncrease;
-    private float amountOfSpeedIncreaseWhileWallRunning = 1.0f;
     private bool speedIncreased = false;
+    private float amountOfSpeedIncreaseWhileWallRunning = 2.0f;
 
     private bool isWallRunning = false;
 
@@ -21,7 +21,6 @@ public class WallRunning
 
         owner.OnUpdateEvent += OnUpdate;
         owner.OnFixedUpdateEvent += OnFixedUpdate;
-
         owner.NoLongerMoving += MovementStopped;
     }
 

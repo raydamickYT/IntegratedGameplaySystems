@@ -6,6 +6,8 @@ public class ActorBase
     public Action OnUpdateEvent;
     public Action OnFixedUpdateEvent;
     public GameObject BulletHit;
+    public Action OnDisableEvent;
+
     public Action NoLongerMoving;
     public Action StartedMoving;
 

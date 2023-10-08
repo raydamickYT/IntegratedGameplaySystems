@@ -33,22 +33,21 @@ public class InstantiateGameObjects : State
             else
             {
                 //niet netjes, maar kan nu omdat we weinig wapens hebben.
-                //Zou een Switch case niet werken? uh ja wel dus lmao
                 switch (manager.Weapons[i].itemName)
                 {
                     case WeaponType.Pistol:
                         {
-                            new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            //new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                     case WeaponType.AssaultRifle:
                         {
-                            new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            //new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                     case WeaponType.Knife:
                         {
-                            new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            //new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                 }
@@ -100,9 +99,9 @@ public class InstantiateGameObjects : State
         }
         if (Registry.ObjectRegistry[e] is IWeapon weapon)
         {
-            var AnObject = GameObject.Instantiate(weapon.WeaponInScene);
-            //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
-            return AnObject;
+            //var AnObject = GameObject.Instantiate(weapon.WeaponInScene);
+            ////deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
+            //return AnObject;
         }
         return null;
     }

@@ -2,26 +2,34 @@ using UnityEngine;
 
 public class Player : ActorBase
 {
-    public readonly InputHandler InputHandler = new();
+    public InputHandler InputHandler = new();
     private GameManager gameManager;
     private ActorData playerData;
+    private SpeedUIManager speedUIManager;
+    public UIElementsData UIElementsData { get; private set; }
 
-    public Player(GameManager gameManager, ActorData playerData) : base(playerData.ActorMesh)
+    public Player(GameManager gameManager, ActorData playerData, Transform canvasTransform) : base(playerData.ActorMesh)
     {
         this.playerData = playerData;
         this.gameManager = gameManager;
+        UIElementsData = gameManager.UiElementsData;
 
         Initialization();
 
         gameManager.OnUpdate += OnUpdate;
         gameManager.OnFixedUpdate += OnFixedUpdate;
         gameManager.OnDisableEvent += OnDisable;
+
+        speedUIManager = new(this, canvasTransform);
     }
 
     private void OnDisable()
     {
+        OnUpdateEvent = null;
+        OnFixedUpdateEvent = null;
         NoLongerMoving = null;
         StartedMoving = null;
+        OnDisableEvent = null;
     }
 
     private void Initialization()
@@ -57,28 +65,28 @@ public class Player : ActorBase
         var sprinting = new Sprinting(playerData);
         var wallRun = new WallRunning(playerData, this);
 
-        InputHandler.BindInputToCommand(playerMovement, KeyCode.W, new MovementContext { Direction = Vector3.forward }, isMovementKey: true);
-        InputHandler.BindInputToCommand(playerMovement, KeyCode.A, new MovementContext { Direction = Vector3.left }, isMovementKey: true);
-        InputHandler.BindInputToCommand(playerMovement, KeyCode.S, new MovementContext { Direction = Vector3.back }, isMovementKey: true);
-        InputHandler.BindInputToCommand(playerMovement, KeyCode.D, new MovementContext { Direction = Vector3.right }, isMovementKey: true);
+        InputHandler.BindInputToCommand(playerMovement, KeyCode.W, Vector3.forward, isMovementKey: true);
+        InputHandler.BindInputToCommand(playerMovement, KeyCode.A, Vector3.left, isMovementKey: true);
+        InputHandler.BindInputToCommand(playerMovement, KeyCode.S, Vector3.back, isMovementKey: true);
+        InputHandler.BindInputToCommand(playerMovement, KeyCode.D, Vector3.right, isMovementKey: true);
 
         InputHandler.BindInputToCommand(cameraControl, isMouseControl: true);
 
 
-        InputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
-        InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
+        InputHandler.BindInputToCommand(jumping, KeyCode.Space, Vector3.up);
+        InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl);
         InputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
         InputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
 
         //equipment
         InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext { WeaponIndex = 0 });
         InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext { WeaponIndex = 1 });
-        //inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha3, new WeaponSelectContext {WeaponIndex = 2});
     }
 
     private void OnFixedUpdate()
     {
         OnFixedUpdateEvent?.Invoke();
+        speedUIManager.UpdateSpeedUIElement(playerData.ActorRigidBody.velocity.magnitude);
     }
 
     private void OnUpdate()

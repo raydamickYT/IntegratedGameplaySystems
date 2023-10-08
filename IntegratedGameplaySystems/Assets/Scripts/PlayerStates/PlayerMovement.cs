@@ -9,15 +9,28 @@ public class PlayerMovement : ICommand
     {
         playerData = _playerData;
         this.owner = owner;
+
+        owner.OnFixedUpdateEvent += OnFixedUpdate;
+        owner.OnDisableEvent += OnDisable;
     }
 
     public void Execute(object context = null)
     {
-        if (playerData.ActorRigidBody == null || context is not MovementContext movementContext) { return; }
+        if (playerData.ActorRigidBody == null || context is not Vector3 movementContext) { return; }
 
-        playerData.ActorRigidBody.AddRelativeForce(100.0f * Time.deltaTime * playerData.CurrentMoveSpeed * movementContext.Direction.normalized, ForceMode.Force);
+        playerData.ActorRigidBody.AddRelativeForce(100.0f * Time.deltaTime * playerData.CurrentMoveSpeed * movementContext.normalized, ForceMode.Force);
 
         SpeedControl();
+    }
+
+    private void OnFixedUpdate()
+    {
+    }
+
+    private void OnDisable()
+    {
+        owner.OnFixedUpdateEvent -= OnFixedUpdate;
+        owner.OnDisableEvent -= OnDisable;
     }
 
     private void SpeedControl()

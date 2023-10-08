@@ -1,10 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using UnityEngine;
+
 public interface IPoolable
 {
-    //zet hier iets neer
     public void Recycle(Vector3 Direction);
 }
 
@@ -14,7 +12,6 @@ public class Registry
 
     public Registry()
     {
-
     }
 
     public static void AddToRegistry(string e, ActorBase a)
@@ -24,6 +21,7 @@ public class Registry
             ObjectRegistry.Add(e, a);
         }
     }
+
     public static void AddToRegistry(string e, IWeapon a)
     {
         if (!ObjectRegistry.ContainsKey(e))

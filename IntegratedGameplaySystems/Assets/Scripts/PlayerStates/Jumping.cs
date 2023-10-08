@@ -10,6 +10,14 @@ public class Jumping : ICommand
     private bool hasExtraJump = true;
     private Rigidbody rb;
 
+    public void OnKeyDownExecute(object context = null)
+    {
+    }
+
+    public void OnKeyUpExecute()
+    {
+    }
+
     public Jumping(ActorData playerData, ActorBase owner)
     {
         this.playerData = playerData;
@@ -25,20 +33,20 @@ public class Jumping : ICommand
         owner.OnUpdateEvent += OnUpdate;
     }
 
-    private void ResetJump(object sender, ElapsedEventArgs e)
-    {
-        canJump = true;
-    }
-
     public void Execute(object context = null)
     {
-        if (context is not MovementContext movementContext) { return; }
+        if (context is not Vector3 movementContext) { return; }
 
         bool grounded = GroundCheck();
         if ((grounded || (!grounded && hasExtraJump)) && canJump)
         {
-            Jump(movementContext.Direction, !grounded);
+            Jump(movementContext, !grounded);
         }
+    }
+
+    private void ResetJump(object sender, ElapsedEventArgs e)
+    {
+        canJump = true;
     }
 
     private bool GroundCheck()
@@ -83,13 +91,5 @@ public class Jumping : ICommand
         rb.AddForce(playerData.JumpForce * direction.normalized, ForceMode.Impulse);
 
         jumpCooldownTimer.Start();
-    }
-
-    public void OnKeyDownExecute(object context = null)
-    {
-    }
-
-    public void OnKeyUpExecute()
-    {
     }
 }
