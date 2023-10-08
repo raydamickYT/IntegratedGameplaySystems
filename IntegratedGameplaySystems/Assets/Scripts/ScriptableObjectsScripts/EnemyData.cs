@@ -7,5 +7,6 @@ using UnityEngine;
 public class EnemyData : ScriptableObject
 {
     public GameObject EnemObject;
-    public LayerMask enemyLayerMask;
+    public LayerMask EnemyLayerMask;
+    public LayerMask BulletLayerMask;
 }
