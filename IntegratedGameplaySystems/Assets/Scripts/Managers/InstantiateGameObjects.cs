@@ -7,6 +7,7 @@ public class InstantiateGameObjects : State
     protected FSM<GameManager> owner;
     private GameManager manager;
     public int AmountToPool = 60;
+    public LayerMask targetLayer;
 
     public InstantiateGameObjects(FSM<GameManager> _owner, ObjectPool _objectPool, GameManager _manager)
     {
@@ -31,8 +32,8 @@ public class InstantiateGameObjects : State
             }
             else
             {
-                //            niet netjes, maar kan nu omdat we weinig wapens hebben.
-                //Zou een Switch case niet werken?
+                //niet netjes, maar kan nu omdat we weinig wapens hebben.
+                //Zou een Switch case niet werken? uh ja wel dus lmao
                 switch (manager.Weapons[i].itemName)
                 {
                     case WeaponType.Pistol:
@@ -53,6 +54,26 @@ public class InstantiateGameObjects : State
                 }
             }
         }
+        targetLayer = manager.enemyData.enemyLayerMask;
+
+        Collider[] colliders = Physics.OverlapSphere(Vector3.zero, float.MaxValue, targetLayer);
+        // Filter these colliders based on a specific type.
+        GameObject[] targetObjects = new GameObject[colliders.Length];
+        int index = 0;
+
+        foreach (var collider in colliders)
+        {
+            GameObject targetType = collider.gameObject;
+            if (targetType != null)
+            {
+                targetObjects[index] = targetType;
+                new Enemy(manager.enemyData, targetType.transform);
+                targetType.SetActive(false);
+                index++;
+            }
+        }
+        //als alle objecten die uit de collider list komen null zijn dan wordt de targetobjects list ook null.
+        //System.Array.Resize(ref targetObjects, index);
     }
 
     public static GameObject Instantiate(string e)

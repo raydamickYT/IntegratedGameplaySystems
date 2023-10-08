@@ -51,7 +51,6 @@ public class Player : ActorBase
 
         var shooting = new Shooting(gameManager, playerData);
 
-
         var cameraControl = new CameraControl(playerData);
         var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);

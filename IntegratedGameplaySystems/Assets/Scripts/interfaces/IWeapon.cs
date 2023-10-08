@@ -41,7 +41,6 @@ public class IWeapon
         else
         {
             WeaponInScene.SetActive(false);
-
         }
 
         FireRate = WeaponScriptableObject.FireRateToFloat(WeaponScriptableObject.fireRate);

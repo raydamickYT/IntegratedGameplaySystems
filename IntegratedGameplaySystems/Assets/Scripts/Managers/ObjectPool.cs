@@ -48,7 +48,6 @@ public class ObjectPool
     {
         if (ActivePooledObjects.Contains(_object) && _object.ActiveObjectInScene.activeInHierarchy)
         {
-//            Debug.Log(InactivePooledObjects.Count);
             ActivePooledObjects.Remove(_object);
             InactivePooledObjects.Add(_object);
             _object.ActiveObjectInScene.SetActive(false);

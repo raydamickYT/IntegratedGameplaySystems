@@ -17,14 +17,22 @@ public class Registry
 
     }
 
-    public static void AddToRegistry(string e, ActorBase a) 
+    public static void AddToRegistry(string e, ActorBase a)
     {
         if (!ObjectRegistry.ContainsKey(e))
         {
             ObjectRegistry.Add(e, a);
         }
     }
-        public static void AddToRegistry(string e, IWeapon a) 
+    public static void AddToRegistry(string e, IWeapon a)
+    {
+        if (!ObjectRegistry.ContainsKey(e))
+        {
+            ObjectRegistry.Add(e, a);
+        }
+    }
+
+    public static void AddToRegistry(string e, Enemy a)
     {
         if (!ObjectRegistry.ContainsKey(e))
         {
