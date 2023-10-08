@@ -5,7 +5,7 @@ public class Jumping : ICommand
 {
     private ActorData playerData;
     private bool canJump = true;
-    private float jumpCooldownDuration = .7f;
+    private float jumpCooldownDuration = .6f;
     private Timer jumpCooldownTimer;
     private bool hasExtraJump = true;
     private Rigidbody rb;

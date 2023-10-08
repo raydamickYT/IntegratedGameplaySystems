@@ -1,7 +1,4 @@
 using UnityEngine;
-using System;
-using System.Collections.Generic;
-using UnityEditor;
 
 public class InstantiateGameObjects : State
 {
@@ -10,7 +7,6 @@ public class InstantiateGameObjects : State
     protected FSM<GameManager> owner;
     private GameManager manager;
     public int AmountToPool = 60;
-
 
     public InstantiateGameObjects(FSM<GameManager> _owner, ObjectPool _objectPool, GameManager _manager)
     {
@@ -23,8 +19,9 @@ public class InstantiateGameObjects : State
     {
         for (int i = 0; i < AmountToPool; i++)
         {
-            // int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
-            new TestBulletActor(manager.bullets.BulletObject, manager, i, objectPool);
+            //int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
+            //Gives an error, null reference.
+            new BulletActor(manager.bullets.BulletObject, manager, i, objectPool);
         }
         for (int i = 0; i < manager.Weapons.Length; i++)
         {
@@ -34,18 +31,25 @@ public class InstantiateGameObjects : State
             }
             else
             {
-                //niet netjes, maar kan nu omdat we weinig wapens hebben.
-                if (manager.Weapons[i].itemName == WeaponType.Pistol)
+                //            niet netjes, maar kan nu omdat we weinig wapens hebben.
+                //Zou een Switch case niet werken?
+                switch (manager.Weapons[i].itemName)
                 {
-                    var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
-                }
-                if (manager.Weapons[i].itemName == WeaponType.AssaultRifle)
-                {
-                    var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
-                }
-                if (manager.Weapons[i].itemName == WeaponType.Knife)
-                {
-                    //var t = new Pistol(manager.Weapons[i], this, manager.Weapons[i].ItemPrefab);
+                    case WeaponType.Pistol:
+                        {
+                            var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            break;
+                        }
+                    case WeaponType.AssaultRifle:
+                        {
+                            var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            break;
+                        }
+                    case WeaponType.Knife:
+                        {
+                            var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            break;
+                        }
                 }
             }
         }
@@ -57,6 +61,7 @@ public class InstantiateGameObjects : State
         {
             var EenObject = GameObject.Instantiate(actorBase.ActorObject);
             //deze check kan omdat hij nu niet een dictionary door hoeft te zoeken dus het is niet zo zwaar.
+            //You're still using the StartsWith "Bullet" though.
             if (e.StartsWith("Bullet"))
             {
                 EenObject.transform.SetParent(GameObject.Find("BulletHolder").transform);

@@ -13,11 +13,11 @@ public class Sprinting : ICommand
 
     public void OnKeyDownExecute(object context = null)
     {
-        playerData.CurrentMoveSpeed += 5.0f;
+        playerData.CurrentMoveSpeed += playerData.SprintSpeedIncrease;
     }
 
     public void OnKeyUpExecute()
     {
-        playerData.CurrentMoveSpeed -= 5.0f;
+        playerData.CurrentMoveSpeed -= playerData.SprintSpeedIncrease;
     }
 }

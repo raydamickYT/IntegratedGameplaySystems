@@ -98,5 +98,4 @@ public class MovementContext
 public class WeaponSelectContext
 {
     public int WeaponIndex { get; set; }
-
 }

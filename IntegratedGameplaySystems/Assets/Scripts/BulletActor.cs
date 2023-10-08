@@ -1,15 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
-public class TestBulletActor : ActorBase, IPoolable
+public class BulletActor : ActorBase, IPoolable
 {
     private GameManager manager;
     private ObjectPool objectPool;
 
     //deze base assigned gelijk de prefab aan de actorbase
-    public TestBulletActor(GameObject Prefab, GameManager _manager, int NameInt, ObjectPool _objectPool) : base(Prefab)
+    public BulletActor(GameObject Prefab, GameManager _manager, int NameInt, ObjectPool _objectPool) : base(Prefab)
     {
         this.objectPool = _objectPool;
         this.manager = _manager;

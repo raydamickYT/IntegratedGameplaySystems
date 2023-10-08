@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     private readonly FSM<GameManager> fsm = new();
+
     public ActorData playerData;
 
     #region Adjustable Variables
@@ -57,9 +56,6 @@ public class GameManager : MonoBehaviour
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.SwitchState(typeof(InstantiateGameObjects));
     }
-
-
-
 
     private void Update()
     {

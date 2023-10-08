@@ -65,13 +65,13 @@ public class WallRunning
 
         Vector3 directionToWall = wallLeft ? Vector3.left : Vector3.right;
 
-        playerData.ActorRigidBody.AddRelativeForce(20.0f * Time.deltaTime * directionToWall.normalized);
+        playerData.ActorRigidBody.AddRelativeForce(Time.deltaTime * 20.0f * directionToWall.normalized);
     }
 
     private void WallCheck()
     {
-        wallLeft = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, playerData.ActorMesh.transform.right, out RaycastHit leftWallHit, maxWallDistance, playerData.WallRunLayerMask);
-        wallRight = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, -playerData.ActorMesh.transform.right, out RaycastHit rightWallHit, maxWallDistance, playerData.WallRunLayerMask);
+        wallLeft = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, playerData.ActorMesh.transform.right, out _, maxWallDistance, playerData.WallRunLayerMask);
+        wallRight = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, -playerData.ActorMesh.transform.right, out _, maxWallDistance, playerData.WallRunLayerMask);
     }
 
     private void OnFixedUpdate()
@@ -82,7 +82,7 @@ public class WallRunning
         }
     }
 
-private void OnUpdate()
+    private void OnUpdate()
     {
         WallCheck();
 

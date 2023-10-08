@@ -21,12 +21,12 @@ public class Sliding : ICommand
     public void OnKeyDownExecute(object context = null)
     {
         playerData.ActorMesh.transform.localScale = new Vector3(1, 0.5f, 1);
-        playerData.CurrentMoveSpeed += playerData.SprintSpeedIncrease;
+        playerData.CurrentMoveSpeed += playerData.SlideSpeedIncrease;
     }
 
     public void OnKeyUpExecute()
     {
-        playerData.CurrentMoveSpeed -= playerData.SprintSpeedIncrease;
+        playerData.CurrentMoveSpeed -= playerData.SlideSpeedIncrease;
         playerData.ActorMesh.transform.localScale = Vector3.one;
     }
 }

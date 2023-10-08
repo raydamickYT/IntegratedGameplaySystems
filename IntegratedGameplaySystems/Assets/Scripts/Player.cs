@@ -1,4 +1,3 @@
-using UnityEditor.Scripting;
 using UnityEngine;
 
 public class Player : ActorBase
@@ -28,13 +27,13 @@ public class Player : ActorBase
     private void Initialization()
     {
         playerData.ActorMesh = GameObject.Instantiate(playerData.ActorPrefab, gameManager.transform.position, Quaternion.identity);
-        playerData.playerRigidBody = playerData.ActorMesh.GetComponent<Rigidbody>();
+        playerData.ActorRigidBody = playerData.ActorMesh.GetComponent<Rigidbody>();
         playerData.playerCamera = GameObject.FindObjectOfType<Camera>();
         playerData.playerCameraTransform = playerData.playerCamera.gameObject.transform;
         playerData.playerCameraHolderTransform = playerData.ActorMesh.GetComponentInChildren<Grid>().gameObject.transform;
 
-
         playerData.CurrentMoveSpeed = playerData.StandardMovementSpeed;
+
         //niet heel netjes, maar moet even voor nu.
         playerData.GunHolder = GameObject.Find("GunHolder");
         if (playerData.GunHolder == null)
@@ -49,10 +48,10 @@ public class Player : ActorBase
     {
         var playerMovement = new PlayerMovement(playerData, this);
         var EquipmentManager = new EquipmentManager(gameManager);
-        
+
         var shooting = new Shooting(gameManager, playerData);
-        
-        
+
+
         var cameraControl = new CameraControl(playerData);
         var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);
@@ -73,8 +72,8 @@ public class Player : ActorBase
         InputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
 
         //equipment
-        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext {WeaponIndex = 0});
-        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext {WeaponIndex = 1});
+        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext { WeaponIndex = 0 });
+        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext { WeaponIndex = 1 });
         //inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha3, new WeaponSelectContext {WeaponIndex = 2});
     }
 

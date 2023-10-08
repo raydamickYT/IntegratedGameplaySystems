@@ -37,8 +37,8 @@ public class EquipmentManager : ICommand
 
     public void Execute(object context = null)
     {
-        Debug.Log(context);
-
+        //Very Spammy
+        //Debug.Log(context);
     }
 
     public void OnKeyDownExecute(object context = null)
