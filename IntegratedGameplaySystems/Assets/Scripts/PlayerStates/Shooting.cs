@@ -33,11 +33,10 @@ public class Shooting : ICommand
             }
             else
             {
-                targetHit = ray.GetPoint(10);
+                targetHit = ray.GetPoint(20);
             }
 
             //bereken de direction
-            Debug.Log(EquipmentManager.currentlyEquippedWeapon);
             Vector3 directionWithoutSpread = targetHit - EquipmentManager.currentlyEquippedWeapon.BulletPoint.position;
 
             float x = UnityEngine.Random.Range(10, 10);

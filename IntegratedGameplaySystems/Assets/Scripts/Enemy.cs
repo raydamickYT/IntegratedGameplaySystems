@@ -12,7 +12,6 @@ public class Enemy : IDamageableActor
         enemyScriptableObject = scriptableObject;
         DamageAbleObject = gameobject;
         Registry.AddToRegistry(gameobject.name, this);
-        Debug.Log(gameobject.name + i);
         SpawnPoint = _spawnPoint;
         //SpawnEnemies();
     }
