@@ -58,7 +58,7 @@ public class WeaponData : ItemData
     public FireRate fireRate;
     public BulletLife bulletLife;
 }
-public enum WeaponType { Pistol, Knife, AssaultRifle }
+public enum WeaponType { Pistol = 0, Knife = 1, AssaultRifle = 2 }
 public enum WeaponStyle { Primary, Secondary, Melee }
 public enum FireRate { Slow, Medium, Fast }
 public enum BulletLife { Short, Medium, Long, Extended }

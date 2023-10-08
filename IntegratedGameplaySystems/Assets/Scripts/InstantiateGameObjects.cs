@@ -1,7 +1,4 @@
 using UnityEngine;
-using System;
-using System.Collections.Generic;
-using UnityEditor;
 
 public class InstantiateGameObjects : State
 {
@@ -18,38 +15,45 @@ public class InstantiateGameObjects : State
         manager = _manager;
     }
 
-    //Gives Errors
-    //public override void OnEnter()
-    //{
-    //    for (int i = 0; i < AmountToPool; i++)
-    //    {
-    ////        int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
-    //        new BulletActor(manager.bullets.BulletObject, manager, i, objectPool);
-    //    }
-    //    for (int i = 0; i < manager.Weapons.Length; i++)
-    //    {
-    //        if (manager.Weapons[i].ItemPrefab.activeInHierarchy)
-    //        {
-    //            break;
-    //        }
-    //        else
-    //        {
-    ////            niet netjes, maar kan nu omdat we weinig wapens hebben.
-    //            if (manager.Weapons[i].itemName == WeaponType.Pistol)
-    //            {
-    //                var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
-    //            }
-    //            if (manager.Weapons[i].itemName == WeaponType.AssaultRifle)
-    //            {
-    //                var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
-    //            }
-    //            if (manager.Weapons[i].itemName == WeaponType.Knife)
-    //            {
-    //                var t = new Pistol(manager.Weapons[i], this, manager.Weapons[i].ItemPrefab);
-    //            }
-    //        }
-    //    }
-    //}
+    public override void OnEnter()
+    {
+        for (int i = 0; i < AmountToPool; i++)
+        {
+            //int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
+            //Gives an error, null reference.
+            new BulletActor(manager.bullets.BulletObject, manager, i, objectPool);
+        }
+        for (int i = 0; i < manager.Weapons.Length; i++)
+        {
+            if (manager.Weapons[i].ItemPrefab.activeInHierarchy)
+            {
+                break;
+            }
+            else
+            {
+                //            niet netjes, maar kan nu omdat we weinig wapens hebben.
+                //Zou een Switch case niet werken?
+                switch (manager.Weapons[i].itemName)
+                {
+                    case WeaponType.Pistol:
+                        {
+                            var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            break;
+                        }
+                    case WeaponType.AssaultRifle:
+                        {
+                            var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            break;
+                        }
+                    case WeaponType.Knife:
+                        {
+                            var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            break;
+                        }
+                }
+            }
+        }
+    }
 
     public static GameObject Instantiate(string e)
     {

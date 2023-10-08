@@ -52,16 +52,14 @@ public class Shooting : ICommand
             bullet.ActiveObjectInScene.SetActive(true);
 
             Rigidbody rb = bullet.ActiveObjectInScene.GetComponent<Rigidbody>();
-            
-            rb.AddForce(directionWithoutSpread.normalized * EquipmentManager.currentlyEquippedWeapon.BulletForce, ForceMode.Impulse);
 
+            rb.AddForce(directionWithoutSpread.normalized * EquipmentManager.currentlyEquippedWeapon.BulletForce, ForceMode.Impulse);
 
             //logic voor fire rate en bullet life
             //geeft een warning omdat er verwacht wordt dat deze awaited worden, maar omdat dat de tijd niet meer accurate maakt doen we dat niet
             Wait();
 
             BulletLifeTime(bullet);
-
         }
     }
 
@@ -86,7 +84,6 @@ public class Shooting : ICommand
 
     public void OnKeyDownExecute(object context = null)
     {
-
     }
 
     public void OnKeyUpExecute()

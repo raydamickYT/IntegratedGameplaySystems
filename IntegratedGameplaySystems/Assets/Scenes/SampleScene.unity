@@ -662,7 +662,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: 6fdd37f6bb8358e4f8bfa96c6e2dfcc0, type: 2}
   AmountToPool: 30
-  BulletPrefab: {fileID: 0}
   bullets: {fileID: 0}
   Weapons:
   - {fileID: 0}
