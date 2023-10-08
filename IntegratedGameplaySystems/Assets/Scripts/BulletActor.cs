@@ -10,11 +10,10 @@ public class BulletActor : ActorBase, IPoolable
     {
         this.objectPool = _objectPool;
         this.manager = _manager;
-        
-        //dit voegt dit script toe niet de gameobject. die zit vast aan dit script.
-        Registry.AddToRegistry(Prefab.name + NameInt, this);
-        ActiveObjectInScene = InstantiateGameObjects.Instantiate(Prefab.name + NameInt);
 
+        //dit voegt dit script toe niet de gameobject. die zit vast aan dit script.
+        Registry.AddToRegistry($"{Prefab.name}{NameInt}", this);
+        ActiveObjectInScene = InstantiateGameObjects.Instantiate($"{Prefab.name}{NameInt}");
     }
 
     public void Recycle(Vector3 direction)

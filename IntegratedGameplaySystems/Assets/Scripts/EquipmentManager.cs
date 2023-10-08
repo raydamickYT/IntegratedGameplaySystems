@@ -25,14 +25,15 @@ public class EquipmentManager : ICommand
             return;
         }
 
-        if (EquipmentManager.currentlyEquippedWeapon != null)
+        if (currentlyEquippedWeapon != null)
         {
-            EquipmentManager.currentlyEquippedWeapon.WeaponInScene.SetActive(false);  // Deactivate the current weapon
+            currentlyEquippedWeapon.WeaponInScene.SetActive(false);  // Deactivate the current weapon
         }
 
         // Activate the selected weapon
-        EquipmentManager.currentlyEquippedWeapon = WeaponsInScene[weaponIndex];
-        EquipmentManager.currentlyEquippedWeapon.WeaponInScene.SetActive(true);
+        currentlyEquippedWeapon = WeaponsInScene[weaponIndex];
+        Debug.Log(currentlyEquippedWeapon.WeaponInScene);
+        currentlyEquippedWeapon.WeaponInScene.SetActive(true);
     }
 
     public void Execute(object context = null)

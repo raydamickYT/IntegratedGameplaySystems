@@ -37,17 +37,17 @@ public class InstantiateGameObjects : State
                 {
                     case WeaponType.Pistol:
                         {
-                            var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                     case WeaponType.AssaultRifle:
                         {
-                            var t = new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            new AssaultRifle(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                     case WeaponType.Knife:
                         {
-                            var t = new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
+                            new Pistol(manager.Weapons[i], manager, manager.Weapons[i].ItemPrefab);
                             break;
                         }
                 }
