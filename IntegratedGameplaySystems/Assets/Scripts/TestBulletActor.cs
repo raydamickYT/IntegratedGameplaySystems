@@ -13,6 +13,7 @@ public class TestBulletActor : ActorBase, IPoolable
     {
         this.objectPool = _objectPool;
         this.manager = _manager;
+        
         //dit voegt dit script toe niet de gameobject. die zit vast aan dit script.
         Registry.AddToRegistry(Prefab.name + NameInt, this);
         ActiveObjectInScene = InstantiateGameObjects.Instantiate(Prefab.name + NameInt);
@@ -22,7 +23,6 @@ public class TestBulletActor : ActorBase, IPoolable
     public void Recycle(Vector3 direction)
     {
         //wat te doen als dit object deactiveerd.
-        Debug.Log(EquipmentManager.currentlyEquippedWeapon.BulletPoint.position);
         ActiveObjectInScene.transform.position = EquipmentManager.currentlyEquippedWeapon.BulletPoint.position;
         ActiveObjectInScene.transform.rotation = EquipmentManager.currentlyEquippedWeapon.BulletPoint.rotation * Quaternion.Euler(0, 0, -90);
         //ActiveObjectInScene.transform.forward = direction.normalized;

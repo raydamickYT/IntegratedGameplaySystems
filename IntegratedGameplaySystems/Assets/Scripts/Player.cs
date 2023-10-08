@@ -7,7 +7,7 @@ public class Player : ActorBase
     private GameManager gameManager;
     private ActorData playerData;
 
-    public Player(GameManager gameManager, ActorData playerData) : base(playerData.PlayerMesh)
+    public Player(GameManager gameManager, ActorData playerData) : base(playerData.ActorMesh)
     {
         this.playerData = playerData;
         this.gameManager = gameManager;
@@ -27,7 +27,7 @@ public class Player : ActorBase
 
     private void Initialization()
     {
-        playerData.PlayerMesh = GameObject.Instantiate(playerData.ActorPrefab, gameManager.transform.position, Quaternion.identity);
+        playerData.ActorMesh = GameObject.Instantiate(playerData.ActorPrefab, gameManager.transform.position, Quaternion.identity);
         playerData.playerRigidBody = playerData.ActorMesh.GetComponent<Rigidbody>();
         playerData.playerCamera = GameObject.FindObjectOfType<Camera>();
         playerData.playerCameraTransform = playerData.playerCamera.gameObject.transform;
@@ -49,7 +49,6 @@ public class Player : ActorBase
     {
         var playerMovement = new PlayerMovement(playerData, this);
         var EquipmentManager = new EquipmentManager(gameManager);
-        inputHandler = new InputHandler();
         
         var shooting = new Shooting(gameManager, playerData);
         
@@ -71,14 +70,12 @@ public class Player : ActorBase
         InputHandler.BindInputToCommand(jumping, KeyCode.Space, new MovementContext { Direction = Vector3.up });
         InputHandler.BindInputToCommand(sliding, KeyCode.LeftControl, new MovementContext { Direction = Vector3.down });
         InputHandler.BindInputToCommand(sprinting, KeyCode.LeftShift);
-        inputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
+        InputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
 
         //equipment
-        inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext {WeaponIndex = 0});
-        inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext {WeaponIndex = 1});
+        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext {WeaponIndex = 0});
+        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext {WeaponIndex = 1});
         //inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha3, new WeaponSelectContext {WeaponIndex = 2});
-
-        fsm.AddState(wallRun);
     }
 
     private void OnFixedUpdate()

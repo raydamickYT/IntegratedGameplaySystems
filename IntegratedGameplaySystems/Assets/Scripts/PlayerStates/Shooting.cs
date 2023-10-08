@@ -8,9 +8,9 @@ public class Shooting : ICommand
 {
     public static bool _canFire = true;
     GameManager manager;
-    PlayerData playerData;
+    ActorData playerData;
 
-    public Shooting(GameManager _manager, PlayerData _playerData)
+    public Shooting(GameManager _manager, ActorData _playerData)
     {
         playerData = _playerData;
         this.manager = _manager;
@@ -67,9 +67,7 @@ public class Shooting : ICommand
 
     public async Task Wait()
     {
-        Debug.Log("FireRate : " + EquipmentManager.currentlyEquippedWeapon.FireRate);
         _canFire = false;
-        Debug.Log(EquipmentManager.currentlyEquippedWeapon.FireRate);
         await Task.Delay(TimeSpan.FromSeconds(EquipmentManager.currentlyEquippedWeapon.FireRate));
         _canFire = true;
     }
@@ -77,7 +75,6 @@ public class Shooting : ICommand
     public async Task BulletLifeTime(ActorBase bullet)
     {
         //net zo simpel, als er een bepaalde tijd verstreken is, dan word de bullet weer naar de inactive pool verplaatst.
-        Debug.Log("BulletLife: " + EquipmentManager.currentlyEquippedWeapon.BulletLife);
         await Task.Delay(TimeSpan.FromSeconds(EquipmentManager.currentlyEquippedWeapon.BulletLife));
         manager.DeactivationDelegate?.Invoke(bullet);
     }
