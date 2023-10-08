@@ -7,8 +7,8 @@ public class ActorData : ScriptableObject
     [NonSerialized] public GameObject ActorMesh;
 
     [NonSerialized] public Rigidbody ActorRigidBody;
-    
- 	[NonSerialized] public GameObject GunHolder;
+
+    [NonSerialized] public GameObject GunHolder;
 
     public GameObject ActorPrefab;
 
@@ -37,6 +37,4 @@ public class ActorData : ScriptableObject
     [NonSerialized] public Transform playerCameraTransform;
     [NonSerialized] public Camera playerCamera;
     [NonSerialized] public Transform playerCameraHolderTransform;
-
-    public GameObject GunHolder { get; internal set; }
 }

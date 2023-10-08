@@ -5,7 +5,6 @@ public class Player : ActorBase
     public readonly InputHandler InputHandler = new();
     private GameManager gameManager;
     private ActorData playerData;
-    private Inventory inventory;
 
     public Player(GameManager gameManager, ActorData playerData) : base(playerData.ActorMesh)
     {
@@ -49,10 +48,10 @@ public class Player : ActorBase
     {
         var playerMovement = new PlayerMovement(playerData, this);
         var EquipmentManager = new EquipmentManager(gameManager);
-        
+
         var shooting = new Shooting(gameManager, playerData);
-        
-        
+
+
         var cameraControl = new CameraControl(playerData);
         var jumping = new Jumping(playerData, this);
         var sliding = new Sliding(playerData);
@@ -73,8 +72,8 @@ public class Player : ActorBase
         InputHandler.BindInputToCommand(shooting, KeyCode.Mouse0);
 
         //equipment
-        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext {WeaponIndex = 0});
-        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext {WeaponIndex = 1});
+        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha1, new WeaponSelectContext { WeaponIndex = 0 });
+        InputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha2, new WeaponSelectContext { WeaponIndex = 1 });
         //inputHandler.BindInputToCommand(EquipmentManager, KeyCode.Alpha3, new WeaponSelectContext {WeaponIndex = 2});
     }
 
