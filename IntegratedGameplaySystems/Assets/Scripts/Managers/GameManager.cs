@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
         Cursor.visible = false;
 
         player = new(this, playerData);
-        damageable = new(enemyData);
         ObjectPool = new(this);
 
         SetupGameStates();

@@ -4,16 +4,36 @@ public class BulletActor : ActorBase, IPoolable
 {
     private GameManager manager;
     private ObjectPool objectPool;
+    private Bullets bullet;
 
     //deze base assigned gelijk de prefab aan de actorbase
-    public BulletActor(GameObject Prefab, GameManager _manager, int NameInt, ObjectPool _objectPool) : base(Prefab)
+    public BulletActor(Bullets _bullet, GameManager _manager, int NameInt, ObjectPool _objectPool) : base(_bullet.BulletObject)
     {
         this.objectPool = _objectPool;
         this.manager = _manager;
 
+        manager.OnUpdate += BulletUpdate;
+
         //dit voegt dit script toe niet de gameobject. die zit vast aan dit script.
-        Registry.AddToRegistry($"{Prefab.name}{NameInt}", this);
-        ActiveObjectInScene = InstantiateGameObjects.Instantiate($"{Prefab.name}{NameInt}");
+        bullet = _bullet;
+        Registry.AddToRegistry($"{bullet.BulletObject.name}{NameInt}", this);
+        ActiveObjectInScene = InstantiateGameObjects.Instantiate($"{bullet.BulletObject.name}{NameInt}");
+    }
+
+    public void BulletUpdate()
+    {
+        if (ActiveObjectInScene.activeSelf)
+        {
+            if (base.BulletHit != null)
+            {
+                float actualDistance = Vector3.Distance(base.BulletHit.transform.position, ActiveObjectInScene.transform.position);
+                if (actualDistance <= 5)
+                {
+                    Debug.Log(BulletHit.layer);
+                    manager.DeactivationDelegate?.Invoke(this);
+                }
+            }
+        }
     }
 
     public void Recycle(Vector3 direction)

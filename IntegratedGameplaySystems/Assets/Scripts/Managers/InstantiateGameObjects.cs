@@ -22,7 +22,7 @@ public class InstantiateGameObjects : State
         {
             //int i staat erbij omdat anders alle bullets dezelfde naam hebben in de registry
             //Gives an error, null reference.
-            new BulletActor(manager.bullets.BulletObject, manager, i, objectPool);
+            new BulletActor(manager.bullets, manager, i, objectPool);
         }
         for (int i = 0; i < manager.Weapons.Length; i++)
         {
@@ -54,7 +54,7 @@ public class InstantiateGameObjects : State
                 }
             }
         }
-        targetLayer = manager.enemyData.enemyLayerMask;
+        targetLayer = manager.enemyData.EnemyLayerMask;
 
         Collider[] colliders = Physics.OverlapSphere(Vector3.zero, float.MaxValue, targetLayer);
         // Filter these colliders based on a specific type.
@@ -67,13 +67,13 @@ public class InstantiateGameObjects : State
             if (targetType != null)
             {
                 targetObjects[index] = targetType;
-                new Enemy(manager.enemyData, targetType.transform);
-                targetType.SetActive(false);
+                //new Enemy(manager.enemyData, targetType.transform, index, manager);
+                //targetType.SetActive(false);
                 index++;
             }
         }
         //als alle objecten die uit de collider list komen null zijn dan wordt de targetobjects list ook null.
-        //System.Array.Resize(ref targetObjects, index);
+        System.Array.Resize(ref targetObjects, index);
     }
 
     public static GameObject Instantiate(string e)
@@ -85,8 +85,16 @@ public class InstantiateGameObjects : State
             //You're still using the StartsWith "Bullet" though.
             if (e.StartsWith("Bullet"))
             {
-                AnObject.transform.SetParent(GameObject.Find("BulletHolder").transform);
-                objectPool.DeActivate(actorBase);
+                if (GameObject.Find("BulletHolder") != null)
+                {
+                    AnObject.transform.SetParent(GameObject.Find("BulletHolder").transform);
+                    objectPool.DeActivate(actorBase);
+                }
+                else
+                {
+                    objectPool.DeActivate(actorBase);
+                    Debug.LogWarning("BulletHolder is niet aanwezig in de scene, voeg hem toe");
+                }
             }
             return AnObject;
         }

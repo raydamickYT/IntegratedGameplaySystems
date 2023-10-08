@@ -43,7 +43,7 @@ public class WeaponData : ItemData
         switch (rate)
         {
             case WeaponType.Pistol:
-                return 100f;
+                return 30f;
             case WeaponType.Knife:
                 return 100f;
             case WeaponType.AssaultRifle:

@@ -29,10 +29,11 @@ public class Shooting : ICommand
             if (Physics.Raycast(ray, out hit))
             {
                 targetHit = hit.point;
+                bullet.BulletHit = hit.collider.gameObject;
             }
             else
             {
-                targetHit = ray.GetPoint(75);
+                targetHit = ray.GetPoint(10);
             }
 
             //bereken de direction
@@ -50,7 +51,7 @@ public class Shooting : ICommand
             }
 
             bullet.ActiveObjectInScene.SetActive(true);
-
+            
             Rigidbody rb = bullet.ActiveObjectInScene.GetComponent<Rigidbody>();
 
             rb.AddForce(directionWithoutSpread.normalized * EquipmentManager.currentlyEquippedWeapon.BulletForce, ForceMode.Impulse);
