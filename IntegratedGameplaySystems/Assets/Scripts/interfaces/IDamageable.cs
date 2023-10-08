@@ -20,7 +20,6 @@ public class IDamageableActor : IDamageable
         DamageAbleScriptableObject = gameObject;
         manager.OnUpdate += DamageAbleUpdate;
         //Initialize();
-        Debug.Log(targetLayer.value);
     }
     public void Initialize()
     {

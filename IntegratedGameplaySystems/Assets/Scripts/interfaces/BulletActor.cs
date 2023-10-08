@@ -1,13 +1,16 @@
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletActor : ActorBase, IPoolable
 {
     private GameManager manager;
     private ObjectPool objectPool;
-    private Bullets bullet;
+    private BulletsData bullet;
 
     //deze base assigned gelijk de prefab aan de actorbase
-    public BulletActor(Bullets _bullet, GameManager _manager, int NameInt, ObjectPool _objectPool) : base(_bullet.BulletObject)
+    public BulletActor(BulletsData _bullet, GameManager _manager, int NameInt, ObjectPool _objectPool) : base(_bullet.BulletObject)
     {
         this.objectPool = _objectPool;
         this.manager = _manager;
@@ -36,7 +39,9 @@ public class BulletActor : ActorBase, IPoolable
                     if (BulletDataFromDict is IDamageableActor damageableActor)
                     {
                         //hier kan je logic uitvoeren, wat moet er gebeuren als de enemy het juiste object raakt.
+                        manager.timer.BonusTime = 4;
                         damageableActor.DamageAbleObject.SetActive(false);
+                        return;
                     }
                 }
                 //nadeel van dit systeem is dat alles in een layermask moet zitten anders deactiveerd de bullet niet als hij een object raakt.

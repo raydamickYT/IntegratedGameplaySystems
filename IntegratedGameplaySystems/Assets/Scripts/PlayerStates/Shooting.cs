@@ -33,7 +33,7 @@ public class Shooting : ICommand
             }
             else
             {
-                targetHit = ray.GetPoint(10);
+                targetHit = ray.GetPoint(20);
             }
 
             //bereken de direction

@@ -13,16 +13,31 @@ public class ObjectPool
 
     private void OnDisable()
     {
+        foreach (var bullet in InactivePooledObjects)
+        {
+            if (bullet.ActiveObjectInScene != null)
+            {
+                GameObject.Destroy(bullet.ActiveObjectInScene);
+            }
+        }
+        foreach (var bullet in ActivePooledObjects)
+        {
+            if (bullet.ActiveObjectInScene != null)
+            {
+                GameObject.Destroy(bullet.ActiveObjectInScene);
+            }
+        }
         InactivePooledObjects.Clear();
         ActivePooledObjects.Clear();
-//        Debug.Log(InactivePooledObjects.Count);
-//        Debug.Log(ActivePooledObjects.Count);
+        Debug.Log("inactive pool " + InactivePooledObjects.Count);
+        Debug.Log(ActivePooledObjects.Count);
     }
 
     public ActorBase GetPooledObjects()
     {
         if (InactivePooledObjects.Count > 0)
         {
+            Debug.Log("t" + InactivePooledObjects[0].ActiveObjectInScene.activeInHierarchy);
             if (!InactivePooledObjects[0].ActiveObjectInScene.activeInHierarchy && Shooting._canFire)
             {
                 ActorBase _object = InactivePooledObjects[0];
@@ -61,4 +76,5 @@ public class ObjectPool
             AddObjectToPool(_object);
         }
     }
+
 }

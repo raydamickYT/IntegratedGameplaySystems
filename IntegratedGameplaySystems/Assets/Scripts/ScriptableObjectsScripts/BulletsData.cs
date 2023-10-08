@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewBullet", menuName = "ScriptableObjects/Bullet")]
-public class Bullets : ScriptableObject
+public class BulletsData : ScriptableObject
 {
     public GameObject BulletObject;
     public LayerMask EnemyLayerMask;
