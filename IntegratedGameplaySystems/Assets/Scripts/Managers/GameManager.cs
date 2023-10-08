@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public ObjectPoolDelegate objectPoolDelegate;
 
     public ObjectPool ObjectPool;
-    public Bullets bullets;
+    public BulletsData bullets;
     public EnemyData enemyData;
 
     public UIElementsData UiElementsData;
@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     public Action OnDisableEvent;
     public Action GameOverEvent;
     public Action GameWonEvent;
+    public Action TargetHit;
 
     public MainMenuScriptable mainMenuFunctions;
 
@@ -147,6 +148,7 @@ public class GameManager : MonoBehaviour
     {
         OnDisableEvent?.Invoke();
 
+        Registry.ObjectRegistry.Clear();
         DeactivationDelegate = null;
         objectPoolDelegate = null;
         OnUpdate = null;

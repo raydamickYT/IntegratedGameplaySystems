@@ -1,10 +1,12 @@
 using System.Diagnostics;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class TimerScript
 {
     private readonly Stopwatch timer = new();
+    public double BonusTime = 0;
     private GameManager owner;
     private TimerData timerData;
 
@@ -36,10 +38,19 @@ public class TimerScript
     public void UpdateTimerElement()
     {
         if (owner.UiElementsData.TimerUIText == null) { return; }
+        UnityEngine.Debug.Log(BonusTime);
 
-        owner.UiElementsData.TimerUIText.text = $@"Timer = {Mathf.RoundToInt((float)timer.Elapsed.TotalSeconds)}";
+        var TimerValue = Mathf.RoundToInt((float)timer.Elapsed.TotalSeconds - (float)BonusTime);
+        var UiTimer = $@"Timer = {TimerValue}";
+        owner.UiElementsData.TimerUIText.text = UiTimer;
 
-        if (Mathf.RoundToInt((float)timer.Elapsed.TotalSeconds) > timerData.TimeUntilGameOver)
+       // UnityEngine.Debug.Log((float)TimeValue);
+
+        if (BonusTime != 0)
+        {
+            BonusTime = 0;
+        }
+        if (TimerValue > timerData.TimeUntilGameOver)
         {
             owner.GameOverEvent?.Invoke();
         }

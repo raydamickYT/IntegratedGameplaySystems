@@ -12,6 +12,7 @@ public class Registry
 
     public Registry()
     {
+        
     }
 
     public static void AddToRegistry(string e, ActorBase a)

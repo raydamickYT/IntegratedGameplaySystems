@@ -13,10 +13,22 @@ public class ObjectPool
 
     private void OnDisable()
     {
+        foreach (var bullet in InactivePooledObjects)
+        {
+            if (bullet.ActiveObjectInScene != null)
+            {
+                GameObject.Destroy(bullet.ActiveObjectInScene);
+            }
+        }
+        foreach (var bullet in ActivePooledObjects)
+        {
+            if (bullet.ActiveObjectInScene != null)
+            {
+                GameObject.Destroy(bullet.ActiveObjectInScene);
+            }
+        }
         InactivePooledObjects.Clear();
         ActivePooledObjects.Clear();
-//        Debug.Log(InactivePooledObjects.Count);
-//        Debug.Log(ActivePooledObjects.Count);
     }
 
     public ActorBase GetPooledObjects()
@@ -61,4 +73,5 @@ public class ObjectPool
             AddObjectToPool(_object);
         }
     }
+
 }
