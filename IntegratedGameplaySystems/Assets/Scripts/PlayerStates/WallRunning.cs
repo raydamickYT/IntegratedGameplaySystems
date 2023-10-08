@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class WallRunning
 {
@@ -21,7 +22,6 @@ public class WallRunning
 
         owner.OnUpdateEvent += OnUpdate;
         owner.OnFixedUpdateEvent += OnFixedUpdate;
-
         owner.NoLongerMoving += MovementStopped;
     }
 

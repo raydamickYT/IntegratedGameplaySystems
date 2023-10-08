@@ -11,10 +11,10 @@ public class Sliding : ICommand
 
     public void Execute(object context = null)
     {
-        if (context is MovementContext movementContext)
+        if (context is Vector3 movementContext)
         {
             //Downward Force.
-            playerData.ActorRigidBody.AddRelativeForce(movementContext.Direction.normalized * 5.0f, ForceMode.Force);
+            playerData.ActorRigidBody.AddRelativeForce(movementContext.normalized * 5.0f, ForceMode.Force);
         }
     }
 

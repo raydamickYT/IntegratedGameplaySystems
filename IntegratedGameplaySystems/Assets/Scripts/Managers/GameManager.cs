@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -17,11 +19,29 @@ public class GameManager : MonoBehaviour
     public event Action OnUpdate;
     public event Action OnFixedUpdate;
     public event Action OnDisableEvent;
+    public Action GameOverEvent;
+    public Action GameWonEvent;
 
-    public ObjectPool ObjectPool;
+    public MainMenuScriptable mainMenuFunctions;
+
+    [SerializeField] private GameObject canvas;
+    [SerializeField] private GameObject gameOverObject;
+    [SerializeField] private GameObject gameWonObject;
+    [SerializeField] private GameObject finishLineObject;
+
+    [SerializeField] private TMP_Text highScoreText;
+    private float highScore = int.MaxValue;
+
+    public UIElementsData UiElementsData;
+
+    [SerializeField] private TimerData timerData;
+
+    public ObjectPool ObjectPool = new();
 
     public Bullets bullets;
     public EnemyData enemyData;
+
+    public TimerScript timer;
 
     public WeaponData[] Weapons = new WeaponData[1];
 
@@ -30,7 +50,6 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    private Player player;
     public IDamageableActor damageable;
 
     private void Start()
@@ -38,20 +57,66 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        player = new(this, playerData);
+        timer = new(this, canvas.transform, timerData);
+        new Player(this, playerData, canvas.transform);
         damageable = new(enemyData);
-        ObjectPool = new(this);
+
+        gameOverObject.SetActive(false);
+        gameWonObject.SetActive(false);
 
         SetupGameStates();
 
+        SaveToJson<int> saveToJson = new SaveToJson<int>();
+        highScore = saveToJson.ReturnSavedInt();
+        highScoreText.text = $"Highscore = {Mathf.RoundToInt(highScore)}";
+
+        GameOverEvent += GameOver;
+        GameWonEvent += GameWon;
         objectPoolDelegate += ObjectPool.GetPooledObjects;
         DeactivationDelegate += ObjectPool.DeActivate;
+    }
 
+    private void ReturnToMenu()
+    {
+        mainMenuFunctions.ReturnToMainMenu();
+    }
+
+    private void GameWon()
+    {
+        gameWonObject.SetActive(true);
+        GameOverEvent = null;
+        OnUpdate = null;
+        OnFixedUpdate = null;
+        OnDisableEvent = null;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        if (timer.ReturnTimeInSeconds() < highScore || highScore == 0)
+        {
+            SaveToJson<int> saveToJson = new SaveToJson<int>();
+            saveToJson.SaveObjectToJson(Mathf.RoundToInt((float)timer.ReturnTimeInSeconds()));
+        }
+
+        Invoke(nameof(ReturnToMenu), 5.0f);
+    }
+
+    private void GameOver()
+    {
+        gameOverObject.SetActive(true);
+        GameOverEvent = null;
+        OnUpdate = null;
+        OnFixedUpdate = null;
+        OnDisableEvent = null;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Invoke(nameof(ReturnToMenu), 5.0f);
     }
 
     private void SetupGameStates()
     {
-
         fsm.AddState(new InstantiateGameObjects(fsm, ObjectPool, this));
         fsm.SwitchState(typeof(InstantiateGameObjects));
     }
@@ -59,13 +124,18 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         fsm.OnUpdate();
-
+        timer.UpdateTimerElement();
         OnUpdate?.Invoke();
     }
 
     private void FixedUpdate()
     {
         OnFixedUpdate?.Invoke();
+
+        if (Vector3.Distance(playerData.ActorMesh.transform.position, finishLineObject.transform.position) < 5.0f)
+        {
+            GameWonEvent?.Invoke();
+        }
     }
 
     private void OnDisable()

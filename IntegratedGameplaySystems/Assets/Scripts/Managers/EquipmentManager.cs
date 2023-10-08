@@ -31,15 +31,13 @@ public class EquipmentManager : ICommand
         }
 
         // Activate the selected weapon
-        currentlyEquippedWeapon = WeaponsInScene[weaponIndex];
-        Debug.Log(currentlyEquippedWeapon.WeaponInScene);
-        currentlyEquippedWeapon.WeaponInScene.SetActive(true);
+        //currentlyEquippedWeapon = WeaponsInScene[weaponIndex];
+        //Debug.Log(currentlyEquippedWeapon.WeaponInScene);
+        //currentlyEquippedWeapon.WeaponInScene.SetActive(true);
     }
 
     public void Execute(object context = null)
     {
-        //Very Spammy
-        //Debug.Log(context);
     }
 
     public void OnKeyDownExecute(object context = null)

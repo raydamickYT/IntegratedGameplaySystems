@@ -32,12 +32,12 @@ public class Jumping : ICommand
 
     public void Execute(object context = null)
     {
-        if (context is not MovementContext movementContext) { return; }
+        if (context is not Vector3 movementContext) { return; }
 
         bool grounded = GroundCheck();
         if ((grounded || (!grounded && hasExtraJump)) && canJump)
         {
-            Jump(movementContext.Direction, !grounded);
+            Jump(movementContext, !grounded);
         }
     }
 

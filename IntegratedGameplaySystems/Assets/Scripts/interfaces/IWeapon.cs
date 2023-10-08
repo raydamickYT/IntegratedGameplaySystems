@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class IWeapon
 {
@@ -11,13 +8,13 @@ public class IWeapon
     public float FireRate = 0, BulletLife = 0, BulletForce = 0;
     public Transform BulletPoint = null;
 
-    
     public IWeapon(WeaponData script, GameObject Prefab, GameManager _gameManager)
     {
         this.WeaponScriptableObject = script;
         this.WeaponInScene = Prefab;
         this.gameManager = _gameManager;
     }
+
     public void WeaponInitialization()
     {
         Registry.AddToRegistry(WeaponInScene.name, this);

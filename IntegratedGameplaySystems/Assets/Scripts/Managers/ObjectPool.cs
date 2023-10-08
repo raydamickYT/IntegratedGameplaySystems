@@ -3,18 +3,14 @@ using UnityEngine;
 
 public class ObjectPool
 {
-    private GameManager manager;
     public List<ActorBase> InactivePooledObjects = new();
     public List<ActorBase> ActivePooledObjects = new();
-    public ObjectPool(GameManager manager)
+    public ObjectPool()
     {
-        this.manager = manager;
     }
 
-    //verplaatst objecten van de inactive pool naar de active pool
     public ActorBase GetPooledObjects()
     {
-        //        Debug.Log(InactivePooledObjects.Count);
         if (InactivePooledObjects.Count > 0)
         {
             if (!InactivePooledObjects[0].ActiveObjectInScene.activeInHierarchy && Shooting._canFire)
@@ -39,11 +35,9 @@ public class ObjectPool
         if (!InactivePooledObjects.Contains(item) && !ActivePooledObjects.Contains(item))
         {
             InactivePooledObjects.Add(item);
-            //            Debug.Log(InactivePooledObjects.Count);
         }
     }
 
-    //de functie die alle bullets van de active pool naar de inactive pool verplaatst.
     public void DeActivate(ActorBase _object)
     {
         if (ActivePooledObjects.Contains(_object) && _object.ActiveObjectInScene.activeInHierarchy)
@@ -54,8 +48,6 @@ public class ObjectPool
         }
         else
         {
-            //Debug.Log(_object);
-            //_object.ActiveObjectInScene.SetActive(false);
             AddObjectToPool(_object);
         }
     }
