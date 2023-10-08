@@ -67,7 +67,7 @@ public class InstantiateGameObjects : State
             if (targetType != null)
             {
                 targetObjects[index] = targetType;
-                //new Enemy(manager.enemyData, targetType.transform, index, manager);
+                new Enemy(targetObjects[index], manager.enemyData, targetType.transform, index, manager);
                 //targetType.SetActive(false);
                 index++;
             }

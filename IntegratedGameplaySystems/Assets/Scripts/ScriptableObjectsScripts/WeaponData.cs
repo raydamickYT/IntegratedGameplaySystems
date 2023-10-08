@@ -43,11 +43,11 @@ public class WeaponData : ItemData
         switch (rate)
         {
             case WeaponType.Pistol:
-                return 30f;
+                return 50f;
             case WeaponType.Knife:
                 return 100f;
             case WeaponType.AssaultRifle:
-                return 200f;
+                return 100f;
             default:
                 throw new System.Exception("No value for rate: " + rate.ToString());
         }

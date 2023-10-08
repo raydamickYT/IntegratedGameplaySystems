@@ -23,8 +23,8 @@ public class Shooting : ICommand
         {
             Ray ray = playerData.playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); // een ray in het midden van je scherm
             RaycastHit hit;
-            //checken of de ray iets hit
 
+            //checken of de ray iets hit
             Vector3 targetHit;
             if (Physics.Raycast(ray, out hit))
             {
@@ -44,6 +44,7 @@ public class Shooting : ICommand
 
             //bereken de direction met spread
             Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0);
+
             //Reset the positions (might do this in the bullet itself instead of here in the future.)
             if (bullet is IPoolable poolableBullet)
             {
@@ -51,7 +52,7 @@ public class Shooting : ICommand
             }
 
             bullet.ActiveObjectInScene.SetActive(true);
-            
+
             Rigidbody rb = bullet.ActiveObjectInScene.GetComponent<Rigidbody>();
 
             rb.AddForce(directionWithoutSpread.normalized * EquipmentManager.currentlyEquippedWeapon.BulletForce, ForceMode.Impulse);
@@ -75,6 +76,10 @@ public class Shooting : ICommand
     {
         //net zo simpel, als er een bepaalde tijd verstreken is, dan word de bullet weer naar de inactive pool verplaatst.
         await Task.Delay(TimeSpan.FromSeconds(EquipmentManager.currentlyEquippedWeapon.BulletLife));
+        if (bullet is BulletActor bulletActor)
+        {
+            manager.OnFixedUpdate -= bulletActor.BulletUpdate;
+        }
         manager.DeactivationDelegate?.Invoke(bullet);
     }
 
