@@ -39,7 +39,7 @@ public class BulletActor : ActorBase, IPoolable
                     if (BulletDataFromDict is IDamageableActor damageableActor)
                     {
                         //hier kan je logic uitvoeren, wat moet er gebeuren als de enemy het juiste object raakt.
-                        manager.timer.BonusTime = 4;
+                        manager.timer.ReduceTime(4);
                         damageableActor.DamageAbleObject.SetActive(false);
                         return;
                     }

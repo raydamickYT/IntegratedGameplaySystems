@@ -4,7 +4,7 @@ public class WallRunning
 {
     private ActorData playerData;
 
-    private float maxWallDistance = 1.0f;
+    private float maxWallDistance = .7f;
     private float minJumpHeight = .5f;
 
     private float speedIncrease;
