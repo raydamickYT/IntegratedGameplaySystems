@@ -4,14 +4,12 @@ public class WallRunning
 {
     private ActorData playerData;
 
-    private float maxWallDistance = .5f;
+    private float maxWallDistance = 1.0f;
     private float minJumpHeight = .5f;
-
-    private bool wallLeft, wallRight;
 
     private float speedIncrease;
     private bool speedIncreased = false;
-    private float amountOfSpeedIncreaseWhileWallRunning = 2.0f;
+    private float amountOfSpeedIncreaseWhileWallRunning = 1.0f;
 
     private bool isWallRunning = false;
 
@@ -32,6 +30,8 @@ public class WallRunning
     private void StartWallRun()
     {
         if (isWallRunning) { return; }
+
+        playerData.ActorRigidBody.velocity = new Vector3(playerData.ActorRigidBody.velocity.x, 0.0f, playerData.ActorRigidBody.velocity.z);
 
         speedIncreased = true;
         isWallRunning = true;
@@ -65,8 +65,8 @@ public class WallRunning
 
     private void WallCheck()
     {
-        wallLeft = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, playerData.ActorMesh.transform.right, out _, maxWallDistance, playerData.WallRunLayerMask);
-        wallRight = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, -playerData.ActorMesh.transform.right, out _, maxWallDistance, playerData.WallRunLayerMask);
+        playerData.WallLeft = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, playerData.ActorMesh.transform.right, out _, maxWallDistance, playerData.WallRunLayerMask);
+        playerData.WallRight = Physics.SphereCast(playerData.ActorMesh.transform.position, .5f, -playerData.ActorMesh.transform.right, out _, maxWallDistance, playerData.WallRunLayerMask);
     }
 
     private void OnFixedUpdate()
@@ -81,7 +81,7 @@ public class WallRunning
     {
         WallCheck();
 
-        if ((wallLeft || wallRight) && GroundCheck())
+        if ((playerData.WallLeft || playerData.WallRight) && GroundCheck())
         {
             if (!isWallRunning)
             {

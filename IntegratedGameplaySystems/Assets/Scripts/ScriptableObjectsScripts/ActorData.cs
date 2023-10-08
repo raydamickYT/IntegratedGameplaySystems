@@ -12,6 +12,8 @@ public class ActorData : ScriptableObject
 
     public GameObject ActorPrefab;
 
+    public bool WallLeft, WallRight;
+
     public float JumpForce = 10.0f;
 
     public float CameraSensitivity;

@@ -18,8 +18,10 @@ public class PlayerMovement : ICommand
     {
         if (playerData.ActorRigidBody == null || context is not Vector3 movementContext) { return; }
 
-        playerData.ActorRigidBody.AddRelativeForce(100.0f * Time.deltaTime * playerData.CurrentMoveSpeed * movementContext.normalized, ForceMode.Force);
-
+        if (!(playerData.WallLeft && movementContext == Vector3.right) && !(playerData.WallRight && movementContext == Vector3.left))
+        {
+            playerData.ActorRigidBody.AddRelativeForce(100.0f * Time.deltaTime * playerData.CurrentMoveSpeed * movementContext.normalized, ForceMode.Force);
+        }
         SpeedControl();
     }
 
