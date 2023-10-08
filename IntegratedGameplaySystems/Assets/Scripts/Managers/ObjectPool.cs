@@ -35,6 +35,7 @@ public class ObjectPool
     {
         if (InactivePooledObjects.Count > 0)
         {
+            Debug.Log("t" + InactivePooledObjects[0].ActiveObjectInScene.activeInHierarchy);
             if (!InactivePooledObjects[0].ActiveObjectInScene.activeInHierarchy && Shooting._canFire)
             {
                 ActorBase _object = InactivePooledObjects[0];
