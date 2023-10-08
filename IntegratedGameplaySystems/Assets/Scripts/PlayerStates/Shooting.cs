@@ -37,6 +37,7 @@ public class Shooting : ICommand
             }
 
             //bereken de direction
+            Debug.Log(EquipmentManager.currentlyEquippedWeapon);
             Vector3 directionWithoutSpread = targetHit - EquipmentManager.currentlyEquippedWeapon.BulletPoint.position;
 
             float x = UnityEngine.Random.Range(10, 10);

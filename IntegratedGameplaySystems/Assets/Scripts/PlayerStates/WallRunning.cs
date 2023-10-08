@@ -61,10 +61,6 @@ public class WallRunning
     {
         playerData.CurrentMoveSpeed += amountOfSpeedIncreaseWhileWallRunning * Time.deltaTime;
         speedIncrease += amountOfSpeedIncreaseWhileWallRunning * Time.deltaTime;
-
-        Vector3 directionToWall = wallLeft ? Vector3.left : Vector3.right;
-
-        playerData.ActorRigidBody.AddRelativeForce(Time.deltaTime * 20.0f * directionToWall.normalized);
     }
 
     private void WallCheck()

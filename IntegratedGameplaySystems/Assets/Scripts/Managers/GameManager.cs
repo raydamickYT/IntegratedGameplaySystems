@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text highScoreText;
 
     private float highScore = int.MaxValue;
-
+    Player player;
     private readonly FSM<GameManager> fsm = new();
 
     private bool gameWon = false;

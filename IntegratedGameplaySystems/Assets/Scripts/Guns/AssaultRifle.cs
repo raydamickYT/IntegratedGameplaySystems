@@ -10,6 +10,5 @@ public class AssaultRifle : IWeapon
     {
         gameManager = _gameManager;
         WeaponScriptableObject = assign;
-        WeaponInitialization();
     }
 }

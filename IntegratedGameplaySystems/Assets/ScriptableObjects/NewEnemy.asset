@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: NewEnemy
   m_EditorClassIdentifier: 
   EnemObject: {fileID: 830673832135509097, guid: 31e7b52c8ccc3fb4e8c692579cbd9d08, type: 3}
-  enemyLayerMask:
+  EnemyLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  BulletLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
